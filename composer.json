@@ -1,0 +1,26 @@
+{
+  "name": "mixstart/framework",
+  "description": "基于 Swoole 的常驻内存型 PHP 高性能框架",
+  "type": "framework",
+  "keywords": [
+    "framework",
+    "mixphp",
+    "swoole"
+  ],
+  "homepage": "http://www.mixphp.cn/",
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Jian Liu",
+      "email": "coder.liu@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "mix\\": "/"
+    }
+  }
+}

@@ -15,7 +15,6 @@
       "email": "coder.liu@qq.com"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
     "php": ">=5.4.0"
   },

@@ -1,6 +1,6 @@
 {
   "name": "mixstart/framework",
-  "description": "基于 Swoole 的常驻内存型 PHP 高性能框架",
+  "description": "MixPHP 框架核心 http://www.mixphp.cn",
   "type": "framework",
   "keywords": [
     "framework",

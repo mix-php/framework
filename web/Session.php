@@ -67,7 +67,7 @@ class Session extends Component
     {
         $success = $this->saveHandler->hMset($this->_sessionKey, [$name => serialize($value)]);
         $this->saveHandler->setTimeout($this->_sessionKey, $this->expires);
-        \Mix::app()->response->setCookie($this->name, $this->_sessionId);
+        \Mix::app()->response->setCookie($this->name, $this->_sessionId, 0, '/');
         return $success ? true : false;
     }
 

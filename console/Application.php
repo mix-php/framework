@@ -2,7 +2,8 @@
 
 namespace mix\console;
 
-use mix\base\Component;
+use mix\console\Input;
+use mix\console\Output;
 
 /**
  * App类
@@ -11,21 +12,71 @@ use mix\base\Component;
 class Application extends \mix\base\Application
 {
 
-    // NotFound错误消息
-    protected $_notFoundMessage = 'Command Not Found';
+    // 命令命名空间
+    public $commandNamespace = '';
+
+    // 命令
+    public $commands = [];
 
     // 执行功能 (CLI模式)
     public function run()
     {
         if (PHP_SAPI != 'cli') {
-            throw new \RuntimeException('请在 CLI 模式下运行');
+            throw new \RuntimeException('Please run in CLI mode.');
         }
         \mix\console\Error::register();
-        $method               = 'CLI';
-        $action               = empty($GLOBALS['argv'][1]) ? '' : $GLOBALS['argv'][1];
-        $controllerAttributes = \Mix::app()->request->param();
-        \Mix::app()->response->content = $this->runAction($method, $action, $controllerAttributes);
-        \Mix::app()->response->send();
+        $input   = Input::getInstance();
+        $command = $input->getCommand();
+        $options = $input->getOptions();
+        if (empty($command)) {
+            throw new \mix\exceptions\NotFoundException("Please input command, '-h' view help.");
+        }
+        if ($command == '-h') {
+            $this->commandList();
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+        return $this->runAction($command, $options);
+    }
+
+    // 命令列表
+    protected function commandList()
+    {
+        $commands = $this->commands;
+        $output   = Output::getInstance();
+        $output->write(PHP_EOL);
+        $prevPrefix = '';
+        foreach ($commands as $command => $item) {
+            $prefix = explode(' ', $command)[0];
+            if ($prefix != $prevPrefix) {
+                $prevPrefix = $prefix;
+                $output->writeln('- ' . $prefix);
+            }
+            $output->write(str_repeat(' ', 4) . $command, Output::FG_GREEN);
+            $output->writeln((isset($item['description']) ? "\t\t{$item['description']}" : ''), Output::NONE);
+        }
+        $output->writeln('');
+    }
+
+    // 执行功能并返回
+    public function runAction($command, $options)
+    {
+        if (isset($this->commands[$command])) {
+            list($class, $action) = $this->commands[$command];
+            $class         = str_replace('/', "\\", $class);
+            $commandDir    = \mix\helpers\FilesystemHelper::dirname($class);
+            $commandDir    = $commandDir == '.' ? '' : "$commandDir\\";
+            $commandName   = \mix\helpers\FilesystemHelper::basename($class);
+            $commandClass  = "{$this->commandNamespace}\\{$commandDir}{$commandName}Command";
+            $commandAction = "action{$action}";
+            if (class_exists($commandClass)) {
+                $object = new $commandClass($options);
+                // 判断方法是否存在
+                if (method_exists($object, $commandAction)) {
+                    return $object->$commandAction();
+                }
+            }
+        }
+        throw new \mix\exceptions\NotFoundException("ERRER unknown command '{$command}'");
     }
 
     // 获取组件

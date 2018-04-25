@@ -65,14 +65,22 @@ class Error extends Component
         }
         // 清空系统错误
         ob_get_contents() and ob_clean();
-        // 错误响应
-        $terminal = new Terminal();
-        $terminal->output($errors['message'] . PHP_EOL, Terminal::COLOR_RED . Terminal::STYLE_BOLD);
-        $terminal->output("{$errors['type']} code {$errors['code']}" . PHP_EOL);
-        $terminal->output($errors['file'], Terminal::STYLE_BOLD);
-        $terminal->output(' line ');
-        $terminal->output($errors['line'] . PHP_EOL, Terminal::STYLE_BOLD);
-        $terminal->output($errors['trace'] . PHP_EOL);
+        // 格式化
+        $message = $errors['message'] . PHP_EOL;
+        $message .= "{$errors['type']} code {$errors['code']}" . PHP_EOL;
+        $message .= $errors['file'] . ' line ' . $errors['line'] . PHP_EOL;
+        $message .= str_replace("\n", PHP_EOL, $errors['trace']);
+        // 输出
+        $output = Output::getInstance();
+        if (!$output->isWin) {
+            // 增加边距
+            $message = str_repeat(' ', 4) . str_replace(PHP_EOL, PHP_EOL . str_repeat(' ', 4), $message);
+            $message = str_repeat(PHP_EOL, 2) . $message . str_repeat(PHP_EOL, 1);
+            $output->writeln($message, Output::BG_RED);
+            $output->writeln('');
+        } else {
+            $output->write($message);
+        }
     }
 
     // 手动处理异常

@@ -48,7 +48,7 @@ class Log extends Component
     }
 
     // 写入信息
-    public function write($level, $message)
+    public function write($filePrefix, $message)
     {
         switch ($this->logRotate) {
             case self::ROTATE_HOUR:
@@ -64,7 +64,7 @@ class Log extends Component
                 $timeFormat = date('Ymd');
                 break;
         }
-        $filename = "{$level}_{$timeFormat}";
+        $filename = "{$filePrefix}_{$timeFormat}";
         $dir      = \Mix::app()->getRuntimePath() . $this->logDir;
         is_dir($dir) or mkdir($dir);
         $file   = $dir . '/' . $filename . '.log';

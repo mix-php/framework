@@ -48,10 +48,10 @@ class MessageHandler extends Component
         if (isset($rule)) {
             // 实例化控制器
             $rule      = "{$this->controllerNamespace}\\{$rule}";
-            $classFull = \mix\base\Route::dirname($rule);
-            $classPath = \mix\base\Route::dirname($classFull);
-            $className = \mix\base\Route::snakeToCamel(\mix\base\Route::basename($classFull), true);
-            $method    = \mix\base\Route::snakeToCamel(\mix\base\Route::basename($rule), true);
+            $classFull = \mix\helpers\FilesystemHelper::dirname($rule);
+            $classPath = \mix\helpers\FilesystemHelper::dirname($classFull);
+            $className = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($classFull), true);
+            $method    = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($rule), true);
             $class     = "{$classPath}\\{$className}Controller";
             $method    = "action{$method}";
             try {

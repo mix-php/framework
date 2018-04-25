@@ -115,7 +115,7 @@ class BasePdo extends Component
                 $sql = str_replace($key, implode(', ', self::quotes($item)), $sql);
             }
         }
-        return [$sql, $params, []];
+        return [$sql, $params];
     }
 
     // 自动连接

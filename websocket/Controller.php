@@ -2,11 +2,13 @@
 
 namespace mix\websocket;
 
+use mix\base\BaseObject;
+
 /**
  * Controller类
  * @author 刘健 <coder.liu@qq.com>
  */
-class Controller extends \mix\base\Controller
+class Controller extends BaseObject
 {
 
     // 服务

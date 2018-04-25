@@ -54,7 +54,7 @@ class BaseValidator
     // 获取标签
     protected function getAttributeLabel()
     {
-        return isset($this->attributeLabels[$this->attribute]) ? $this->attributeLabels[$this->attribute] : \mix\base\Route::snakeToCamel($this->attribute, true);
+        return isset($this->attributeLabels[$this->attribute]) ? $this->attributeLabels[$this->attribute] : \mix\helpers\FilesystemHelper::snakeToCamel($this->attribute, true);
     }
 
     // 获取属性值

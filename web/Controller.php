@@ -2,13 +2,14 @@
 
 namespace mix\web;
 
+use mix\base\BaseObject;
 use mix\web\View;
 
 /**
  * Controller类
  * @author 刘健 <coder.liu@qq.com>
  */
-class Controller extends \mix\base\Controller
+class Controller extends BaseObject
 {
 
     // 默认布局
@@ -41,7 +42,7 @@ class Controller extends \mix\base\Controller
         $prefix = str_replace([\Mix::app()->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($this));
         $items  = [];
         foreach (explode('.', $prefix) as $item) {
-            $items[] = \mix\base\Route::camelToSnake($item);
+            $items[] = \mix\helpers\FilesystemHelper::camelToSnake($item);
         }
         return implode('.', $items);
     }

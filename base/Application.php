@@ -8,8 +8,8 @@ namespace mix\base;
  *
  * @property \mix\base\Route $route
  * @property \mix\base\Log $log
- * @property \mix\web\Request|\mix\swoole\Request|\mix\console\Request $request
- * @property \mix\web\Response|\mix\swoole\Response|\mix\console\Response $response
+ * @property \mix\web\Request|\mix\swoole\Request|\mix\console\Input $request
+ * @property \mix\web\Response|\mix\swoole\Response|\mix\console\Output $response
  * @property \mix\web\Error $error
  * @property \mix\web\Token $token
  * @property \mix\web\Session $session
@@ -27,9 +27,6 @@ class Application
     // 基础路径
     public $basePath = '';
 
-    // 控制器命名空间
-    public $controllerNamespace = '';
-
     // 组件配置
     public $components = [];
 
@@ -38,9 +35,6 @@ class Application
 
     // 组件容器
     protected $_components;
-
-    // NotFound错误消息
-    protected $_notFoundMessage = '';
 
     // 组件命名空间
     protected $_componentNamespace;
@@ -83,50 +77,6 @@ class Application
         }
         // 装入容器
         $this->_components[$name] = $object;
-    }
-
-    // 执行功能并返回
-    public function runAction($method, $action, $controllerAttributes = [])
-    {
-        $action = "{$method} {$action}";
-        // 路由匹配
-        $items = \Mix::app()->route->match($action);
-        foreach ($items as $item) {
-            list($action, $queryParams) = $item;
-            // 执行功能
-            if ($action) {
-                // 路由参数导入请求类
-                \Mix::app()->request->setRoute($queryParams);
-                // 实例化控制器
-                $controllerAction = "{$this->controllerNamespace}\\{$action}";
-                $controllerFull   = \mix\base\Route::dirname($controllerAction);
-                $controllerPath   = \mix\base\Route::dirname($controllerFull);
-                $controllerName   = \mix\base\Route::snakeToCamel(\mix\base\Route::basename($controllerFull), true);
-                $controllerMethod = \mix\base\Route::snakeToCamel(\mix\base\Route::basename($controllerAction), true);
-                $controllerClass  = "{$controllerPath}\\{$controllerName}Controller";
-                $controllerAction = "action{$controllerMethod}";
-                if (class_exists($controllerClass)) {
-                    $controller = new $controllerClass($controllerAttributes);
-                    // 判断方法是否存在
-                    if (method_exists($controller, $controllerAction)) {
-                        // Web 应用
-                        if ($this instanceof \mix\web\Application) {
-                            // 执行前置动作
-                            $controller->beforeAction($controllerAction);
-                            // 执行控制器的方法
-                            $result = $controller->$controllerAction();
-                            // 执行后置动作
-                            $controller->afterAction($controllerAction);
-                            // 返回执行结果
-                            return $result;
-                        }
-                        // 非 Web 应用
-                        return $controller->$controllerAction();
-                    }
-                }
-            }
-        }
-        throw new \mix\exceptions\NotFoundException($this->_notFoundMessage);
     }
 
     // 获取配置目录路径

@@ -11,19 +11,63 @@ use mix\base\Component;
 class Application extends \mix\base\Application
 {
 
-    // NotFound错误消息
-    protected $_notFoundMessage = 'Not Found (#404)';
+    // 控制器命名空间
+    public $controllerNamespace = '';
 
     // 执行功能 (Apache/PHP-FPM)
     public function run()
     {
         \mix\web\Error::register();
-        $server = \Mix::app()->request->server();
-        $method = strtoupper($server['request_method']);
-        $action = empty($server['path_info']) ? '' : substr($server['path_info'], 1);
+        $server                        = \Mix::app()->request->server();
+        $method                        = strtoupper($server['request_method']);
+        $action                        = empty($server['path_info']) ? '' : substr($server['path_info'], 1);
         \Mix::app()->response->content = $this->runAction($method, $action);
         \Mix::app()->response->send();
         $this->cleanComponents();
+    }
+
+    // 执行功能并返回
+    public function runAction($method, $action)
+    {
+        $action = "{$method} {$action}";
+        // 路由匹配
+        $items = \Mix::app()->route->match($action);
+        foreach ($items as $item) {
+            list($action, $queryParams) = $item;
+            // 执行功能
+            if ($action) {
+                // 路由参数导入请求类
+                \Mix::app()->request->setRoute($queryParams);
+                // 实例化控制器
+                $controllerAction = "{$this->controllerNamespace}\\{$action}";
+                $controllerFull   = \mix\helpers\FilesystemHelper::dirname($controllerAction);
+                $controllerPath   = \mix\helpers\FilesystemHelper::dirname($controllerFull);
+                $controllerName   = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($controllerFull), true);
+                $controllerMethod = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($controllerAction), true);
+                $controllerClass  = "{$controllerPath}\\{$controllerName}Controller";
+                $controllerAction = "action{$controllerMethod}";
+                if (class_exists($controllerClass)) {
+                    $controller = new $controllerClass();
+                    // 判断方法是否存在
+                    if (method_exists($controller, $controllerAction)) {
+                        // Web 应用
+                        if ($this instanceof \mix\web\Application) {
+                            // 执行前置动作
+                            $controller->beforeAction($controllerAction);
+                            // 执行控制器的方法
+                            $result = $controller->$controllerAction();
+                            // 执行后置动作
+                            $controller->afterAction($controllerAction);
+                            // 返回执行结果
+                            return $result;
+                        }
+                        // 非 Web 应用
+                        return $controller->$controllerAction();
+                    }
+                }
+            }
+        }
+        throw new \mix\exceptions\NotFoundException('Not Found (#404)');
     }
 
     // 获取组件

@@ -8,8 +8,10 @@ namespace mix\base;
  *
  * @property \mix\base\Route $route
  * @property \mix\base\Log $log
- * @property \mix\web\Request|\mix\swoole\Request|\mix\console\Input $request
- * @property \mix\web\Response|\mix\swoole\Response|\mix\console\Output $response
+ * @property \mix\console\Input $input
+ * @property \mix\console\Output $output
+ * @property \mix\web\Request|\mix\swoole\Request $request
+ * @property \mix\web\Response|\mix\swoole\Response $response
  * @property \mix\web\Error $error
  * @property \mix\web\Token $token
  * @property \mix\web\Session $session

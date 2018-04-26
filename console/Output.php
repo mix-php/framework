@@ -2,17 +2,14 @@
 
 namespace mix\console;
 
-use mix\base\BaseObject;
+use mix\base\Component;
 
 /**
- * 终端类
+ * Output组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Output extends BaseObject
+class Output extends Component
 {
-
-    // 实例
-    protected static $instance;
 
     // 颜色
     const NONE = "\033[0m";
@@ -32,15 +29,6 @@ class Output extends BaseObject
 
     // 是否为 WIN 操作系统
     public $isWin;
-
-    // 获取实例
-    public static function getInstance()
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new self;
-        }
-        return self::$instance;
-    }
 
     // 构造事件
     public function onConstruct()

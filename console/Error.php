@@ -35,7 +35,7 @@ class Error extends Component
     }
 
     // Exception Handler
-    public static function appException($e)
+    public static function appException(\Exception $e)
     {
         // debug处理 & exit处理
         if ($e instanceof \mix\exceptions\DebugException || $e instanceof \mix\exceptions\EndException) {
@@ -71,7 +71,7 @@ class Error extends Component
         $message .= $errors['file'] . ' line ' . $errors['line'] . PHP_EOL;
         $message .= str_replace("\n", PHP_EOL, $errors['trace']);
         // 输出
-        $output = Output::getInstance();
+        $output = \Mix::app()->output;
         if (!$output->isWin) {
             // 增加边距
             $message = str_repeat(' ', 4) . str_replace(PHP_EOL, PHP_EOL . str_repeat(' ', 4), $message);

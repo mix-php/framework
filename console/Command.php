@@ -41,8 +41,8 @@ class Command extends BaseObject
             }
         }
         // 导入输入输出实例
-        $this->input  = Input::getInstance();
-        $this->output = Output::getInstance();
+        $this->input  = \Mix::app()->input;
+        $this->output = \Mix::app()->output;
         // 调用父类构造方法
         parent::__construct([]);
     }

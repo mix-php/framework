@@ -2,32 +2,23 @@
 
 namespace mix\console;
 
-use mix\base\BaseObject;
+use mix\base\Component;
 
 /**
- * Request组件
+ * Input组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Input extends BaseObject
+class Input extends Component
 {
 
-    // 实例
-    protected static $instance;
+    // 脚本文件名
+    protected $_scriptFileName;
 
     // 命令
     protected $_command = [];
 
     // 全部选项
     protected $_options = [];
-
-    // 获取实例
-    public static function getInstance()
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new self;
-        }
-        return self::$instance;
-    }
 
     // 初始化事件
     public function onInitialize()
@@ -43,6 +34,10 @@ class Input extends BaseObject
         // 解析全部选项
         $options = [];
         foreach ($GLOBALS['argv'] as $key => $value) {
+            // 获取脚本文件名
+            if ($key == 0) {
+                $this->_scriptFileName = $value;
+            }
             // 获取命令
             if (in_array($key, [1, 2])) {
                 $this->_command[] = $value;
@@ -64,6 +59,12 @@ class Input extends BaseObject
             }
         }
         $this->_options = $options;
+    }
+
+    // 获取脚本文件名
+    public function getScriptFileName()
+    {
+        return $this->_scriptFileName;
     }
 
     // 获取命令

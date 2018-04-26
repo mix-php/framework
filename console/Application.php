@@ -2,9 +2,6 @@
 
 namespace mix\console;
 
-use mix\console\Input;
-use mix\console\Output;
-
 /**
  * App类
  * @author 刘健 <coder.liu@qq.com>
@@ -25,27 +22,36 @@ class Application extends \mix\base\Application
             throw new \RuntimeException('Please run in CLI mode.');
         }
         \mix\console\Error::register();
-        $input   = Input::getInstance();
+        $input   = \Mix::app()->input;
         $command = $input->getCommand();
         $options = $input->getOptions();
         if (empty($command)) {
             throw new \mix\exceptions\NotFoundException("Please input command, '-h' view help.");
         }
         if ($command == '-h') {
-            $this->commandList();
+            $this->help();
             return ExitCode::UNSPECIFIED_ERROR;
         }
         return $this->runAction($command, $options);
     }
 
+    // 输出帮助
+    protected function help()
+    {
+        $input  = \Mix::app()->input;
+        $output = \Mix::app()->output;
+        $output->writeln("Usage: {$input->getScriptFileName()} [command] [options]");
+        $this->commandList();
+    }
+
     // 命令列表
     protected function commandList()
     {
-        $commands = $this->commands;
-        $output   = Output::getInstance();
-        $output->write(PHP_EOL);
+        $output = \Mix::app()->output;
+        $output->writeln('');
+        $output->writeln('Commands:');
         $prevPrefix = '';
-        foreach ($commands as $command => $item) {
+        foreach ($this->commands as $command => $item) {
             $prefix = explode(' ', $command)[0];
             if ($prefix != $prevPrefix) {
                 $prevPrefix = $prefix;

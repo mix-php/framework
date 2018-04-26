@@ -75,7 +75,8 @@ class Error extends Component
         if (!$output->isWin) {
             // 增加边距
             $message = str_repeat(' ', 4) . str_replace(PHP_EOL, PHP_EOL . str_repeat(' ', 4), $message);
-            $message = str_repeat(PHP_EOL, 2) . $message . str_repeat(PHP_EOL, 1);
+            $message = (PHP_EOL . PHP_EOL) . $message . (PHP_EOL);
+            // 写入
             $output->writeln($message, Output::BG_RED);
             $output->writeln('');
         } else {

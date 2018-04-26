@@ -36,24 +36,25 @@ class Output extends Component
         $this->isWin = substr(PHP_OS, 0, 3) === 'WIN' ? true : false;
     }
 
+    // ANSI 格式化
+    public function ansiFormat($message, $color = self::NONE)
+    {
+        if ($this->isWin) {
+            return $message;
+        }
+        return $color . $message . self::NONE;
+    }
+
     // 写入
     public function write($message, $color = self::NONE)
     {
-        if ($this->isWin) {
-            echo $message;
-            return;
-        }
-        echo $color . $message . self::NONE;
+        echo $this->ansiFormat($message, $color);
     }
 
     // 写入，带换行
     public function writeln($message, $color = self::NONE)
     {
-        if ($this->isWin) {
-            echo $message . PHP_EOL;
-            return;
-        }
-        echo $color . $message . self::NONE . PHP_EOL;
+        echo $this->ansiFormat($message, $color) . PHP_EOL;
     }
 
 }

@@ -35,7 +35,7 @@ class Application extends \mix\base\Application
         return $this->runAction($command, $options);
     }
 
-    // 输出帮助
+    // 帮助
     protected function help()
     {
         $input  = \Mix::app()->input;

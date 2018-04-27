@@ -1,6 +1,8 @@
 <?php
 
-namespace mix\base;
+namespace mix\web;
+
+use mix\base\Component;
 
 /**
  * Route组件

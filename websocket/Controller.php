@@ -11,22 +11,13 @@ use mix\base\BaseObject;
 class Controller extends BaseObject
 {
 
-    // 服务
-    protected $_server;
+    /**
+     * 服务
+     * @var \Swoole\WebSocket\Server
+     */
+    public $server;
 
     // 文件描述符
-    protected $_fd;
-
-    // 获取服务
-    public function getServer()
-    {
-        return $this->_server;
-    }
-
-    // 获取文件描述符
-    public function getFd()
-    {
-        return $this->_fd;
-    }
+    public $fd;
 
 }

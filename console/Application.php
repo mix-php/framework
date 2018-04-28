@@ -67,18 +67,20 @@ class Application extends \mix\base\Application
     public function runAction($command, $options)
     {
         if (isset($this->commands[$command])) {
-            list($class, $action) = $this->commands[$command];
-            $class         = str_replace('/', "\\", $class);
-            $commandDir    = \mix\helpers\FilesystemHelper::dirname($class);
+            // 实例化控制器
+            list($shortClass, $shortAction) = $this->commands[$command];
+            $shortClass    = str_replace('/', "\\", $shortClass);
+            $commandDir    = \mix\helpers\FilesystemHelper::dirname($shortClass);
             $commandDir    = $commandDir == '.' ? '' : "$commandDir\\";
-            $commandName   = \mix\helpers\FilesystemHelper::basename($class);
+            $commandName   = \mix\helpers\FilesystemHelper::basename($shortClass);
             $commandClass  = "{$this->commandNamespace}\\{$commandDir}{$commandName}Command";
-            $commandAction = "action{$action}";
+            $commandAction = "action{$shortAction}";
+            // 判断类是否存在
             if (class_exists($commandClass)) {
-                $object = new $commandClass($options);
+                $commandInstance = new $commandClass($options);
                 // 判断方法是否存在
-                if (method_exists($object, $commandAction)) {
-                    return $object->$commandAction();
+                if (method_exists($commandInstance, $commandAction)) {
+                    return $commandInstance->$commandAction();
                 }
             }
         }

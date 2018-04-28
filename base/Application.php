@@ -6,10 +6,10 @@ namespace mix\base;
  * App类
  * @author 刘健 <coder.liu@qq.com>
  *
- * @property \mix\base\Route $route
  * @property \mix\base\Log $log
  * @property \mix\console\Input $input
  * @property \mix\console\Output $output
+ * @property \mix\web\Route $route
  * @property \mix\web\Request|\mix\swoole\Request $request
  * @property \mix\web\Response|\mix\swoole\Response $response
  * @property \mix\web\Error $error
@@ -21,7 +21,6 @@ namespace mix\base;
  * @property \mix\websocket\TokenReader $tokenReader
  * @property \mix\websocket\SessionReader $sessionReader
  * @property \mix\websocket\MessageHandler $messageHandler
- *
  */
 class Application
 {

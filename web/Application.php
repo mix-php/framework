@@ -31,39 +31,31 @@ class Application extends \mix\base\Application
     {
         $action = "{$method} {$action}";
         // 路由匹配
-        $items = \Mix::app()->route->match($action);
-        foreach ($items as $item) {
-            list($action, $queryParams) = $item;
-            // 执行功能
-            if ($action) {
-                // 路由参数导入请求类
-                \Mix::app()->request->setRoute($queryParams);
-                // 实例化控制器
-                $controllerAction = "{$this->controllerNamespace}\\{$action}";
-                $controllerFull   = \mix\helpers\FilesystemHelper::dirname($controllerAction);
-                $controllerPath   = \mix\helpers\FilesystemHelper::dirname($controllerFull);
-                $controllerName   = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($controllerFull), true);
-                $controllerMethod = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($controllerAction), true);
-                $controllerClass  = "{$controllerPath}\\{$controllerName}Controller";
-                $controllerAction = "action{$controllerMethod}";
-                if (class_exists($controllerClass)) {
-                    $controller = new $controllerClass();
-                    // 判断方法是否存在
-                    if (method_exists($controller, $controllerAction)) {
-                        // Web 应用
-                        if ($this instanceof \mix\web\Application) {
-                            // 执行前置动作
-                            $controller->beforeAction($controllerAction);
-                            // 执行控制器的方法
-                            $result = $controller->$controllerAction();
-                            // 执行后置动作
-                            $controller->afterAction($controllerAction);
-                            // 返回执行结果
-                            return $result;
-                        }
-                        // 非 Web 应用
-                        return $controller->$controllerAction();
-                    }
+        $result = \Mix::app()->route->match($action);
+        foreach ($result as $item) {
+            list($route, $queryParams) = $item;
+            // 路由参数导入请求类
+            \Mix::app()->request->setRoute($queryParams);
+            // 实例化控制器
+            list($shortClass, $shortAction) = $route;
+            $controllerDir    = \mix\helpers\FilesystemHelper::dirname($shortClass);
+            $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
+            $controllerName   = \mix\helpers\FilesystemHelper::basename($shortClass);
+            $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
+            $controllerAction = "action{$shortAction}";
+            // 判断类是否存在
+            if (class_exists($controllerClass)) {
+                $controllerInstance = new $controllerClass();
+                // 判断方法是否存在
+                if (method_exists($controllerInstance, $controllerAction)) {
+                    // 执行前置动作
+                    $controllerInstance->beforeAction($controllerAction);
+                    // 执行控制器的方法
+                    $content = $controllerInstance->$controllerAction();
+                    // 执行后置动作
+                    $controllerInstance->afterAction($controllerAction);
+                    // 返回执行结果
+                    return $content;
                 }
             }
         }

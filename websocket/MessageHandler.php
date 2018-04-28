@@ -23,9 +23,6 @@ class MessageHandler extends Component
     // 文件描述符
     protected $_fd;
 
-    // NotFound错误消息
-    protected $_notFoundMessage = 'MessageHandler: Action Not Found';
-
     // 设置服务
     public function setServer($server)
     {
@@ -43,49 +40,35 @@ class MessageHandler extends Component
     // 执行功能
     public function runAction($action, $paramArray = [])
     {
-        isset($this->rules[$action]) and $rule = $this->rules[$action];
         // 匹配成功
-        if (isset($rule)) {
+        if (isset($this->rules[$action])) {
             // 实例化控制器
-            $rule      = "{$this->controllerNamespace}\\{$rule}";
-            $classFull = \mix\helpers\FilesystemHelper::dirname($rule);
-            $classPath = \mix\helpers\FilesystemHelper::dirname($classFull);
-            $className = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($classFull), true);
-            $method    = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($rule), true);
-            $class     = "{$classPath}\\{$className}Controller";
-            $method    = "action{$method}";
-            try {
-                $reflect = new \ReflectionClass($class);
-            } catch (\ReflectionException $e) {
-                $this->clean();
-                throw new \mix\exceptions\NotFoundException($this->_notFoundMessage);
-            }
-            $controller = $reflect->newInstanceArgs([[
-                '_server' => $this->_server,
-                '_fd'     => $this->_fd,
-            ]]);
-            // 判断方法是否存在
-            if (method_exists($controller, $method)) {
-                // 执行控制器的方法
-                $content = call_user_func_array([$controller, $method], $paramArray);
-                // 响应
-                if (!is_null($content)) {
-                    $this->_server->push($this->_fd, $content);
+            list($shortClass, $shortAction) = $this->rules[$action];
+            $shortClass       = str_replace('/', "\\", $shortClass);
+            $controllerDir    = \mix\helpers\FilesystemHelper::dirname($shortClass);
+            $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
+            $controllerName   = \mix\helpers\FilesystemHelper::basename($shortClass);
+            $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Command";
+            $controllerAction = "action{$shortAction}";
+            // 判断类是否存在
+            if (class_exists($controllerClass)) {
+                $controllerInstance = new $controllerClass([
+                    'server' => $this->_server,
+                    'fd'     => $this->_fd,
+                ]);
+                // 判断方法是否存在
+                if (method_exists($controllerInstance, $controllerAction)) {
+                    // 执行控制器的方法
+                    $content = call_user_func_array([$controllerInstance, $controllerAction], $paramArray);
+                    // 响应
+                    if (!is_null($content)) {
+                        $this->_server->push($this->_fd, $content);
+                    }
+                    return;
                 }
-                // 清扫
-                $this->clean();
-                return;
             }
         }
-        $this->clean();
-        throw new \mix\exceptions\NotFoundException($this->_notFoundMessage);
-    }
-
-    // 清扫
-    public function clean()
-    {
-        $this->setServer(null);
-        $this->setFd(null);
+        throw new \mix\exceptions\NotFoundException('MessageHandler: Action Not Found');
     }
 
 }

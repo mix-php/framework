@@ -48,7 +48,7 @@ class MessageHandler extends Component
             $controllerDir    = \mix\helpers\FilesystemHelper::dirname($shortClass);
             $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
             $controllerName   = \mix\helpers\FilesystemHelper::basename($shortClass);
-            $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Command";
+            $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
             $controllerAction = "action{$shortAction}";
             // 判断类是否存在
             if (class_exists($controllerClass)) {

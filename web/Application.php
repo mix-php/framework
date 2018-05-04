@@ -40,8 +40,9 @@ class Application extends \mix\base\Application
             list($shortClass, $shortAction) = $route;
             $controllerDir    = \mix\helpers\FilesystemHelper::dirname($shortClass);
             $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
-            $controllerName   = \mix\helpers\FilesystemHelper::basename($shortClass);
+            $controllerName   = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($shortClass), true);
             $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
+            $shortAction      = \mix\helpers\FilesystemHelper::snakeToCamel($shortAction, true);
             $controllerAction = "action{$shortAction}";
             // 判断类是否存在
             if (class_exists($controllerClass)) {

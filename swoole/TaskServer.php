@@ -24,22 +24,22 @@ class TaskServer extends BaseObject
     public $queueKey = '';
 
     // 主进程pid
-    protected $mpid = 0;
+    protected $_masterPid = 0;
 
     // 工作进程pid集合
-    protected $workers = [];
+    protected $_workers = [];
 
     // 左进程启动事件回调函数
-    protected $onLeftStart;
+    protected $_onLeftStart;
 
     // 右进程启动事件回调函数
-    protected $onRightStart;
+    protected $_onRightStart;
 
     // 启动
     public function start()
     {
-        Process::setName(sprintf("mix-daemon: taskd: {$this->name}: %s", 'master'));
-        $this->mpid = Process::getPid();
+        Process::setName(sprintf("mix-daemon: task: {$this->name}: %s", 'master'));
+        $this->_masterPid = Process::getPid();
         $this->createLeftProcesses();
         $this->createRightProcesses();
         $this->subProcessWait();
@@ -50,10 +50,10 @@ class TaskServer extends BaseObject
     {
         switch ($event) {
             case 'LeftStart':
-                $this->onLeftStart = $callback;
+                $this->_onLeftStart = $callback;
                 break;
             case 'RightStart':
-                $this->onRightStart = $callback;
+                $this->_onRightStart = $callback;
                 break;
         }
     }
@@ -62,7 +62,7 @@ class TaskServer extends BaseObject
     protected function createLeftProcesses()
     {
         for ($i = 0; $i < $this->leftProcess; $i++) {
-            $this->createProcess($i, $this->onLeftStart, 'left');
+            $this->createProcess($i, $this->_onLeftStart, 'left');
         }
     }
 
@@ -70,7 +70,7 @@ class TaskServer extends BaseObject
     protected function createRightProcesses()
     {
         for ($i = 0; $i < $this->rightProcess; $i++) {
-            $this->createProcess($i, $this->onRightStart, 'right');
+            $this->createProcess($i, $this->_onRightStart, 'right');
         }
     }
 
@@ -82,7 +82,7 @@ class TaskServer extends BaseObject
         }
         $process = new TaskProcess(function ($worker) use ($index, $callback, $processType) {
             try {
-                Process::setName(sprintf("mix-daemon: taskd: {$this->name}: {$processType} #%s", $index));
+                Process::setName(sprintf("mix-daemon: task: {$this->name}: {$processType} #%s", $index));
                 list($object, $method) = $callback;
                 $object->$method($worker, $index);
             } catch (\Exception $e) {
@@ -90,9 +90,9 @@ class TaskServer extends BaseObject
             }
         }, false, false);
         $process->useQueue(crc32($this->queueKey), 2);
-        $process->mpid       = $this->mpid;
-        $pid                 = $process->start();
-        $this->workers[$pid] = [$index, $callback, $processType];
+        $process->setMasterPid($this->_masterPid);
+        $pid                  = $process->start();
+        $this->_workers[$pid] = [$index, $callback, $processType];
         return $pid;
     }
 
@@ -100,8 +100,8 @@ class TaskServer extends BaseObject
     protected function rebootProcess($ret)
     {
         $pid = $ret['pid'];
-        if (isset($this->workers[$pid])) {
-            list($index, $callback, $processType) = $this->workers[$pid];
+        if (isset($this->_workers[$pid])) {
+            list($index, $callback, $processType) = $this->_workers[$pid];
             $this->createProcess($index, $callback, $processType);
             return;
         }

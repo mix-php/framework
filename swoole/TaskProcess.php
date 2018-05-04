@@ -2,6 +2,8 @@
 
 namespace mix\swoole;
 
+use mix\swoole\Process;
+
 /**
  * 任务进程类
  * @author 刘健 <coder.liu@qq.com>
@@ -14,12 +16,18 @@ class TaskProcess extends \Swoole\Process
     const CONSUMER = 1;
 
     // 主进程pid
-    public $mpid = 0;
+    protected $_masterPid = 0;
+
+    // 设置主进程pid
+    public function setMasterPid($pid)
+    {
+        $this->_masterPid = $pid;
+    }
 
     // 检查主进程
     public function checkMaster($processType = self::CONSUMER)
     {
-        if (!\Swoole\Process::kill($this->mpid, 0)) {
+        if (!Process::isRunning($this->_masterPid)) {
             if ($processType == self::PRODUCER) {
                 // 如果队列没有数据，就删除队列，释放堵塞的消费者进程
                 if ($this->statQueue()['queue_num'] == 0) {
@@ -38,16 +46,22 @@ class TaskProcess extends \Swoole\Process
         }
     }
 
+    // 杀死主进程
+    public function killMaster()
+    {
+        Process::kill($this->_masterPid);
+    }
+
     // 投递数据到消息队列中
     public function push($data)
     {
-        parent::push(serialize($data));
+        return parent::push($data);
     }
 
     // 从队列中提取数据
     public function pop($maxsize = 8192)
     {
-        return unserialize(parent::pop($maxsize));
+        return parent::pop($maxsize);
     }
 
 }

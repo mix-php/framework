@@ -38,7 +38,7 @@ class TaskServer extends BaseObject
     // 启动
     public function start()
     {
-        Process::setName(sprintf("mix-daemon: task: {$this->name}: %s", 'master'));
+        Process::setName("{$this->name}: task: master");
         $this->_masterPid = Process::getPid();
         $this->createLeftProcesses();
         $this->createRightProcesses();
@@ -82,7 +82,7 @@ class TaskServer extends BaseObject
         }
         $process = new TaskProcess(function ($worker) use ($index, $callback, $processType) {
             try {
-                Process::setName(sprintf("mix-daemon: task: {$this->name}: {$processType} #%s", $index));
+                Process::setName("{$this->name}: task: {$processType} #{$index}");
                 list($object, $method) = $callback;
                 $object->$method($worker, $index);
             } catch (\Exception $e) {

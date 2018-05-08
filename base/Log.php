@@ -24,7 +24,7 @@ class Log extends Component
     public $logRotate = self::ROTATE_DAY;
 
     // 最大文件尺寸
-    public $maxFileSize = 2097152;
+    public $maxFileSize = 0;
 
     // 换行符
     public $newline = PHP_EOL;
@@ -65,11 +65,14 @@ class Log extends Component
                 break;
         }
         $filename = "{$filePrefix}_{$timeFormat}";
-        $dir      = \Mix::app()->getRuntimePath() . $this->logDir;
+        $dir      = $this->logDir;
+        if (pathinfo($this->logDir)['dirname'] == '.') {
+            $dir = \Mix::app()->getRuntimePath() . $this->logDir;
+        }
         is_dir($dir) or mkdir($dir);
         $file   = $dir . '/' . $filename . '.log';
         $number = 0;
-        while (file_exists($file) && filesize($file) >= $this->maxFileSize) {
+        while (file_exists($file) && $this->maxFileSize > 0 && filesize($file) >= $this->maxFileSize) {
             $file = $dir . '/' . $filename . '_' . ++$number . '.log';
         }
         file_put_contents($file, $message . $this->newline, FILE_APPEND | LOCK_EX);

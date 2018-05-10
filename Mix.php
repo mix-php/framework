@@ -21,7 +21,7 @@ class Mix
      *
      * @return \mix\web\Application|\mix\swoole\Application|\mix\console\Application
      */
-    public static function app($namespace = null)
+    public static function app($componentNamespace = null)
     {
         // 获取App
         $app = self::getApp();
@@ -29,7 +29,7 @@ class Mix
             return $app;
         }
         // 设置组件命名空间
-        $app->setComponentNamespace($namespace);
+        $app->setComponentNamespace($componentNamespace);
         // 返回App
         return $app;
     }
@@ -100,3 +100,5 @@ class Mix
     }
 
 }
+
+include 'helpers.php';

@@ -37,11 +37,15 @@ class Error extends Component
     // Exception Handler
     public static function appException(\Exception $e)
     {
-        // debug处理 & exit处理
-        if ($e instanceof \mix\exceptions\DebugException || $e instanceof \mix\exceptions\EndException) {
-            \Mix::app()->response->content = $e->getMessage();
-            \Mix::app()->response->send();
-            return;
+        // debug处理
+        if ($e instanceof \mix\exceptions\DebugException) {
+            $content = $e->getMessage();
+            exit($content);
+        }
+        // exit处理
+        if ($e instanceof \mix\exceptions\EndException) {
+            $exitCode = (int)$e->getMessage();
+            exit($exitCode);
         }
         // 错误参数定义
         $errors = [
@@ -77,6 +81,8 @@ class Error extends Component
         // 写入
         $output->writeln($message, Output::NONE);
         $output->writeln('');
+        // 退出
+        exit(ExitCode::EXCEPTION);
     }
 
     // 手动处理异常

@@ -116,4 +116,34 @@ class Application extends \mix\base\Application
         return $this->basePath . 'views' . DIRECTORY_SEPARATOR;
     }
 
+    // 打印变量的相关信息
+    public function varDump($var, $send = false)
+    {
+        ob_start();
+        var_dump($var);
+        $content                       = ob_get_clean();
+        \Mix::app()->response->content .= $content;
+        if ($send) {
+            throw new \mix\exceptions\DebugException(\Mix::app()->response->content);
+        }
+    }
+
+    // 打印关于变量的易于理解的信息
+    public function varPrint($var, $send = false)
+    {
+        ob_start();
+        print_r($var);
+        $content                       = ob_get_clean();
+        \Mix::app()->response->content .= $content;
+        if ($send) {
+            throw new \mix\exceptions\DebugException(\Mix::app()->response->content);
+        }
+    }
+
+    // 终止程序
+    public function end($content = '')
+    {
+        throw new \mix\exceptions\EndException($content);
+    }
+
 }

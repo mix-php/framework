@@ -30,6 +30,7 @@ namespace mix\client;
  * @method llen($key)
  * @method subscribe($channel)
  * @method publish($channel, $message)
+ * @method ttl($key)
  */
 class Redis extends BaseRedis
 {

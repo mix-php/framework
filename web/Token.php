@@ -127,7 +127,7 @@ class Token extends Component
         return $success ? true : false;
     }
 
-    // 清除session
+    // 清除token
     public function clear()
     {
         $success = $this->saveHandler->del($this->_tokenKey);

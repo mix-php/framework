@@ -308,7 +308,7 @@ class BasePdo extends Component
     }
 
     // 回滚事务
-    public function rollBack()
+    public function rollback()
     {
         $this->_pdo->rollBack();
     }

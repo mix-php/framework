@@ -26,7 +26,7 @@ use mix\base\Facade;
  * @method transaction($closure) static
  * @method beginTransaction() static
  * @method commit() static
- * @method rollBack() static
+ * @method rollback() static
  * @method getRawSql() static
  */
 class Rdb extends Facade

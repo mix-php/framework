@@ -9,8 +9,8 @@ namespace mix\client;
 class BaseRedisPersistent extends BaseRedis
 {
 
-    // 连接持续时间
-    public $persistentTime = 7200;
+    // 连接休眠超时(超时会重连)
+    public $sleepTimeout = 7200;
 
     // 重用连接(相同配置)
     public $reusableConnection = false;
@@ -49,7 +49,7 @@ class BaseRedisPersistent extends BaseRedis
     public function __call($name, $arguments)
     {
         // 主动重新连接
-        if (isset($this->_lastActiveTime) && ($this->_lastActiveTime + $this->persistentTime < time())) {
+        if (isset($this->_lastActiveTime) && ($this->_lastActiveTime + $this->sleepTimeout < time())) {
             $this->reconnect();
         }
         try {

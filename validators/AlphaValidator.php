@@ -16,7 +16,7 @@ class AlphaValidator extends BaseValidator
     protected function type()
     {
         $value = $this->_attributeValue;
-        if (!preg_match('/^[a-zA-Z]+$/i', $value)) {
+        if (!Validate::isAlpha($value)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}只能为字母.";
             } else {

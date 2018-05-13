@@ -17,7 +17,7 @@ class InValidator extends BaseValidator
     {
         $value  = $this->_attributeValue;
         $strict = empty($this->_settings['strict']) ? false : true;
-        if (!in_array($value, $param, $strict)) {
+        if (!Validate::in($value, $param, $strict)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}不在%s范围内.";
             } else {

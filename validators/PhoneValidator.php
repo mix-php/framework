@@ -16,7 +16,7 @@ class PhoneValidator extends BaseValidator
     protected function type()
     {
         $value = $this->_attributeValue;
-        if (!preg_match('/^1[34578]\d{9}$/i', $value)) {
+        if (!Validate::isPhone($value)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}不符合手机号格式.";
             } else {

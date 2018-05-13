@@ -16,7 +16,7 @@ class EmailValidator extends BaseValidator
     protected function type()
     {
         $value = $this->_attributeValue;
-        if (!preg_match('/^[\.a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/i', $value)) {
+        if (!Validate::isEmail($value)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}不符合邮箱格式.";
             } else {

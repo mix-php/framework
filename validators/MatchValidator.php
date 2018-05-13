@@ -16,7 +16,7 @@ class MatchValidator extends BaseValidator
     protected function pattern($param)
     {
         $value = $this->_attributeValue;
-        if (!preg_match($param, $value)) {
+        if (!Validate::match($value, $param)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}是无效的值.";
             } else {

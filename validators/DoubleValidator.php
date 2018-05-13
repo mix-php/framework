@@ -16,7 +16,7 @@ class DoubleValidator extends BaseValidator
     protected function type()
     {
         $value = $this->_attributeValue;
-        if (!preg_match('/^[-]{0,1}[0-9]+[.][0-9]+$|^[-]{0,1}[0-9]$/i', $value)) {
+        if (!Validate::isDouble($value)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}只能为小数.";
             } else {

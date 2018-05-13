@@ -16,8 +16,7 @@ class DateValidator extends BaseValidator
     protected function format($param)
     {
         $value = $this->_attributeValue;
-        $date = date_create($value);
-        if (!$date || $value != date_format($date, $param)) {
+        if (!Validate::isDate($value, $param)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}不符合日期格式.";
             } else {

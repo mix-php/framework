@@ -16,7 +16,7 @@ class UrlValidator extends BaseValidator
     protected function type()
     {
         $value = $this->_attributeValue;
-        if (!preg_match('/^[a-z]+:\/\/[\S]+$/i', $value)) {
+        if (!Validate::isUrl($value)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}不符合网址格式.";
             } else {

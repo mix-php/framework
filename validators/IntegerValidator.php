@@ -16,7 +16,7 @@ class IntegerValidator extends BaseValidator
     protected function type()
     {
         $value = $this->_attributeValue;
-        if (!preg_match('/^[-]{0,1}[0-9]+$/i', $value)) {
+        if (!Validate::isInteger($value)) {
             if (is_null($this->attributeMessage)) {
                 $error = "{$this->attributeLabel}只能为整数.";
             } else {

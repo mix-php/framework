@@ -9,19 +9,18 @@ namespace mix\validators;
 class CallValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['callback'];
+    // 启用的选项
+    protected $_enabledOptions = ['callback'];
 
     // 回调验证
     protected function callback($param)
     {
-        if (!call_user_func_array($param, [$this->attributes[$this->attribute]])) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}是无效的值.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $this->errors[] = sprintf($error, $param);
+        $value = $this->attributeValue;
+        if (!call_user_func_array($param, [$value])) {
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}是无效的值.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

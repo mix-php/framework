@@ -9,7 +9,7 @@ namespace mix\validators;
 class ImageValidator extends FileValidator
 {
 
-    // 文件类型标签
-    protected $typeLabel = '图片';
+    // 验证器名称
+    protected $_name = '图片';
 
 }

@@ -9,20 +9,18 @@ namespace mix\validators;
 class EmailValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['type', 'length', 'minLength', 'maxLength'];
+    // 启用的选项
+    protected $_enabledOptions = ['length', 'minLength', 'maxLength'];
 
     // 类型验证
     protected function type()
     {
-        $value = $this->_attributeValue;
+        $value = $this->attributeValue;
         if (!Validate::isEmail($value)) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}不符合邮箱格式.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $this->errors[] = $error;
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}不符合邮箱格式.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

@@ -9,21 +9,18 @@ namespace mix\validators;
 class CompareValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['compareAttribute'];
+    // 启用的选项
+    protected $_enabledOptions = ['compareAttribute'];
 
     // 比较属性
     protected function compareAttribute($param)
     {
-        $value = $this->_attributeValue;
+        $value = $this->attributeValue;
         if (!isset($this->attributes[$param]) || $value != $this->attributes[$param]) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}不等于%s.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $paramLabel = isset($this->attributeLabels[$param]) ? $this->attributeLabels[$param] : ucfirst($param);
-            $this->errors[] = sprintf($error, $paramLabel);
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}不等于{$param}.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

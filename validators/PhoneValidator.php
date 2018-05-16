@@ -9,20 +9,18 @@ namespace mix\validators;
 class PhoneValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['type'];
+    // 启用的选项
+    protected $_enabledOptions = [];
 
     // 类型验证
     protected function type()
     {
-        $value = $this->_attributeValue;
+        $value = $this->attributeValue;
         if (!Validate::isPhone($value)) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}不符合手机号格式.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $this->errors[] = $error;
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}不符合手机号格式.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

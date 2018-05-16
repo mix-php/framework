@@ -9,20 +9,18 @@ namespace mix\validators;
 class DateValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['format'];
+    // 启用的选项
+    protected $_enabledOptions = ['format'];
 
     // 格式验证
     protected function format($param)
     {
-        $value = $this->_attributeValue;
+        $value = $this->attributeValue;
         if (!Validate::isDate($value, $param)) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}不符合日期格式.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $this->errors[] = sprintf($error, $param);
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}不符合日期格式.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

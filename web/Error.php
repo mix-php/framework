@@ -72,7 +72,7 @@ class Error extends Component
             $message .= "[type] {$errors['type']}" . PHP_EOL;
             $message .= "[file] {$errors['file']} line {$errors['line']}" . PHP_EOL;
             $message .= "[trace] {$errors['trace']}" . PHP_EOL;
-            $message .= '$_SERVER' . substr(print_r($_SERVER, true), 5);
+            $message .= '$_SERVER' . substr(print_r(\Mix::app()->request->server() + \Mix::app()->request->header(), true), 5);
             $message .= '$_GET' . substr(print_r(\Mix::app()->request->get(), true), 5);
             $message .= '$_POST' . substr(print_r(\Mix::app()->request->post(), true), 5);
             \Mix::app()->log->error($message);

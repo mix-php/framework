@@ -9,20 +9,18 @@ namespace mix\validators;
 class DoubleValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['type', 'unsigned', 'min', 'max', 'length', 'minLength', 'maxLength'];
+    // 启用的选项
+    protected $_enabledOptions = ['unsigned', 'min', 'max', 'length', 'minLength', 'maxLength'];
 
     // 类型验证
     protected function type()
     {
-        $value = $this->_attributeValue;
+        $value = $this->attributeValue;
         if (!Validate::isDouble($value)) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}只能为小数.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $this->errors[] = $error;
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}只能为小数.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

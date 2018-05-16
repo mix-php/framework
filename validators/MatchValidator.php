@@ -9,20 +9,18 @@ namespace mix\validators;
 class MatchValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['pattern'];
+    // 启用的选项
+    protected $_enabledOptions = ['pattern'];
 
     // 正则验证
     protected function pattern($param)
     {
-        $value = $this->_attributeValue;
+        $value = $this->attributeValue;
         if (!Validate::match($value, $param)) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}是无效的值.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $this->errors[] = sprintf($error, $param);
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}是无效的值.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

@@ -9,8 +9,8 @@ namespace mix\validators;
 class StringValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['length', 'minLength', 'maxLength', 'filter'];
+    // 启用的选项
+    protected $_enabledOptions = ['length', 'minLength', 'maxLength', 'filter'];
 
     // 过滤处理
     protected function filter($param)
@@ -18,13 +18,13 @@ class StringValidator extends BaseValidator
         foreach ($param as $value) {
             switch ($value) {
                 case 'trim':
-                    $this->attributes[$this->attribute] = trim($this->attributes[$this->attribute]);
+                    $this->attributeValue = trim($this->attributeValue);
                     break;
                 case 'strip_tags':
-                    $this->attributes[$this->attribute] = strip_tags($this->attributes[$this->attribute]);
+                    $this->attributeValue = strip_tags($this->attributeValue);
                     break;
                 case 'htmlspecialchars':
-                    $this->attributes[$this->attribute] = htmlspecialchars($this->attributes[$this->attribute]);
+                    $this->attributeValue = htmlspecialchars($this->attributeValue);
                     break;
             }
         }

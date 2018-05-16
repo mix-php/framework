@@ -9,21 +9,19 @@ namespace mix\validators;
 class InValidator extends BaseValidator
 {
 
-    // 允许的功能集合
-    protected $_allowActions = ['range', 'strict'];
+    // 启用的选项
+    protected $_enabledOptions = ['range', 'strict'];
 
     // 范围验证
     protected function range($param)
     {
-        $value  = $this->_attributeValue;
+        $value  = $this->attributeValue;
         $strict = empty($this->_settings['strict']) ? false : true;
         if (!Validate::in($value, $param, $strict)) {
-            if (is_null($this->attributeMessage)) {
-                $error = "{$this->attributeLabel}不在%s范围内.";
-            } else {
-                $error = $this->attributeMessage;
-            }
-            $this->errors[] = sprintf($error, implode('、', $param));
+            // 设置错误消息
+            $defaultMessage = "{$this->attribute}不在{$param}范围内.";
+            $this->setError(__METHOD__, $defaultMessage);
+            // 返回
             return false;
         }
         return true;

@@ -298,6 +298,9 @@ class BasePdo extends Component
     // 开始事务
     public function beginTransaction()
     {
+        // 自动连接
+        $this->autoConnect();
+        // 开始事务
         $this->_pdo->beginTransaction();
     }
 

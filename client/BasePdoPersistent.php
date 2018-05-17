@@ -9,33 +9,17 @@ namespace mix\client;
 class BasePdoPersistent extends BasePdo
 {
 
-    // 连接休眠超时(超时会重连)
-    public $sleepTimeout = 7200;
-
     // 重用连接(相同配置)
     public $reusableConnection = false;
-
-    // 最后活动时间
-    protected $_lastActiveTime;
 
     // 初始化
     protected function initialize()
     {
         // 重用连接(相同配置)
         if ($this->reusableConnection) {
-            $hash                  = md5($this->dsn . $this->username . $this->password);
-            $this->_pdo            = &\Mix::$container['pdo_' . $hash];
-            $this->_lastActiveTime = &\Mix::$container['pdoLastActiveTime_' . $hash];
+            $hash       = md5($this->dsn . $this->username . $this->password);
+            $this->_pdo = &\Mix::$container['pdo_' . $hash];
         }
-    }
-
-    // 连接
-    protected function connect()
-    {
-        // 更新活动时间
-        $this->_lastActiveTime = time();
-        // 连接
-        parent::connect();
     }
 
     // 重新连接
@@ -48,20 +32,44 @@ class BasePdoPersistent extends BasePdo
     // 执行前准备
     protected function prepare()
     {
-        // 主动重新连接
-        if (isset($this->_lastActiveTime) && ($this->_lastActiveTime + $this->sleepTimeout < time())) {
-            $this->reconnect();
-        }
         try {
-            // 更新活动时间
-            $this->_lastActiveTime = time();
             // 执行前准备
             parent::prepare();
         } catch (\Exception $e) {
-            // 长连接异常处理
-            $this->disconnect();
-            throw $e;
+            if (self::isDisconnectException($e)) {
+                // 连接异常处理
+                $this->reconnect();
+                $this->prepare();
+            } else {
+                // 抛出其他异常
+                throw $e;
+            }
         }
+    }
+
+    // 判断是否为连接异常
+    protected static function isDisconnectException(\Exception $e)
+    {
+        $disconnectMessages = [
+            'server has gone away',
+            'no connection to the server',
+            'Lost connection',
+            'is dead or not enabled',
+            'Error while sending',
+            'decryption failed or bad record mac',
+            'server closed the connection unexpectedly',
+            'SSL connection has been closed unexpectedly',
+            'Error writing data to the connection',
+            'Resource deadlock avoided',
+            'failed with errno',
+        ];
+        $errorMessage       = $e->getMessage();
+        foreach ($disconnectMessages as $message) {
+            if (false !== stripos($errorMessage, $message)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

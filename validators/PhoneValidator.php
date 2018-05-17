@@ -19,7 +19,7 @@ class PhoneValidator extends BaseValidator
         if (!Validate::isPhone($value)) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不符合手机号格式.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

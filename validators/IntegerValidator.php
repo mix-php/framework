@@ -19,7 +19,7 @@ class IntegerValidator extends BaseValidator
         if (!Validate::isInteger($value)) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}只能为整数.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

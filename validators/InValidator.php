@@ -20,7 +20,7 @@ class InValidator extends BaseValidator
         if (!Validate::in($value, $param, $strict)) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不在{$param}范围内.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

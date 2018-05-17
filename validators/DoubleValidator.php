@@ -19,7 +19,7 @@ class DoubleValidator extends BaseValidator
         if (!Validate::isDouble($value)) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}只能为小数.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

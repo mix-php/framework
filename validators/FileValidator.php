@@ -55,7 +55,7 @@ class FileValidator extends BaseValidator
                     $defaultMessage = '未知上传错误.';
                     break;
             }
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -68,8 +68,8 @@ class FileValidator extends BaseValidator
         $value = $this->attributeValue;
         if (!in_array($value['type'], $param)) {
             // 设置错误消息
-            $defaultMessage = "{$this->attribute}类型不在{$param}范围内.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $defaultMessage = "{$this->attribute}类型不在" . implode(',', $param) . "范围内.";
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -83,7 +83,7 @@ class FileValidator extends BaseValidator
         if ($value['size'] > $param * 1024) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不能大于{$param}KB.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

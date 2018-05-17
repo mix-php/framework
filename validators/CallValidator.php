@@ -19,7 +19,7 @@ class CallValidator extends BaseValidator
         if (!call_user_func_array($param, [$value])) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}是无效的值.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

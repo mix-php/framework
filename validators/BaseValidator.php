@@ -52,7 +52,7 @@ class BaseValidator extends BaseObject
             // 预处理
             foreach ($this->options as $name => $option) {
                 if (!in_array($name, $this->_enabledOptions)) {
-                    throw new \mix\exceptions\ModelException("属性 {$this->attribute} 的验证选项 {$name} 不存在");
+                    throw new \mix\exceptions\ValidatorException("属性 {$this->attribute} 的验证选项 {$name} 不存在");
                 }
                 // 不存在的选项转为设置
                 if (!method_exists($this, $name)) {
@@ -62,15 +62,18 @@ class BaseValidator extends BaseObject
             }
             // 执行类型验证
             if (method_exists($this, 'type')) {
-                $this->type();
+                $this->options = array_merge(['type' => true], $this->options);
             }
             // 执行上传验证
             if (method_exists($this, 'upload')) {
-                $this->upload();
+                $this->options = array_merge(['upload' => true], $this->options);
             }
             // 执行全部选项验证
             foreach ($this->options as $name => $param) {
-                $this->$name($param);
+                $success = $this->$name($param);
+                if (!$success) {
+                    break;
+                }
             }
         }
         $result = empty($this->errors);
@@ -121,7 +124,7 @@ class BaseValidator extends BaseObject
         if ($this->isRequired && is_null($value)) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不能为空.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -139,7 +142,7 @@ class BaseValidator extends BaseObject
             }
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不是标量类型.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -153,7 +156,7 @@ class BaseValidator extends BaseObject
         if ($param && substr($value, 0, 1) == '-') {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不能为负数.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -167,7 +170,7 @@ class BaseValidator extends BaseObject
         if (is_numeric($value) && $value < $param) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不能小于{$param}.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -181,7 +184,7 @@ class BaseValidator extends BaseObject
         if (is_numeric($value) && $value > $param) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不能大于{$param}.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -195,7 +198,7 @@ class BaseValidator extends BaseObject
         if (mb_strlen($value) != $param) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}长度只能为{$param}位.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -209,7 +212,7 @@ class BaseValidator extends BaseObject
         if (mb_strlen($value) < $param) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}长度不能小于{$param}位.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }
@@ -223,7 +226,7 @@ class BaseValidator extends BaseObject
         if (mb_strlen($value) > $param) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}长度不能大于{$param}位.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

@@ -19,7 +19,7 @@ class AlphaNumericValidator extends BaseValidator
         if (!Validate::isAlphaNumeric($value)) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}只能为字母和数字.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

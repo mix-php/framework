@@ -19,7 +19,7 @@ class CompareValidator extends BaseValidator
         if (!isset($this->attributes[$param]) || $value != $this->attributes[$param]) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不等于{$param}.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

@@ -19,7 +19,7 @@ class EmailValidator extends BaseValidator
         if (!Validate::isEmail($value)) {
             // 设置错误消息
             $defaultMessage = "{$this->attribute}不符合邮箱格式.";
-            $this->setError(__METHOD__, $defaultMessage);
+            $this->setError(__FUNCTION__, $defaultMessage);
             // 返回
             return false;
         }

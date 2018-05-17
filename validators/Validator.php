@@ -1,6 +1,8 @@
 <?php
 
-namespace mix\base;
+namespace mix\validators;
+
+use mix\base\BaseObject;
 
 /**
  * Validator基类
@@ -60,10 +62,10 @@ class Validator extends BaseObject
     {
         $scenarios = $this->scenarios();
         if (!isset($scenarios[$scenario])) {
-            throw new \mix\exceptions\ModelException("场景不存在：{$scenario}");
+            throw new \mix\exceptions\ValidatorException("场景不存在：{$scenario}");
         }
         if (!isset($scenarios[$scenario]['required'])) {
-            throw new \mix\exceptions\ModelException("场景 {$scenario} 未定义 required 选项");
+            throw new \mix\exceptions\ValidatorException("场景 {$scenario} 未定义 required 选项");
         }
         if (!isset($scenarios[$scenario]['optional'])) {
             $scenarios[$scenario]['optional'] = [];
@@ -75,13 +77,19 @@ class Validator extends BaseObject
     public function validate()
     {
         if (!isset($this->_scenario)) {
-            throw new \mix\exceptions\ModelException("场景未设置");
+            throw new \mix\exceptions\ValidatorException("场景未设置");
         }
         $this->_errors      = [];
         $scenario           = $this->_scenario;
         $scenarioAttributes = array_merge($scenario['required'], $scenario['optional']);
         $rules              = $this->rules();
         $messages           = $this->messages();
+        // 判断是否定义了规则
+        foreach ($scenarioAttributes as $attribute) {
+            if (!isset($rules[$attribute])) {
+                throw new \mix\exceptions\ValidatorException("属性 {$attribute} 未定义规则");
+            }
+        }
         // 验证器验证
         foreach ($rules as $attribute => $rule) {
             if (!in_array($attribute, $scenarioAttributes)) {
@@ -89,7 +97,7 @@ class Validator extends BaseObject
             }
             $validatorType = array_shift($rule);
             if (!isset($this->_validators[$validatorType])) {
-                throw new \mix\exceptions\ModelException("属性 {$attribute} 的验证类型 {$validatorType} 不存在");
+                throw new \mix\exceptions\ValidatorException("属性 {$attribute} 的验证类型 {$validatorType} 不存在");
             }
             $attributeValue = isset($this->attributes[$attribute]) ? $this->attributes[$attribute] : null;
             // 实例化
@@ -97,7 +105,7 @@ class Validator extends BaseObject
             $validator                = new $validatorClass([
                 'isRequired'     => in_array($attribute, $scenario['required']),
                 'options'        => $rule,
-                'attribute'  => $attribute,
+                'attribute'      => $attribute,
                 'attributeValue' => $attributeValue,
                 'messages'       => $messages,
                 'attributes'     => $this->attributes,
@@ -110,6 +118,24 @@ class Validator extends BaseObject
             }
         }
         return empty($this->_errors);
+    }
+
+    // 返回全部错误
+    public function getErrors()
+    {
+        return $this->_errors;
+    }
+
+    // 返回一条错误
+    public function getError()
+    {
+        $errors = $this->_errors;
+        if (empty($errors)) {
+            return '';
+        }
+        $item  = array_shift($errors);
+        $error = array_shift($item);
+        return $error;
     }
 
 }

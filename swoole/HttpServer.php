@@ -92,7 +92,8 @@ class HttpServer extends BaseObject
     protected function onRequest()
     {
         $this->server->on('request', function ($request, $response) {
-            \Mix::setHost($request->header['host']);
+            $host = isset($request->header['host']) ? $request->header['host'] : '';
+            \Mix::setHost($host);
             // 执行请求
             try {
                 \Mix::app()->request->setRequester($request);

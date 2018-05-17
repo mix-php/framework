@@ -9,33 +9,17 @@ namespace mix\client;
 class BaseRedisPersistent extends BaseRedis
 {
 
-    // 连接休眠超时(超时会重连)
-    public $sleepTimeout = 7200;
-
     // 重用连接(相同配置)
     public $reusableConnection = false;
 
-    // 最后活动时间
-    protected $_lastActiveTime;
-
     // 初始化
-    public function initialize()
+    protected function initialize()
     {
         // 重用连接(相同配置)
         if ($this->reusableConnection) {
-            $hash                  = md5($this->host . $this->port . $this->database . $this->password);
-            $this->_redis          = &\Mix::$container['redis_' . $hash];
-            $this->_lastActiveTime = &\Mix::$container['redisLastActiveTime_' . $hash];
+            $hash         = md5($this->host . $this->port . $this->database . $this->password);
+            $this->_redis = &\Mix::$container['redis_' . $hash];
         }
-    }
-
-    // 连接
-    public function connect()
-    {
-        // 更新活动时间
-        $this->_lastActiveTime = time();
-        // 连接
-        parent::connect();
     }
 
     // 重新连接
@@ -48,20 +32,36 @@ class BaseRedisPersistent extends BaseRedis
     // 执行命令
     public function __call($name, $arguments)
     {
-        // 主动重新连接
-        if (isset($this->_lastActiveTime) && ($this->_lastActiveTime + $this->sleepTimeout < time())) {
-            $this->reconnect();
-        }
         try {
             // 更新活动时间
             $this->_lastActiveTime = time();
             // 执行命令
             return parent::__call($name, $arguments);
         } catch (\Exception $e) {
-            // 长连接异常处理
-            $this->disconnect();
-            throw $e;
+            if (self::isDisconnectException($e)) {
+                // 连接异常处理
+                $this->reconnect();
+                return $this->__call($name, $arguments);
+            } else {
+                // 抛出其他异常
+                throw $e;
+            }
         }
+    }
+
+    // 判断是否为连接异常
+    protected static function isDisconnectException(\Exception $e)
+    {
+        $disconnectMessages = [
+            'failed with errno',
+        ];
+        $errorMessage       = $e->getMessage();
+        foreach ($disconnectMessages as $message) {
+            if (false !== stripos($errorMessage, $message)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

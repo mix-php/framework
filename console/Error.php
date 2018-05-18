@@ -35,7 +35,7 @@ class Error extends Component
     }
 
     // Exception Handler
-    public static function appException(\Exception $e)
+    public static function appException(\Exception $e, $isWrite = false)
     {
         // debug处理
         if ($e instanceof \mix\exceptions\DebugException) {
@@ -82,13 +82,13 @@ class Error extends Component
         $output->writeln($message, Output::NONE);
         $output->writeln('');
         // 退出
-        exit(ExitCode::EXCEPTION);
+        $isWrite or exit(ExitCode::EXCEPTION);
     }
 
-    // 手动处理异常
-    public function exception($e)
+    // 写入错误
+    public function write($e)
     {
-        self::appException($e);
+        self::appException($e, true);
     }
 
 }

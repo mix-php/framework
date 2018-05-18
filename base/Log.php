@@ -47,7 +47,7 @@ class Log extends Component
         in_array('error', $this->level) and $this->write('error', $message);
     }
 
-    // 写入信息
+    // 写入日志
     public function write($filePrefix, $message)
     {
         switch ($this->logRotate) {

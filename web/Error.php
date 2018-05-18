@@ -117,10 +117,4 @@ class Error extends Component
         \Mix::app()->cleanComponents();
     }
 
-    // 手动处理异常
-    public function exception($e)
-    {
-        self::appException($e);
-    }
-
 }

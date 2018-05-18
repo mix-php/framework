@@ -9,9 +9,9 @@ use mix\base\Facade;
  * @author 刘健 <coder.liu@qq.com>
  *
  * @method disconnect() static
- * @method queryBuilder($sqlItem) static
- * @method createCommand($sql = null) static
- * @method bindParams($data) static
+ * @method \mix\client\PDO queryBuilder($sqlItem) static
+ * @method \mix\client\PDO createCommand($sql = null) static
+ * @method \mix\client\PDO bindParams($data) static
  * @method queryAll() static
  * @method queryOne() static
  * @method queryColumn($columnNumber = 0) static
@@ -19,10 +19,10 @@ use mix\base\Facade;
  * @method execute() static
  * @method getLastInsertId() static
  * @method getRowCount() static
- * @method insert($table, $data) static
- * @method batchInsert($table, $data) static
- * @method update($table, $data, $where) static
- * @method delete($table, $where) static
+ * @method \mix\client\PDO insert($table, $data) static
+ * @method \mix\client\PDO batchInsert($table, $data) static
+ * @method \mix\client\PDO update($table, $data, $where) static
+ * @method \mix\client\PDO delete($table, $where) static
  * @method transaction($closure) static
  * @method beginTransaction() static
  * @method commit() static

@@ -26,12 +26,6 @@ class Route extends Component
     // 转化后的路由规则
     protected $_rules = [];
 
-    // 默认路由规则
-    protected $defaultRules = [
-        // 一级目录
-        ':controller/:action' => [':controller', ':action'],
-    ];
-
     // 初始化事件
     public function onInitialize()
     {
@@ -43,7 +37,6 @@ class Route extends Component
     // 初始化，生成路由数据，将路由规则转换为正则表达式，并提取路由参数名
     public function initialize()
     {
-        $this->rules += $this->defaultRules;
         // URL 目录处理
         foreach ($this->rules as $rule => $route) {
             if (strpos($rule, ':controller') !== false && strpos($rule, ':action') !== false) {

@@ -11,18 +11,6 @@ use mix\base\BaseObject;
 class Command extends BaseObject
 {
 
-    /**
-     * 输出类
-     * @var \mix\console\Input
-     */
-    public $input;
-
-    /**
-     * 输出类
-     * @var \mix\console\Output
-     */
-    public $output;
-
     // 重写构造方法
     public function __construct($attributes = [])
     {
@@ -40,9 +28,6 @@ class Command extends BaseObject
                 $this->$fullname = $attribute;
             }
         }
-        // 导入输入输出实例
-        $this->input  = \Mix::app()->input;
-        $this->output = \Mix::app()->output;
         // 调用父类构造方法
         parent::__construct([]);
     }

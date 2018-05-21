@@ -18,7 +18,6 @@ class Application extends \mix\web\Application
         $action                        = empty($server['path_info']) ? '' : substr($server['path_info'], 1);
         \Mix::app()->response->content = $this->runAction($method, $action);
         \Mix::app()->response->send();
-        $this->cleanComponents();
     }
 
 }

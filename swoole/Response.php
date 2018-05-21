@@ -118,6 +118,8 @@ class Response extends Component
             $this->sendHeaders();
             $this->_responder->end($content);
         }
+        // 清扫组件容器
+        \Mix::app()->cleanComponents();
     }
 
     // 发送HTTP状态码

@@ -12,7 +12,7 @@ namespace mix\base;
  * @property \mix\web\Route $route
  * @property \mix\web\Request|\mix\swoole\Request $request
  * @property \mix\web\Response|\mix\swoole\Response $response
- * @property \mix\web\Error $error
+ * @property \mix\web\Error|\mix\console\Error $error
  * @property \mix\web\Token $token
  * @property \mix\web\Session $session
  * @property \mix\web\Cookie $cookie

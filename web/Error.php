@@ -50,7 +50,6 @@ class Error extends Component
         if ($e instanceof \mix\exceptions\DebugException || $e instanceof \mix\exceptions\EndException) {
             \Mix::app()->response->content = $e->getMessage();
             \Mix::app()->response->send();
-            \Mix::app()->cleanComponents();
             return;
         }
         // 错误参数定义
@@ -114,7 +113,6 @@ class Error extends Component
                 break;
         }
         \Mix::app()->response->send();
-        \Mix::app()->cleanComponents();
     }
 
 }

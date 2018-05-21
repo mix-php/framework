@@ -115,4 +115,10 @@ class Error extends Component
         \Mix::app()->response->send();
     }
 
+    // 处理异常
+    public function handleException($e)
+    {
+        self::appException($e);
+    }
+
 }

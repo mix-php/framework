@@ -8,7 +8,7 @@ use mix\base\Facade;
  * Error 门面类
  * @author 刘健 <coder.liu@qq.com>
  *
- * @method write($e) static
+ * @method handleException($e) static
  */
 class Error extends Facade
 {

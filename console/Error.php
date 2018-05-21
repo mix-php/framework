@@ -85,8 +85,8 @@ class Error extends Component
         $isWrite or exit(ExitCode::EXCEPTION);
     }
 
-    // 写入错误
-    public function write($e)
+    // 处理异常
+    public function handleException($e)
     {
         self::appException($e, true);
     }

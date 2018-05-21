@@ -86,7 +86,7 @@ class TaskServer extends BaseObject
                 list($object, $method) = $callback;
                 $object->$method($worker, $index);
             } catch (\Exception $e) {
-                \Mix::app()->error->write($e);
+                \Mix::app()->error->handleException($e);
             }
         }, false, false);
         $process->useQueue(crc32($this->queueKey), 2);

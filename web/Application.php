@@ -14,6 +14,12 @@ class Application extends \mix\base\Application
     // 控制器命名空间
     public $controllerNamespace = '';
 
+    // 中间件命名空间
+    public $middlewareNamespace = '';
+
+    // 全局中间件
+    public $middleware = [];
+
     // 执行功能 (Apache/PHP-FPM)
     public function run()
     {
@@ -49,18 +55,44 @@ class Application extends \mix\base\Application
                 $controllerInstance = new $controllerClass();
                 // 判断方法是否存在
                 if (method_exists($controllerInstance, $controllerAction)) {
-                    // 执行前置动作
-                    $controllerInstance->beforeAction($controllerAction);
-                    // 执行控制器的方法
-                    $content = $controllerInstance->$controllerAction();
-                    // 执行后置动作
-                    $controllerInstance->afterAction($controllerAction);
-                    // 返回执行结果
-                    return $content;
+                    // 执行中间件
+                    $middleware = $this->getAllMiddlewareInstance($route['middleware']);
+                    if (!empty($middleware)) {
+                        return $this->runMiddleware([$controllerInstance, $controllerAction], $middleware);
+                    }
+                    // 直接返回执行结果
+                    return $controllerInstance->$controllerAction();
                 }
+            }
+            // 不带路由参数的路由规则找不到时，直接抛出错误
+            if (empty($queryParams)) {
+                break;
             }
         }
         throw new \mix\exceptions\NotFoundException('Not Found (#404)');
+    }
+
+    // 执行中间件
+    protected function runMiddleware($callable, $middleware)
+    {
+        $item = array_shift($middleware);
+        if (empty($item)) {
+            return call_user_func($callable);
+        }
+        return $item->handle($callable, function () use ($callable, $middleware) {
+            return $this->runMiddleware($callable, $middleware);
+        });
+    }
+
+    // 获取全部中间件实例
+    protected function getAllMiddlewareInstance($routeMiddleware)
+    {
+        $middleware = [];
+        foreach (array_merge($this->middleware, $routeMiddleware) as $key => $name) {
+            $name             = "{$this->middlewareNamespace}\\{$name}";
+            $middleware[$key] = new $name();
+        }
+        return $middleware;
     }
 
     // 获取组件

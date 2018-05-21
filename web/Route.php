@@ -44,10 +44,16 @@ class Route extends Component
                 $prefix     = dirname($controller);
                 $prefix     = $prefix == '.' ? '' : $prefix;
                 // 增加上两级的路由
-                $this->rules += [
+                $rules = [
                     $controller => [$controller, 'Index'],
                     $prefix     => [($prefix == '' ? '' : "{$prefix}/") . 'Index', 'Index'],
                 ];
+                // 附上中间件
+                if (isset($route['middleware'])) {
+                    $rules[$controller]['middleware'] = $route['middleware'];
+                    $rules[$prefix]['middleware']     = $route['middleware'];
+                }
+                $this->rules += $rules;
             }
         }
         // 转正则
@@ -111,7 +117,7 @@ class Route extends Component
                 // 记录参数
                 $shortAction = array_pop($fragments);
                 $shortClass  = implode('\\', $fragments);
-                $result[]    = [[$shortClass, $shortAction], $queryParams];
+                $result[]    = [[$shortClass, $shortAction, 'middleware' => isset($route['middleware']) ? $route['middleware'] : []], $queryParams];
             }
         }
         return $result;

@@ -47,14 +47,4 @@ class Controller extends BaseObject
         return implode('.', $items);
     }
 
-    // 前置动作
-    public function beforeAction($action)
-    {
-    }
-
-    // 后置动作
-    public function afterAction($action)
-    {
-    }
-
 }

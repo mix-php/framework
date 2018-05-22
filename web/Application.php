@@ -88,7 +88,7 @@ class Application extends \mix\base\Application
     {
         $middleware = [];
         foreach (array_merge($this->middleware, $routeMiddleware) as $key => $name) {
-            $name             = "{$this->middlewareNamespace}\\{$name}";
+            $name             = "{$this->middlewareNamespace}\\{$name}Middleware";
             $middleware[$key] = new $name();
         }
         return $middleware;

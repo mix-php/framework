@@ -15,6 +15,7 @@ use mix\base\Facade;
  * @method delete($name) static
  * @method clear() static
  * @method getTokenId() static
+ * @method refresh() static
  */
 class Token extends Facade
 {

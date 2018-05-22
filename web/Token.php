@@ -13,18 +13,25 @@ class Token extends Component
 
     // 保存处理者
     public $saveHandler;
+
     // 保存的Key前缀
     public $saveKeyPrefix;
+
     // 有效期
     public $expires = 7200;
+
     // session名
     public $name = 'access_token';
+
     // TokenKey
     protected $_tokenKey;
+
     // TokenID
     protected $_tokenId;
+
     // Token前缀
     protected $_tokenPrefix;
+
     // 唯一索引前缀
     protected $_uniqueIndexPrefix;
 
@@ -34,7 +41,7 @@ class Token extends Component
         parent::onInitialize();
         // 前缀处理
         $this->_tokenPrefix       = $this->saveKeyPrefix . 'DATA:';
-        $this->_uniqueIndexPrefix = $this->saveKeyPrefix . 'UNIQUEINDEX:';
+        $this->_uniqueIndexPrefix = $this->saveKeyPrefix . 'UIDX:';
     }
 
     // 请求开始事件
@@ -88,13 +95,15 @@ class Token extends Component
         }
         // 更新唯一索引
         $this->saveHandler->setex($uniqueKey, $this->expires, $this->_tokenId);
+        // 在数据中加入索引信息
+        $this->saveHandler->hmset($this->_tokenKey, ['__uidx__' => $uniqueId]);
     }
 
     // 赋值
     public function set($name, $value)
     {
-        $success = $this->saveHandler->hMset($this->_tokenKey, [$name => serialize($value)]);
-        $this->saveHandler->setTimeout($this->_tokenKey, $this->expires);
+        $success = $this->saveHandler->hmset($this->_tokenKey, [$name => serialize($value)]);
+        $this->saveHandler->expire($this->_tokenKey, $this->expires);
         return $success ? true : false;
     }
 
@@ -102,28 +111,28 @@ class Token extends Component
     public function get($name = null)
     {
         if (is_null($name)) {
-            $array = $this->saveHandler->hGetAll($this->_tokenKey);
-            foreach ($array as $key => $item) {
-                $array[$key] = unserialize($item);
+            $result = $this->saveHandler->hgetall($this->_tokenKey);
+            unset($result['__uidx__']);
+            foreach ($result as $key => $item) {
+                $result[$key] = unserialize($item);
             }
-            return $array ?: [];
+            return $result ?: [];
         }
-        $reslut = $this->saveHandler->hmGet($this->_tokenKey, [$name]);
-        $value  = array_shift($reslut);
+        $value = $this->saveHandler->hget($this->_tokenKey, $name);
         return $value === false ? null : unserialize($value);
     }
 
     // 判断是否存在
     public function has($name)
     {
-        $exist = $this->saveHandler->hExists($this->_tokenKey, $name);
+        $exist = $this->saveHandler->hexists($this->_tokenKey, $name);
         return $exist ? true : false;
     }
 
     // 删除
     public function delete($name)
     {
-        $success = $this->saveHandler->hDel($this->_tokenKey, $name);
+        $success = $this->saveHandler->hdel($this->_tokenKey, $name);
         return $success ? true : false;
     }
 
@@ -138,6 +147,33 @@ class Token extends Component
     public function getTokenId()
     {
         return $this->_tokenId;
+    }
+
+    // 刷新token
+    public function refresh()
+    {
+        // 判断 token 是否存在
+        $tokenData = $this->saveHandler->hgetall($this->_tokenKey);
+        if (empty($tokenData)) {
+            return false;
+        }
+        // 定义变量
+        $oldData     = $tokenData;
+        $oldTokenKey = $this->_tokenKey;
+        $newTokenId  = self::createTokenId();
+        $newTokenKey = $this->_tokenPrefix . $newTokenId;
+        $uniqueKey   = $this->_uniqueIndexPrefix . $oldData['__uidx__'];
+        // 生成新的 token 数据
+        $this->saveHandler->del($oldTokenKey);
+        $this->saveHandler->hmset($newTokenKey, $oldData);
+        $this->saveHandler->set($uniqueKey, $newTokenId);
+        $this->saveHandler->expire($newTokenKey, $this->expires);
+        $this->saveHandler->expire($uniqueKey, $this->expires);
+        // 新 token 赋值到属性
+        $this->_tokenId  = $newTokenId;
+        $this->_tokenKey = $newTokenKey;
+        // 返回
+        return true;
     }
 
 }

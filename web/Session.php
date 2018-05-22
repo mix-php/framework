@@ -13,14 +13,19 @@ class Session extends Component
 
     // 保存处理者
     public $saveHandler;
+
     // 保存的Key前缀
     public $saveKeyPrefix;
+
     // 有效期
     public $expires = 7200;
+
     // session名
     public $name = 'mixssid';
+
     // SessionKey
     protected $_sessionKey;
+
     // SessionID
     protected $_sessionId;
 
@@ -48,7 +53,7 @@ class Session extends Component
             $this->_sessionId = self::createSessionId();
         }
         $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
-        $this->saveHandler->setTimeout($this->_sessionKey, $this->expires);
+        $this->saveHandler->expire($this->_sessionKey, $this->expires);
     }
 
     // 创建session_id
@@ -65,8 +70,8 @@ class Session extends Component
     // 赋值
     public function set($name, $value)
     {
-        $success = $this->saveHandler->hMset($this->_sessionKey, [$name => serialize($value)]);
-        $this->saveHandler->setTimeout($this->_sessionKey, $this->expires);
+        $success = $this->saveHandler->hmset($this->_sessionKey, [$name => serialize($value)]);
+        $this->saveHandler->expire($this->_sessionKey, $this->expires);
         \Mix::app()->response->setCookie($this->name, $this->_sessionId, 0, '/');
         return $success ? true : false;
     }
@@ -75,28 +80,27 @@ class Session extends Component
     public function get($name = null)
     {
         if (is_null($name)) {
-            $array = $this->saveHandler->hGetAll($this->_sessionKey);
-            foreach ($array as $key => $item) {
-                $array[$key] = unserialize($item);
+            $result = $this->saveHandler->hgetall($this->_sessionKey);
+            foreach ($result as $key => $item) {
+                $result[$key] = unserialize($item);
             }
-            return $array ?: [];
+            return $result ?: [];
         }
-        $reslut = $this->saveHandler->hmGet($this->_sessionKey, [$name]);
-        $value  = array_shift($reslut);
+        $value = $this->saveHandler->hget($this->_sessionKey, $name);
         return $value === false ? null : unserialize($value);
     }
 
     // 判断是否存在
     public function has($name)
     {
-        $exist = $this->saveHandler->hExists($this->_sessionKey, $name);
+        $exist = $this->saveHandler->hexists($this->_sessionKey, $name);
         return $exist ? true : false;
     }
 
     // 删除
     public function delete($name)
     {
-        $success = $this->saveHandler->hDel($this->_sessionKey, $name);
+        $success = $this->saveHandler->hdel($this->_sessionKey, $name);
         return $success ? true : false;
     }
 

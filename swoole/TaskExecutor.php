@@ -8,7 +8,7 @@ use mix\base\BaseObject;
  * 任务服务器类
  * @author 刘健 <coder.liu@qq.com>
  */
-class TaskServer extends BaseObject
+class TaskExecutor extends BaseObject
 {
 
     // 左进程数

@@ -1,9 +1,9 @@
 <?php
 
-namespace mix\web;
+namespace mix\http;
 
 use mix\base\Component;
-use mix\web\View;
+use mix\http\View;
 
 /**
  * Error类
@@ -24,9 +24,9 @@ class Error extends Component
     public static function register()
     {
         error_reporting(E_ALL);
-        set_error_handler(['mix\web\Error', 'appError']);
-        set_exception_handler(['mix\web\Error', 'appException']);
-        register_shutdown_function(['mix\web\Error', 'appShutdown']);
+        set_error_handler(['mix\http\Error', 'appError']);
+        set_exception_handler(['mix\http\Error', 'appException']);
+        register_shutdown_function(['mix\http\Error', 'appShutdown']);
     }
 
     // Error Handler

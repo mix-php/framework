@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\swoole;
+namespace mix\websocket;
 
 use mix\base\BaseObject;
 

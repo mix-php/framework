@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\swoole;
+namespace mix\http;
 
 use mix\base\Component;
 

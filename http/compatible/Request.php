@@ -1,12 +1,12 @@
 <?php
 
-namespace mix\web;
+namespace mix\http\compatible;
 
 /**
  * Request组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Request extends BaseRequest
+class Request extends \mix\http\BaseRequest
 {
 
     // 初始化事件

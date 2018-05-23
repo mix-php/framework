@@ -70,9 +70,9 @@ class Application extends \mix\base\Application
             // 实例化控制器
             list($shortClass, $shortAction) = $this->commands[$command];
             $shortClass    = str_replace('/', "\\", $shortClass);
-            $commandDir    = \mix\helpers\FilesystemHelper::dirname($shortClass);
+            $commandDir    = \mix\helpers\FileSystemHelper::dirname($shortClass);
             $commandDir    = $commandDir == '.' ? '' : "$commandDir\\";
-            $commandName   = \mix\helpers\FilesystemHelper::basename($shortClass);
+            $commandName   = \mix\helpers\FileSystemHelper::basename($shortClass);
             $commandClass  = "{$this->commandNamespace}\\{$commandDir}{$commandName}Command";
             $commandAction = "action{$shortAction}";
             // 判断类是否存在

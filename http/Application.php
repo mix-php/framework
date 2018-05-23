@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\web;
+namespace mix\http;
 
 use mix\base\Component;
 
@@ -20,17 +20,17 @@ class Application extends \mix\base\Application
     // 全局中间件
     public $middleware = [];
 
-    // 执行功能 (Apache/PHP-FPM)
+    // 执行功能
     public function run()
     {
-        \mix\web\Error::register();
+        \mix\http\Error::register();
         $server                        = \Mix::app()->request->server();
         $method                        = strtoupper($server['request_method']);
         $action                        = empty($server['path_info']) ? '' : substr($server['path_info'], 1);
         \Mix::app()->response->content = $this->runAction($method, $action);
         \Mix::app()->response->send();
     }
-
+    
     // 执行功能并返回
     public function runAction($method, $action)
     {
@@ -43,11 +43,11 @@ class Application extends \mix\base\Application
             \Mix::app()->request->setRoute($queryParams);
             // 实例化控制器
             list($shortClass, $shortAction) = $route;
-            $controllerDir    = \mix\helpers\FilesystemHelper::dirname($shortClass);
+            $controllerDir    = \mix\helpers\FileSystemHelper::dirname($shortClass);
             $controllerDir    = $controllerDir == '.' ? '' : "$controllerDir\\";
-            $controllerName   = \mix\helpers\FilesystemHelper::snakeToCamel(\mix\helpers\FilesystemHelper::basename($shortClass), true);
+            $controllerName   = \mix\helpers\NameHelper::snakeToCamel(\mix\helpers\FileSystemHelper::basename($shortClass), true);
             $controllerClass  = "{$this->controllerNamespace}\\{$controllerDir}{$controllerName}Controller";
-            $shortAction      = \mix\helpers\FilesystemHelper::snakeToCamel($shortAction, true);
+            $shortAction      = \mix\helpers\NameHelper::snakeToCamel($shortAction, true);
             $controllerAction = "action{$shortAction}";
             // 判断类是否存在
             if (class_exists($controllerClass)) {

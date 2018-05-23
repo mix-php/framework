@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\swoole;
+namespace mix\process;
 
 /**
  * 进程助手类

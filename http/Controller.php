@@ -1,9 +1,9 @@
 <?php
 
-namespace mix\web;
+namespace mix\http;
 
 use mix\base\BaseObject;
-use mix\web\View;
+use mix\http\View;
 
 /**
  * Controller类
@@ -42,7 +42,7 @@ class Controller extends BaseObject
         $prefix = str_replace([\Mix::app()->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($this));
         $items  = [];
         foreach (explode('.', $prefix) as $item) {
-            $items[] = \mix\helpers\FilesystemHelper::camelToSnake($item);
+            $items[] = \mix\helpers\NameHelper::camelToSnake($item);
         }
         return implode('.', $items);
     }

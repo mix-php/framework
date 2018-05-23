@@ -1,8 +1,9 @@
 <?php
 
-namespace mix\swoole;
+namespace mix\http;
 
 use mix\base\BaseObject;
+use mix\process\Process;
 
 /**
  * Http服务器类
@@ -75,7 +76,7 @@ class HttpServer extends BaseObject
                 Process::setName("mix-httpd: task #{$workerId}");
             }
             // 错误处理注册
-            \mix\web\Error::register();
+            \mix\http\Error::register();
             // 实例化Apps
             $apps = [];
             foreach ($this->virtualHosts as $host => $configFile) {

@@ -1,8 +1,8 @@
 <?php
 
-namespace mix\swoole;
+namespace mix\task;
 
-use mix\swoole\Process;
+use mix\process\Process;
 
 /**
  * 任务进程类

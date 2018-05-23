@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\web;
+namespace mix\http\compatible;
 
 use mix\base\Component;
 

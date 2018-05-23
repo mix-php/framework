@@ -1,8 +1,8 @@
 <?php
 
-namespace mix\swoole;
+namespace mix\http;
 
-use mix\web\BaseRequest;
+use mix\http\BaseRequest;
 
 /**
  * Request组件

@@ -9,13 +9,13 @@ namespace mix\base;
  * @property \mix\base\Log $log
  * @property \mix\console\Input $input
  * @property \mix\console\Output $output
- * @property \mix\web\Route $route
- * @property \mix\web\Request|\mix\swoole\Request $request
- * @property \mix\web\Response|\mix\swoole\Response $response
- * @property \mix\web\Error|\mix\console\Error $error
- * @property \mix\web\Token $token
- * @property \mix\web\Session $session
- * @property \mix\web\Cookie $cookie
+ * @property \mix\http\Route $route
+ * @property \mix\http\Request|\mix\http\compatible\Request $request
+ * @property \mix\http\Response|\mix\http\compatible\Response $response
+ * @property \mix\http\Error|\mix\console\Error $error
+ * @property \mix\http\Token $token
+ * @property \mix\http\Session $session
+ * @property \mix\http\Cookie $cookie
  * @property \mix\client\PDO $rdb
  * @property \mix\client\Redis $redis
  * @property \mix\websocket\TokenReader $tokenReader

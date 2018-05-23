@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\swoole;
+namespace mix\task;
 
 use mix\base\BaseObject;
 

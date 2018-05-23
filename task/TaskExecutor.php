@@ -3,6 +3,7 @@
 namespace mix\task;
 
 use mix\base\BaseObject;
+use mix\process\Process;
 
 /**
  * 任务服务器类

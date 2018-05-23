@@ -19,7 +19,7 @@ class Mix
     /**
      * 返回App，并设置组件命名空间
      *
-     * @return \mix\web\Application|\mix\swoole\Application|\mix\console\Application
+     * @return \mix\http\Application|\mix\console\Application
      */
     public static function app($componentNamespace = null)
     {
@@ -37,7 +37,7 @@ class Mix
     /**
      * 获取App
      *
-     * @return \mix\swoole\Application|\mix\web\Application|\mix\console\Application
+     * @return \mix\http\Application|\mix\console\Application
      */
     protected static function getApp()
     {

@@ -38,7 +38,7 @@ class MessageHandler extends Component
     }
 
     // 执行功能
-    public function runAction($action, $paramArray = [])
+    public function runAction($action, $params = [])
     {
         // 匹配成功
         if (isset($this->rules[$action])) {
@@ -59,7 +59,7 @@ class MessageHandler extends Component
                 // 判断方法是否存在
                 if (method_exists($controllerInstance, $controllerAction)) {
                     // 执行控制器的方法
-                    $content = call_user_func_array([$controllerInstance, $controllerAction], $paramArray);
+                    $content = call_user_func_array([$controllerInstance, $controllerAction], $params);
                     // 响应
                     if (!is_null($content)) {
                         $this->_server->push($this->_fd, $content);
@@ -68,7 +68,7 @@ class MessageHandler extends Component
                 }
             }
         }
-        throw new \mix\exceptions\NotFoundException('MessageHandler: Action Not Found');
+        throw new \mix\exceptions\NotFoundException("ERRER unknown action '{$action}'");
     }
 
 }

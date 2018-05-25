@@ -37,7 +37,7 @@ class Validator extends BaseObject
     ];
 
     // 错误
-    public $_errors = [];
+    protected $_errors = [];
 
     // 规则
     public function rules()

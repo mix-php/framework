@@ -37,7 +37,7 @@ class BasePDOPersistent extends BasePDO
             parent::prepare();
         } catch (\Exception $e) {
             if (self::isDisconnectException($e)) {
-                // 连接异常处理
+                // 断开连接异常处理
                 $this->reconnect();
                 $this->prepare();
             } else {
@@ -47,7 +47,7 @@ class BasePDOPersistent extends BasePDO
         }
     }
 
-    // 判断是否为连接异常
+    // 判断是否为断开连接异常
     protected static function isDisconnectException(\Exception $e)
     {
         $disconnectMessages = [

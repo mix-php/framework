@@ -39,7 +39,7 @@ class BaseRedisPersistent extends BaseRedis
             return parent::__call($name, $arguments);
         } catch (\Exception $e) {
             if (self::isDisconnectException($e)) {
-                // 连接异常处理
+                // 断开连接异常处理
                 $this->reconnect();
                 return $this->__call($name, $arguments);
             } else {
@@ -49,11 +49,12 @@ class BaseRedisPersistent extends BaseRedis
         }
     }
 
-    // 判断是否为连接异常
+    // 判断是否为断开连接异常
     protected static function isDisconnectException(\Exception $e)
     {
         $disconnectMessages = [
             'failed with errno',
+            'connection lost',
         ];
         $errorMessage       = $e->getMessage();
         foreach ($disconnectMessages as $message) {

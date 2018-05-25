@@ -250,16 +250,23 @@ class BasePDO extends Component
     // 更新
     public function update($table, $data, $where)
     {
-        $keys        = array_keys($data);
-        $fieldsSql   = array_map(function ($key) {
-            return "`{$key}` = :{$key}";
-        }, $keys);
+        $setSql = [];
+        foreach ($data as $key => $item) {
+            if (is_array($item)) {
+                list($operator, $value) = $item;
+                $setSql[]   = "`{$key}` =  `{$key}` {$operator} :{$key}";
+                $data[$key] = $value;
+                continue;
+            }
+            $setSql[] = "`{$key}` = :{$key}";
+        }
+        $whereSql    = [];
         $whereParams = [];
         foreach ($where as $key => $value) {
-            $where[$key]                      = "`{$value[0]}` {$value[1]} :where_{$value[0]}";
+            $whereSql[$key]                   = "`{$value[0]}` {$value[1]} :where_{$value[0]}";
             $whereParams["where_{$value[0]}"] = $value[2];
         }
-        $sql = "UPDATE `{$table}` SET " . implode(', ', $fieldsSql) . " WHERE " . implode(' AND ', $where);
+        $sql = "UPDATE `{$table}` SET " . implode(', ', $setSql) . " WHERE " . implode(' AND ', $whereSql);
         $this->createCommand($sql);
         $this->bindParams($data);
         $this->bindParams($whereParams);

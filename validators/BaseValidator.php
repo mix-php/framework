@@ -38,6 +38,9 @@ class BaseValidator extends BaseObject
     // 设置
     protected $_settings = [];
 
+    // 初始化选项
+    protected $_initOptions = [];
+
     // 启用的选项
     protected $_enabledOptions = [];
 
@@ -60,13 +63,9 @@ class BaseValidator extends BaseObject
                     unset($this->options[$name]);
                 }
             }
-            // 执行类型验证
-            if (method_exists($this, 'type')) {
-                $this->options = array_merge(['type' => true], $this->options);
-            }
-            // 执行上传验证
-            if (method_exists($this, 'upload')) {
-                $this->options = array_merge(['upload' => true], $this->options);
+            // 执行初始化选项验证
+            foreach ($this->_initOptions as $option) {
+                $this->options = array_merge([$option => null], $this->options);
             }
             // 执行全部选项验证
             foreach ($this->options as $name => $param) {
@@ -84,7 +83,7 @@ class BaseValidator extends BaseObject
         } else {
             if ($this instanceof \mix\validators\FileValidator) {
                 // 实例化文件对象
-                $this->mainValidator->$attribute = \mix\web\UploadFile::getInstanceByName($attribute);
+                $this->mainValidator->$attribute = \mix\http\UploadFile::getInstanceByName($attribute);
             } else {
                 // 属性赋值
                 $this->mainValidator->$attribute = $this->attributeValue;

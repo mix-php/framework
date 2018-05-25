@@ -9,11 +9,14 @@ namespace mix\validators;
 class EmailValidator extends BaseValidator
 {
 
+    // 初始化选项
+    protected $_initOptions = ['email'];
+
     // 启用的选项
     protected $_enabledOptions = ['length', 'minLength', 'maxLength'];
 
     // 类型验证
-    protected function type()
+    protected function email()
     {
         $value = $this->attributeValue;
         if (!Validate::isEmail($value)) {

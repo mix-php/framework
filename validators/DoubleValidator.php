@@ -9,11 +9,14 @@ namespace mix\validators;
 class DoubleValidator extends BaseValidator
 {
 
+    // 初始化选项
+    protected $_initOptions = ['double'];
+
     // 启用的选项
     protected $_enabledOptions = ['unsigned', 'min', 'max', 'length', 'minLength', 'maxLength'];
 
     // 类型验证
-    protected function type()
+    protected function double()
     {
         $value = $this->attributeValue;
         if (!Validate::isDouble($value)) {

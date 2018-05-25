@@ -9,11 +9,14 @@ namespace mix\validators;
 class PhoneValidator extends BaseValidator
 {
 
+    // 初始化选项
+    protected $_initOptions = ['phone'];
+
     // 启用的选项
     protected $_enabledOptions = [];
 
     // 类型验证
-    protected function type()
+    protected function phone()
     {
         $value = $this->attributeValue;
         if (!Validate::isPhone($value)) {

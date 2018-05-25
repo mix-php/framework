@@ -9,11 +9,14 @@ namespace mix\validators;
 class AlphaNumericValidator extends BaseValidator
 {
 
+    // 初始化选项
+    protected $_initOptions = ['alphaNumeric'];
+
     // 启用的选项
     protected $_enabledOptions = ['length', 'minLength', 'maxLength'];
 
     // 类型验证
-    protected function type()
+    protected function alphaNumeric()
     {
         $value = $this->attributeValue;
         if (!Validate::isAlphaNumeric($value)) {

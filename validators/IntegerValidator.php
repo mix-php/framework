@@ -9,11 +9,14 @@ namespace mix\validators;
 class IntegerValidator extends BaseValidator
 {
 
+    // 初始化选项
+    protected $_initOptions = ['integer'];
+
     // 启用的选项
     protected $_enabledOptions = ['unsigned', 'min', 'max', 'length', 'minLength', 'maxLength'];
 
     // 类型验证
-    protected function type()
+    protected function integer()
     {
         $value = $this->attributeValue;
         if (!Validate::isInteger($value)) {

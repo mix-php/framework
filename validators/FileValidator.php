@@ -9,6 +9,9 @@ namespace mix\validators;
 class FileValidator extends BaseValidator
 {
 
+    // 初始化选项
+    protected $_initOptions = ['upload'];
+
     // 启用的选项
     protected $_enabledOptions = ['mimes', 'maxSize'];
 

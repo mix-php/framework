@@ -2,8 +2,6 @@
 
 namespace mix\http;
 
-use mix\http\BaseRequest;
-
 /**
  * Request组件
  * @author 刘健 <coder.liu@qq.com>

@@ -3,6 +3,7 @@
 namespace mix\http;
 
 use mix\base\BaseObject;
+use mix\helpers\JsonHelper;
 
 /**
  * JSON 类
@@ -15,7 +16,7 @@ class Json extends BaseObject
     public static function encode($array)
     {
         // 不转义中文、斜杠
-        return json_encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return JsonHelper::encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
 }

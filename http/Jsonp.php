@@ -3,6 +3,7 @@
 namespace mix\http;
 
 use mix\base\BaseObject;
+use mix\helpers\JsonHelper;
 
 /**
  * JSONP 类
@@ -11,15 +12,15 @@ use mix\base\BaseObject;
 class Jsonp extends BaseObject
 {
 
-    // callback名称
-    public $callbackName = 'callback';
+    // callback键名
+    public $name = 'callback';
 
     // 编码
     public function encode($array)
     {
         // 不转义中文、斜杠
-        $jsonString = (new Json)->encode($array);
-        $callback   = \Mix::app()->request->get($this->callbackName);
+        $jsonString = JsonHelper::encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $callback   = \Mix::app()->request->get($this->name);
         if (is_null($callback)) {
             return $jsonString;
         }

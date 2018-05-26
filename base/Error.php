@@ -9,9 +9,18 @@ namespace mix\base;
 class Error
 {
 
+    // 已经注册
+    protected static $registered = false;
+
     // 注册错误处理
     public static function register()
     {
+        // 多次注册处理
+        if (self::$registered) {
+            return;
+        }
+        self::$registered = true;
+        // 注册错误处理
         error_reporting(E_ALL);
         set_error_handler(['mix\base\Error', 'appError']);
         set_exception_handler(['mix\base\Error', 'appException']);

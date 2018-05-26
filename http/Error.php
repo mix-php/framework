@@ -80,13 +80,13 @@ class Error extends Component
         \Mix::app()->response->content    = $content;
         switch ($format) {
             case self::FORMAT_HTML:
-                \Mix::app()->response->setHeader('Content-Type', 'text/html;charset=utf-8');
+                \Mix::app()->response->format = \mix\http\Response::FORMAT_HTML;
                 break;
             case self::FORMAT_JSON:
-                \Mix::app()->response->setHeader('Content-Type', 'application/json;charset=utf-8');
+                \Mix::app()->response->format = \mix\http\Response::FORMAT_JSON;
                 break;
             case self::FORMAT_XML:
-                \Mix::app()->response->setHeader('Content-Type', 'text/xml;charset=utf-8');
+                \Mix::app()->response->format = \mix\http\Response::FORMAT_XML;
                 break;
         }
         \Mix::app()->response->send();

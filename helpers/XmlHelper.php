@@ -31,7 +31,7 @@ class XmlHelper
         if (!empty($data)) {
             foreach ($data as $key => $val) {
                 $xml .= "<$key>";
-                if (is_iterable($val)) {
+                if (is_array($val)) {
                     $xml .= self::arrayToXml($val);
                 } elseif (is_numeric($val)) {
                     $xml .= $val;

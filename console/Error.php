@@ -11,31 +11,8 @@ use mix\base\Component;
 class Error extends Component
 {
 
-    // 注册异常处理
-    public static function register()
-    {
-        error_reporting(E_ALL);
-        set_error_handler(['mix\console\Error', 'appError']);
-        set_exception_handler(['mix\console\Error', 'appException']);
-        register_shutdown_function(['mix\console\Error', 'appShutdown']);
-    }
-
-    // Error Handler
-    public static function appError($errno, $errstr, $errfile = '', $errline = 0)
-    {
-        throw new \mix\exceptions\ErrorException($errno, $errstr, $errfile, $errline);
-    }
-
-    // Error Handler
-    public static function appShutdown()
-    {
-        if ($error = error_get_last()) {
-            self::appException(new \mix\exceptions\ErrorException($error['type'], $error['message'], $error['file'], $error['line']));
-        }
-    }
-
-    // Exception Handler
-    public static function appException(\Exception $e, $isWrite = false)
+    // 异常处理
+    public function handleException(\Exception $e, $exit = false)
     {
         // debug处理
         if ($e instanceof \mix\exceptions\DebugException) {
@@ -82,13 +59,7 @@ class Error extends Component
         $output->writeln($message, Output::NONE);
         $output->writeln('');
         // 退出
-        $isWrite or exit(ExitCode::EXCEPTION);
-    }
-
-    // 处理异常
-    public function handleException($e)
-    {
-        self::appException($e, true);
+        $exit and exit(ExitCode::EXCEPTION);
     }
 
 }

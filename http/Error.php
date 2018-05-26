@@ -20,31 +20,8 @@ class Error extends Component
     // 输出格式
     public $format = self::FORMAT_HTML;
 
-    // 注册异常处理
-    public static function register()
-    {
-        error_reporting(E_ALL);
-        set_error_handler(['mix\http\Error', 'appError']);
-        set_exception_handler(['mix\http\Error', 'appException']);
-        register_shutdown_function(['mix\http\Error', 'appShutdown']);
-    }
-
-    // Error Handler
-    public static function appError($errno, $errstr, $errfile = '', $errline = 0)
-    {
-        throw new \mix\exceptions\ErrorException($errno, $errstr, $errfile, $errline);
-    }
-
-    // Error Handler
-    public static function appShutdown()
-    {
-        if ($error = error_get_last()) {
-            self::appException(new \mix\exceptions\ErrorException($error['type'], $error['message'], $error['file'], $error['line']));
-        }
-    }
-
-    // Exception Handler
-    public static function appException($e)
+    // 异常处理
+    public function handleException(\Exception $e)
     {
         // debug处理 & exit处理
         if ($e instanceof \mix\exceptions\DebugException || $e instanceof \mix\exceptions\EndException) {
@@ -113,12 +90,6 @@ class Error extends Component
                 break;
         }
         \Mix::app()->response->send();
-    }
-
-    // 处理异常
-    public function handleException($e)
-    {
-        self::appException($e);
     }
 
 }

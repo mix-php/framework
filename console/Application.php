@@ -21,7 +21,7 @@ class Application extends \mix\base\Application
         if (PHP_SAPI != 'cli') {
             throw new \RuntimeException('Please run in CLI mode.');
         }
-        \mix\console\Error::register();
+        \mix\base\Error::register();
         $input   = \Mix::app()->input;
         $command = $input->getCommand();
         $options = $input->getOptions();

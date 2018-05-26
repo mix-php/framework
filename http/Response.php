@@ -44,11 +44,6 @@ class Response extends BaseResponse
     // 发送
     public function send()
     {
-        // 多次发送处理
-        if ($this->_isSent) {
-            return;
-        }
-        $this->_isSent = true;
         // 预处理
         $this->prepare();
         // 发送
@@ -76,6 +71,12 @@ class Response extends BaseResponse
     // 发送内容
     protected function sendContent()
     {
+        // 多次发送处理
+        if ($this->_isSent) {
+            return;
+        }
+        $this->_isSent = true;
+        // 发送内容
         $this->_responder->end($this->content);
     }
 

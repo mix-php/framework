@@ -75,8 +75,6 @@ class HttpServer extends BaseObject
             } else {
                 Process::setName("mix-httpd: task #{$workerId}");
             }
-            // 错误处理注册
-            \mix\http\Error::register();
             // 实例化Apps
             $apps = [];
             foreach ($this->virtualHosts as $host => $configFile) {

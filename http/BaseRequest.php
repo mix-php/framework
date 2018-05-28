@@ -128,7 +128,7 @@ class BaseRequest extends Component
         return $this->method() == 'OPTIONS';
     }
 
-    // 返回请求方式
+    // 返回请求类型
     public function method()
     {
         return $this->server('request_method');
@@ -143,13 +143,13 @@ class BaseRequest extends Component
     // 返回请求的URL
     public function url()
     {
-        return $this->header('host') . $this->path();
+        return $this->server('request_scheme') . '//' . $this->header('host') . $this->path();
     }
 
     // 返回请求的完整URL
     public function fullUrl()
     {
-        return $this->header('host') . $this->server('request_uri');
+        return $this->server('request_scheme') . '//' . $this->header('host') . $this->server('request_uri');
     }
 
 }

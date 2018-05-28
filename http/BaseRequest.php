@@ -137,19 +137,28 @@ class BaseRequest extends Component
     // 返回请求的路径
     public function path()
     {
-        return $this->server('path_info');
+        return substr($this->server('path_info'), 1);
     }
 
     // 返回请求的URL
     public function url()
     {
-        return $this->server('request_scheme') . '//' . $this->header('host') . $this->path();
+        $scheme = $this->server('request_scheme') ?: $this->header('request_scheme');
+        return $scheme . '://' . $this->header('host') . $this->server('path_info');
     }
 
     // 返回请求的完整URL
     public function fullUrl()
     {
-        return $this->server('request_scheme') . '//' . $this->header('host') . $this->server('request_uri');
+        $scheme = $this->server('request_scheme') ?: $this->header('request_scheme');
+        return $scheme . '://' . $this->header('host') . $this->server('path_info') . '?' . $this->server('query_string');
+    }
+
+    // 返回请求的根URL
+    public function root()
+    {
+        $scheme = $this->server('request_scheme') ?: $this->header('request_scheme');
+        return $scheme . '://' . $this->header('host');
     }
 
 }

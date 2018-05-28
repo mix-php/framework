@@ -12,10 +12,13 @@ class BaseObject
     // 构造
     public function __construct($attributes = [])
     {
+        // 执行构造事件
         $this->onConstruct();
+        // 导入属性
         foreach ($attributes as $name => $attribute) {
             $this->$name = $attribute;
         }
+        // 执行初始化事件
         $this->onInitialize();
     }
 

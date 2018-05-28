@@ -143,22 +143,25 @@ class BaseRequest extends Component
     // 返回请求的URL
     public function url()
     {
-        $scheme = $this->server('request_scheme') ?: $this->header('request_scheme');
-        return $scheme . '://' . $this->header('host') . $this->server('path_info');
+        return $this->scheme() . '://' . $this->header('host') . $this->server('path_info');
     }
 
     // 返回请求的完整URL
     public function fullUrl()
     {
-        $scheme = $this->server('request_scheme') ?: $this->header('request_scheme');
-        return $scheme . '://' . $this->header('host') . $this->server('path_info') . '?' . $this->server('query_string');
+        return $this->scheme() . '://' . $this->header('host') . $this->server('path_info') . '?' . $this->server('query_string');
     }
 
     // 返回请求的根URL
     public function root()
     {
-        $scheme = $this->server('request_scheme') ?: $this->header('request_scheme');
-        return $scheme . '://' . $this->header('host');
+        return $this->scheme() . '://' . $this->header('host');
+    }
+
+    // 获取协议
+    protected function scheme()
+    {
+        return $this->server('request_scheme') ?: $this->header('request_scheme');
     }
 
 }

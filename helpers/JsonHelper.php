@@ -12,9 +12,6 @@ class JsonHelper
     // 编码
     public static function encode($value, $options = 0, $depth = 512)
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            return json_encode($value, $options);
-        }
         return json_encode($value, $options, $depth);
     }
 

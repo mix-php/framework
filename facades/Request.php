@@ -23,6 +23,7 @@ use mix\base\Facade;
  * @method isHead() static
  * @method isOptions() static
  * @method method() static
+ * @method root() static
  * @method path() static
  * @method url() static
  * @method fullUrl() static

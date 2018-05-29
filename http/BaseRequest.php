@@ -134,6 +134,12 @@ class BaseRequest extends Component
         return $this->server('request_method');
     }
 
+    // 返回请求的根URL
+    public function root()
+    {
+        return $this->scheme() . '://' . $this->header('host');
+    }
+
     // 返回请求的路径
     public function path()
     {
@@ -150,12 +156,6 @@ class BaseRequest extends Component
     public function fullUrl()
     {
         return $this->scheme() . '://' . $this->header('host') . $this->server('path_info') . '?' . $this->server('query_string');
-    }
-
-    // 返回请求的根URL
-    public function root()
-    {
-        return $this->scheme() . '://' . $this->header('host');
     }
 
     // 获取协议

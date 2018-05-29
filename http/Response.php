@@ -76,6 +76,10 @@ class Response extends BaseResponse
             return;
         }
         $this->_isSent = true;
+        // 非标量处理
+        if (!is_scalar($this->content)) {
+            $this->content = ucfirst(gettype($this->content));
+        }
         // 发送内容
         $this->_responder->end($this->content);
     }

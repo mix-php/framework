@@ -3,6 +3,7 @@
 namespace mix\http;
 
 use mix\base\Component;
+use mix\helpers\StringHelper;
 
 /**
  * Session组件
@@ -50,21 +51,11 @@ class Session extends Component
     {
         $this->_sessionId = \Mix::app()->request->cookie($this->name);
         if (is_null($this->_sessionId)) {
-            $this->_sessionId = self::createSessionId();
+            // 创建session_id
+            $this->_sessionId = StringHelper::getRandomString(26);
         }
         $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
         $this->saveHandler->expire($this->_sessionKey, $this->expires);
-    }
-
-    // 创建session_id
-    protected static function createSessionId()
-    {
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-        $name  = '';
-        for ($i = 0; $i < 26; $i++) {
-            $name .= $chars{mt_rand(0, 61)};
-        }
-        return $name;
     }
 
     // 赋值

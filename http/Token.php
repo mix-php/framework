@@ -3,6 +3,7 @@
 namespace mix\http;
 
 use mix\base\Component;
+use mix\helpers\StringHelper;
 
 /**
  * Token组件
@@ -66,21 +67,14 @@ class Token extends Component
         $this->_tokenId = \Mix::app()->request->get($this->name) or
         $this->_tokenId = \Mix::app()->request->header($this->name) or
         $this->_tokenId = \Mix::app()->request->post($this->name);
-        if (is_null($this->_tokenId)) {
-            $this->_tokenId = self::createTokenId();
-        }
         $this->_tokenKey = $this->_tokenPrefix . $this->_tokenId;
     }
 
     // 创建TokenID
-    protected static function createTokenId()
+    public function createTokenId()
     {
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-        $name  = '';
-        for ($i = 0; $i < 32; $i++) {
-            $name .= $chars{mt_rand(0, 61)};
-        }
-        return $name;
+        $this->_tokenId  = StringHelper::getRandomString(32);
+        $this->_tokenKey = $this->_tokenPrefix . $this->_tokenId;
     }
 
     // 设置唯一索引

@@ -154,7 +154,7 @@ class Token extends Component
         // 定义变量
         $oldData     = $tokenData;
         $oldTokenKey = $this->_tokenKey;
-        $newTokenId  = self::createTokenId();
+        $newTokenId  = StringHelper::getRandomString(32);
         $newTokenKey = $this->_tokenPrefix . $newTokenId;
         $uniqueKey   = $this->_uniqueIndexPrefix . $oldData['__uidx__'];
         // 生成新的 token 数据

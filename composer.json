@@ -23,6 +23,7 @@
       "mix\\": "src/"
     },
     "files": [
+      "src/Mix.php",
       "src/helpers/Functions.php"
     ]
   }

@@ -100,5 +100,3 @@ class Mix
     }
 
 }
-
-include 'helpers.php';

@@ -2,7 +2,7 @@
 
 namespace mix\task;
 
-use mix\process\Process;
+use mix\process\ProcessHelper;
 
 /**
  * 任务进程类（左）
@@ -18,7 +18,7 @@ class LeftProcess extends BaseProcess
         if (!$this->next->push($data)) {
             throw new \mix\exceptions\TaskException('LeftProcess Error: push faild.');
         }
-        if (!Process::isRunning($this->mpid)) {
+        if (!ProcessHelper::isRunning($this->mpid)) {
             $this->current->exit();
         }
         return true;

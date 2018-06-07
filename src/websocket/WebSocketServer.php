@@ -3,7 +3,7 @@
 namespace mix\websocket;
 
 use mix\base\BaseObject;
-use mix\process\Process;
+use mix\process\ProcessHelper;
 
 /**
  * Http服务器类
@@ -87,7 +87,7 @@ class WebSocketServer extends BaseObject
     {
         $this->_server->on('Start', function ($server) {
             // 进程命名
-            Process::setName("mix-websocketd: master {$this->host}:{$this->port}");
+            ProcessHelper::setTitle("mix-websocketd: master {$this->host}:{$this->port}");
         });
     }
 
@@ -96,7 +96,7 @@ class WebSocketServer extends BaseObject
     {
         $this->_server->on('ManagerStart', function ($server) {
             // 进程命名
-            Process::setName("mix-websocketd: manager");
+            ProcessHelper::setTitle("mix-websocketd: manager");
         });
     }
 
@@ -106,9 +106,9 @@ class WebSocketServer extends BaseObject
         $this->_server->on('WorkerStart', function ($server, $workerId) {
             // 进程命名
             if ($workerId < $server->setting['worker_num']) {
-                Process::setName("mix-websocketd: worker #{$workerId}");
+                ProcessHelper::setTitle("mix-websocketd: worker #{$workerId}");
             } else {
-                Process::setName("mix-websocketd: task #{$workerId}");
+                ProcessHelper::setTitle("mix-websocketd: task #{$workerId}");
             }
         });
     }

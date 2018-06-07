@@ -2,7 +2,7 @@
 
 namespace mix\task;
 
-use mix\process\Process;
+use mix\process\ProcessHelper;
 
 /**
  * 任务进程类（中）
@@ -17,7 +17,7 @@ class CenterProcess extends BaseProcess
         if ($this->mode == TaskExecutor::MODE_ACQUISITION) {
             throw new \mix\exceptions\TaskException('CenterProcess Error: method \'pop\' is not available in MODE_ACQUISITION mode.');
         }
-        if (!Process::isRunning($this->mpid) && $this->queueIsEmpty()) {
+        if (!ProcessHelper::isRunning($this->mpid) && $this->queueIsEmpty()) {
             $this->current->freeQueue();
             $this->current->exit();
         }
@@ -38,7 +38,7 @@ class CenterProcess extends BaseProcess
         if (!$this->next->push($data)) {
             throw new \mix\exceptions\TaskException('CenterProcess Error: push faild.');
         }
-        if ($this->mode == TaskExecutor::MODE_ACQUISITION && !Process::isRunning($this->mpid)) {
+        if ($this->mode == TaskExecutor::MODE_ACQUISITION && !ProcessHelper::isRunning($this->mpid)) {
             $this->current->exit();
         }
         return true;

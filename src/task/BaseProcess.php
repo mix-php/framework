@@ -3,7 +3,7 @@
 namespace mix\task;
 
 use mix\base\BaseObject;
-use mix\process\Process;
+use mix\process\ProcessHelper;
 
 /**
  * 任务进程类
@@ -37,7 +37,7 @@ class BaseProcess extends BaseObject
     // 杀死主进程
     public function killMasterProcess()
     {
-        Process::kill($this->mpid);
+        ProcessHelper::kill($this->mpid);
     }
 
     // 队列是否为空，只在主进程关闭时使用

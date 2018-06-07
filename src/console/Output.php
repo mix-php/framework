@@ -3,6 +3,7 @@
 namespace mix\console;
 
 use mix\base\Component;
+use mix\process\PhpInfoHelper;
 
 /**
  * Output组件
@@ -28,18 +29,18 @@ class Output extends Component
     const BG_BLUE = "\033[44m";
 
     // 是否为 WIN 操作系统
-    public $isWin;
+    protected $_isWin;
 
     // 构造事件
     public function onConstruct()
     {
-        $this->isWin = substr(PHP_OS, 0, 3) === 'WIN' ? true : false;
+        $this->_isWin = PhpInfoHelper::isWin();
     }
 
     // ANSI 格式化
     public function ansiFormat($message, $color = self::NONE)
     {
-        if ($this->isWin) {
+        if ($this->_isWin) {
             return $message;
         }
         return $color . $message . self::NONE;

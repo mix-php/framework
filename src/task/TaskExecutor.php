@@ -3,7 +3,7 @@
 namespace mix\task;
 
 use mix\base\BaseObject;
-use mix\process\Process;
+use mix\process\ProcessHelper;
 
 /**
  * 任务执行器类
@@ -74,7 +74,7 @@ class TaskExecutor extends BaseObject
     // 启动
     public function start()
     {
-        Process::setName("{$this->name} master");
+        ProcessHelper::setTitle("{$this->name} master");
         $this->createProcesses();
         $this->subProcessWait();
     }
@@ -136,12 +136,12 @@ class TaskExecutor extends BaseObject
                 break;
         }
         $mode        = $this->mode;
-        $mpid        = Process::getPid();
+        $mpid        = ProcessHelper::getPid();
         $popExitWait = $this->popExitWait;
         // 创建进程对象
         $process = new \Swoole\Process(function ($worker) use ($callback, $taskClass, $next, $mode, $mpid, $popExitWait, $processType, $number) {
             try {
-                Process::setName("{$this->name} {$processType} #{$number}");
+                ProcessHelper::setTitle("{$this->name} {$processType} #{$number}");
                 $taskProcess = new $taskClass([
                     'mode'        => $mode,
                     'number'      => $number,

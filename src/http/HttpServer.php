@@ -3,7 +3,7 @@
 namespace mix\http;
 
 use mix\base\BaseObject;
-use mix\process\Process;
+use mix\process\ProcessHelper;
 
 /**
  * Http服务器类
@@ -52,7 +52,7 @@ class HttpServer extends BaseObject
     {
         $this->server->on('Start', function ($server) {
             // 进程命名
-            Process::setName("mix-httpd: master {$this->host}:{$this->port}");
+            ProcessHelper::setTitle("mix-httpd: master {$this->host}:{$this->port}");
         });
     }
 
@@ -61,7 +61,7 @@ class HttpServer extends BaseObject
     {
         $this->server->on('ManagerStart', function ($server) {
             // 进程命名
-            Process::setName("mix-httpd: manager");
+            ProcessHelper::setTitle("mix-httpd: manager");
         });
     }
 
@@ -71,9 +71,9 @@ class HttpServer extends BaseObject
         $this->server->on('WorkerStart', function ($server, $workerId) {
             // 进程命名
             if ($workerId < $server->setting['worker_num']) {
-                Process::setName("mix-httpd: worker #{$workerId}");
+                ProcessHelper::setTitle("mix-httpd: worker #{$workerId}");
             } else {
-                Process::setName("mix-httpd: task #{$workerId}");
+                ProcessHelper::setTitle("mix-httpd: task #{$workerId}");
             }
             // 实例化Apps
             $apps = [];

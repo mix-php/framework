@@ -2,7 +2,7 @@
 
 namespace mix\task;
 
-use mix\process\Process;
+use mix\process\ProcessHelper;
 
 /**
  * 任务进程类（右）
@@ -14,7 +14,7 @@ class RightProcess extends BaseProcess
     // 从队列中提取数据
     public function pop($unserialize = true)
     {
-        if (!Process::isRunning($this->mpid) && $this->queueIsEmpty()) {
+        if (!ProcessHelper::isRunning($this->mpid) && $this->queueIsEmpty()) {
             $this->current->freeQueue();
             $this->current->exit();
         }

@@ -49,7 +49,6 @@ class Error extends Component
         // 格式化输出
         $output  = \Mix::app()->output;
         $message = $output->ansiFormat($errors['message'], Output::BG_RED) . PHP_EOL;
-        $message .= $time . PHP_EOL;
         $message .= "{$errors['type']} code {$errors['code']}" . PHP_EOL;
         $message .= $output->ansiFormat($errors['file'], Output::BG_RED) . ' line ' . $output->ansiFormat($errors['line'], Output::BG_RED) . PHP_EOL;
         $message .= str_replace("\n", PHP_EOL, $errors['trace']);

@@ -14,9 +14,6 @@ class CenterProcess extends BaseProcess
     // 从队列中提取数据
     public function pop($unserialize = true)
     {
-        if ($this->mode == TaskExecutor::MODE_ACQUISITION) {
-            throw new \mix\exceptions\TaskException('CenterProcess Error: method \'pop\' is not available in MODE_ACQUISITION mode.');
-        }
         if (!ProcessHelper::isRunning($this->mpid) && $this->queueIsEmpty()) {
             $this->current->freeQueue();
             $this->current->exit();
@@ -38,9 +35,6 @@ class CenterProcess extends BaseProcess
         if (!$this->next->push($data)) {
             throw new \mix\exceptions\TaskException('CenterProcess Error: push faild.');
         }
-        if ($this->mode == TaskExecutor::MODE_ACQUISITION && !ProcessHelper::isRunning($this->mpid)) {
-            $this->current->exit();
-        }
         return true;
     }
 
@@ -48,9 +42,6 @@ class CenterProcess extends BaseProcess
     public function fallback($data, $serialize = true)
     {
         $serialize and $data = serialize($data);
-        if ($this->mode == TaskExecutor::MODE_ACQUISITION) {
-            throw new \mix\exceptions\TaskException('CenterProcess Error: method \'fallback\' is not available in MODE_ACQUISITION mode.');
-        }
         if (!$this->current->push($data)) {
             throw new \mix\exceptions\TaskException('CenterProcess Error: fallback faild.');
         }

@@ -18,9 +18,6 @@ class TaskExecutor extends BaseObject
     // 推送模式
     const MODE_PUSH = 1;
 
-    // 采集模式
-    const  MODE_ACQUISITION = 2;
-
     // 程序名称
     public $name = '';
 

@@ -3,7 +3,7 @@
 namespace mix\console;
 
 use mix\base\Component;
-use mix\process\PhpInfoHelper;
+use mix\helpers\PhpInfoHelper;
 
 /**
  * Output组件

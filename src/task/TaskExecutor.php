@@ -3,7 +3,7 @@
 namespace mix\task;
 
 use mix\base\BaseObject;
-use mix\process\ProcessHelper;
+use mix\helpers\ProcessHelper;
 
 /**
  * 任务执行器类

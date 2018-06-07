@@ -3,7 +3,7 @@
 namespace mix\websocket;
 
 use mix\base\BaseObject;
-use mix\process\ProcessHelper;
+use mix\helpers\ProcessHelper;
 
 /**
  * Http服务器类

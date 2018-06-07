@@ -2,7 +2,7 @@
 
 namespace mix\task;
 
-use mix\process\ProcessHelper;
+use mix\helpers\ProcessHelper;
 
 /**
  * 任务进程类（左）

@@ -81,7 +81,7 @@ class Mix
         }
     }
 
-    // 使用配置创建新对象
+    // 使用配置创建对象
     public static function createObject($config)
     {
         // 构建属性数组

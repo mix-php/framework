@@ -24,4 +24,25 @@ class LeftProcess extends BaseProcess
         return true;
     }
 
+    // 结束任务
+    public function finish()
+    {
+        // 杀死主进程
+        ProcessHelper::kill($this->mpid);
+        while (ProcessHelper::isRunning($this->mpid)) {
+            // 等待进程退出
+            usleep(100000);
+        }
+        // 发送一个空数据，解锁阻塞的中进程
+        if (isset($this->next) && $this->next->statQueue()['queue_num'] == 0) {
+            $this->next->push(serialize(null));
+        }
+        // 发送一个空数据，解锁阻塞的右进程
+        if (isset($this->afterNext) && $this->afterNext->statQueue()['queue_num'] == 0) {
+            $this->afterNext->push(serialize(null));
+        }
+        // 退出
+        $this->current->exit();
+    }
+
 }

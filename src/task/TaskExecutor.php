@@ -119,6 +119,7 @@ class TaskExecutor extends BaseObject
                 $callback  = $this->_onRightStart;
                 $taskClass = '\mix\task\RightProcess';
                 $next      = null;
+                $afterNext = null;
                 break;
             case 'center':
                 $callback  = $this->_onCenterStart;
@@ -127,19 +128,26 @@ class TaskExecutor extends BaseObject
                 if (!empty($temp = $this->_rightProcesses)) {
                     $next = array_pop($temp);
                 }
+                $afterNext = null;
                 break;
             case 'left':
                 $callback  = $this->_onLeftStart;
                 $taskClass = '\mix\task\LeftProcess';
-                $temp      = $this->_centerProcesses;
-                $next      = array_pop($temp);
+                $next      = null;
+                if (!empty($temp = $this->_centerProcesses)) {
+                    $next = array_pop($temp);
+                }
+                $afterNext = null;
+                if (!empty($temp = $this->_rightProcesses)) {
+                    $afterNext = array_pop($temp);
+                }
                 break;
         }
         $mode        = $this->mode;
         $mpid        = ProcessHelper::getPid();
         $popExitWait = $this->popExitWait;
         // 创建进程对象
-        $process = new \Swoole\Process(function ($worker) use ($callback, $taskClass, $next, $mode, $mpid, $popExitWait, $processType, $number) {
+        $process = new \Swoole\Process(function ($worker) use ($callback, $taskClass, $next, $afterNext, $mode, $mpid, $popExitWait, $processType, $number) {
             try {
                 ProcessHelper::setTitle("{$this->name} {$processType} #{$number}");
                 $taskProcess = new $taskClass([
@@ -150,6 +158,7 @@ class TaskExecutor extends BaseObject
                     'popExitWait' => $popExitWait,
                     'current'     => $worker,
                     'next'        => $next,
+                    'afterNext'   => $afterNext,
                 ]);
                 call_user_func($callback, $taskProcess);
             } catch (\Exception $e) {

@@ -15,7 +15,6 @@ class BaseProcess extends BaseObject
     // 模式
     public $mode;
 
-
     // 进程编号
     public $number;
 
@@ -31,14 +30,11 @@ class BaseProcess extends BaseObject
     // 当前对象
     public $current;
 
-    // 下一步对象
+    // 下一步的对象
     public $next;
 
-    // 杀死主进程
-    public function killMasterProcess()
-    {
-        ProcessHelper::kill($this->mpid);
-    }
+    // 下下步的对象
+    public $afterNext;
 
     // 队列是否为空，只在主进程关闭时使用
     protected function queueIsEmpty()

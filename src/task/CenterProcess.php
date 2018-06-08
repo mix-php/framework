@@ -39,7 +39,7 @@ class CenterProcess extends BaseProcess
     }
 
     // 回退数据
-    public function fallback($data, $serialize = true)
+    public function rollback($data, $serialize = true)
     {
         $serialize and $data = serialize($data);
         if (!$this->current->push($data)) {

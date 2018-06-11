@@ -225,13 +225,13 @@ class TaskExecutor extends BaseObject
     {
         $pid = $ret['pid'];
         if (isset($this->_workers[$pid])) {
+            // 取出进程信息
+            list($processType, $number) = $this->_workers[$pid];
             // 删除旧引用
             unset($this->_workers[$pid]);
             unset($this->_rightProcesses[$pid]);
             unset($this->_centerProcesses[$pid]);
             unset($this->_leftProcesses[$pid]);
-            // 重建进程
-            list($processType, $number) = $this->_workers[$pid];
             // 不重启定时任务中完成任务的进程
             if ($this->type == self::TYPE_CRONTAB) {
                 if ($processType == 'left' && $this->_table->get('leftFinishStatus', 'value')) {
@@ -241,6 +241,7 @@ class TaskExecutor extends BaseObject
                     return;
                 }
             }
+            // 重建进程
             $this->createProcess($processType, $number);
             // 返回
             return;

@@ -15,14 +15,16 @@ class RightProcess extends BaseProcess
     public function pop($unserialize = true)
     {
         if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
-            $finished = $this->_table->get('centerFinishStatus', 'value') == 1;
+            $finished = $this->table->get('centerFinishStatus', 'value') == 1;
         } else {
             $finished = !ProcessHelper::isRunning($this->mpid);
         }
         if ($finished && $this->queueIsEmpty()) {
             if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
                 // 杀死主进程
-                ProcessHelper::kill($this->mpid);
+                if (ProcessHelper::isRunning($this->mpid)) {
+                    ProcessHelper::kill($this->mpid);
+                }
             }
             // 退出
             $this->current->freeQueue();

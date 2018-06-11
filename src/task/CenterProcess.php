@@ -15,7 +15,7 @@ class CenterProcess extends BaseProcess
     public function pop($unserialize = true)
     {
         if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
-            $finished = $this->_table->get('leftFinishStatus', 'value') == 1;
+            $finished = $this->table->get('leftFinishStatus', 'value') == 1;
         } else {
             $finished = !ProcessHelper::isRunning($this->mpid);
         }
@@ -23,7 +23,9 @@ class CenterProcess extends BaseProcess
             if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
                 if ($this->mode == \mix\task\TaskExecutor::MODE_PUSH) {
                     // 杀死主进程
-                    ProcessHelper::kill($this->mpid);
+                    if (ProcessHelper::isRunning($this->mpid)) {
+                        ProcessHelper::kill($this->mpid);
+                    }
                 } else {
                     // 标记完成
                     $this->table->set('centerFinishStatus', ['value' => 1]);

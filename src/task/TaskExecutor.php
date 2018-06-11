@@ -94,8 +94,10 @@ class TaskExecutor extends BaseObject
     {
         // 修改进程标题
         ProcessHelper::setTitle("{$this->name} master");
-        // 调整定时任务模式下的进程数
-
+        // 调整定时任务类型下的左进程数
+        if ($this->type == self::TYPE_CRONTAB) {
+            $this->leftProcess = 1;
+        }
         // 创建全部进程
         $this->createProcesses();
         // 等待重启进程

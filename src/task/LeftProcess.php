@@ -18,7 +18,7 @@ class LeftProcess extends BaseProcess
         if (!$this->next->push($data)) {
             throw new \mix\exceptions\TaskException('LeftProcess Error: push faild.');
         }
-        if (!ProcessHelper::isRunning($this->mpid)) {
+        if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON && !ProcessHelper::isRunning($this->mpid)) {
             $this->current->exit();
         }
         return true;
@@ -27,20 +27,11 @@ class LeftProcess extends BaseProcess
     // 结束任务
     public function finish()
     {
-        // 杀死主进程
-        ProcessHelper::kill($this->mpid);
-        while (ProcessHelper::isRunning($this->mpid)) {
-            // 等待进程退出
-            usleep(100000);
+        if ($this->type != \mix\task\TaskExecutor::TYPE_CRONTAB) {
+            throw new \mix\exceptions\TaskException('LeftProcess Error: method \'finish\' is not available in TYPE_CRONTAB type.');
         }
-        // 发送一个空数据，解锁阻塞的中进程
-        if (isset($this->next) && $this->next->statQueue()['queue_num'] == 0) {
-            $this->next->push(serialize(null));
-        }
-        // 发送一个空数据，解锁阻塞的右进程
-        if (isset($this->afterNext) && $this->afterNext->statQueue()['queue_num'] == 0) {
-            $this->afterNext->push(serialize(null));
-        }
+        // 标记完成
+        $this->table->set('leftFinishStatus', ['value' => 1]);
         // 退出
         $this->current->exit();
     }

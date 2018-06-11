@@ -14,7 +14,17 @@ class RightProcess extends BaseProcess
     // 从队列中提取数据
     public function pop($unserialize = true)
     {
-        if (!ProcessHelper::isRunning($this->mpid) && $this->queueIsEmpty()) {
+        if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
+            $finished = $this->_table->get('centerFinishStatus', 'value') == 1;
+        } else {
+            $finished = !ProcessHelper::isRunning($this->mpid);
+        }
+        if ($finished && $this->queueIsEmpty()) {
+            if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
+                // 杀死主进程
+                ProcessHelper::kill($this->mpid);
+            }
+            // 退出
             $this->current->freeQueue();
             $this->current->exit();
         }
@@ -26,7 +36,7 @@ class RightProcess extends BaseProcess
     }
 
     // 回退数据
-    public function fallback($data, $serialize = true)
+    public function rollback($data, $serialize = true)
     {
         $serialize and $data = serialize($data);
         if (!$this->current->push($data)) {

@@ -11,6 +11,9 @@ use mix\base\BaseObject;
 class BaseProcess extends BaseObject
 {
 
+    // 类型
+    public $type;
+
     // 模式
     public $mode;
 
@@ -34,6 +37,9 @@ class BaseProcess extends BaseObject
 
     // 下下步的对象
     public $afterNext;
+
+    // 共享内存表
+    public $table;
 
     // 队列是否为空，只在主进程关闭时使用
     protected function queueIsEmpty()

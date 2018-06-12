@@ -45,7 +45,7 @@ class BaseProcess extends BaseObject
     protected function queueIsEmpty()
     {
         $waitTime     = $this->popExitWait * 1000000;
-        $intervalTime = 10000;
+        $intervalTime = 100000;
         while ($this->current->statQueue()['queue_num'] == 0) {
             if ($waitTime <= 0) {
                 return true;

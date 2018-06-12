@@ -11,28 +11,25 @@ use mix\helpers\ProcessHelper;
 class CenterProcess extends BaseProcess
 {
 
+    // 定时任务执行状态
+    const CRONTAB_STATUS_FINISH = 3;
+
     // 从队列中提取数据
     public function pop($unserialize = true)
     {
         if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
-            $finished = $this->table->get('leftFinishStatus', 'value') == 1;
+            $finished = true;
         } else {
             $finished = !ProcessHelper::isRunning($this->mpid);
         }
         if ($finished && $this->queueIsEmpty()) {
-            if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
-                if ($this->mode == \mix\task\TaskExecutor::MODE_PUSH) {
-                    // 杀死主进程
-                    if (ProcessHelper::isRunning($this->mpid)) {
-                        ProcessHelper::kill($this->mpid);
-                    }
-                } else {
-                    // 标记完成
-                    $this->table->set('centerFinishStatus', ['value' => 1]);
-                }
+            if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB && $this->table->get('crontabRunStatus', 'value') == LeftProcess::CRONTAB_STATUS_FINISH) {
+                $this->table->set('crontabRunStatus', ['value' => self::CRONTAB_STATUS_FINISH]);
+                $this->current->freeQueue();
             }
-            // 退出
-            $this->current->freeQueue();
+            if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
+                $this->current->freeQueue();
+            }
             $this->current->exit();
         }
         $data = $this->current->pop();

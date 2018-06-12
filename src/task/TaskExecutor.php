@@ -43,7 +43,7 @@ class TaskExecutor extends BaseObject
     public $rightProcess = 0;
 
     // POP退出等待时间 (秒)
-    public $popExitWait = 3;
+    public $popExitWait = 5;
 
     // 左进程启动事件回调函数
     protected $_onLeftStart;
@@ -83,8 +83,7 @@ class TaskExecutor extends BaseObject
             $table = new \Swoole\Table(2);
             $table->column('value', \Swoole\Table::TYPE_INT);
             $table->create();
-            $table->set('leftFinishStatus', ['value' => 0]);
-            $table->set('centerFinishStatus', ['value' => 0]);
+            $table->set('crontabRunStatus', ['value' => 0]);
             $this->_table = $table;
         }
     }
@@ -232,13 +231,20 @@ class TaskExecutor extends BaseObject
             unset($this->_rightProcesses[$pid]);
             unset($this->_centerProcesses[$pid]);
             unset($this->_leftProcesses[$pid]);
-            // 不重启定时任务中完成任务的进程
+            // 定时任务进程状态处理
             if ($this->type == self::TYPE_CRONTAB) {
-                if ($processType == 'left' && $this->_table->get('leftFinishStatus', 'value')) {
-                    return;
-                }
-                if ($processType == 'center' && $this->_table->get('centerFinishStatus', 'value')) {
-                    return;
+                switch ($processType . ':' . $this->_table->get('crontabRunStatus', 'value')) {
+                    case 'left:' . LeftProcess::CRONTAB_STATUS_START:
+                        $this->_table->set('crontabRunStatus', ['value' => LeftProcess::CRONTAB_STATUS_FINISH]);
+                        return;
+                    case 'center:' . CenterProcess::CRONTAB_STATUS_FINISH:
+                        if ($this->mode == self::MODE_PUSH) {
+                            ProcessHelper::kill(ProcessHelper::getPid());
+                        }
+                        return;
+                    case 'right:' . RightProcess::CRONTAB_STATUS_FINISH:
+                        ProcessHelper::kill(ProcessHelper::getPid());
+                        return;
                 }
             }
             // 重建进程

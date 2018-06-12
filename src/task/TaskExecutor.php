@@ -80,10 +80,12 @@ class TaskExecutor extends BaseObject
         $this->_messageKey = crc32(uniqid('', true));
         // 创建内存表
         if ($this->type == self::TYPE_CRONTAB) {
-            $table = new \Swoole\Table(2);
+            $table = new \Swoole\Table(4);
             $table->column('value', \Swoole\Table::TYPE_INT);
             $table->create();
             $table->set('crontabRunStatus', ['value' => 0]);
+            $table->set('crontabCenterUnfinished', ['value' => $this->centerProcess]);
+            $table->set('crontabRightUnfinished', ['value' => $this->rightProcess]);
             $this->_table = $table;
         }
     }

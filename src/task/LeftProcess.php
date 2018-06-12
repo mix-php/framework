@@ -20,7 +20,7 @@ class LeftProcess extends BaseProcess
     {
         $serialize and $data = serialize($data);
         if (!$this->next->push($data)) {
-            throw new \mix\exceptions\TaskException('LeftProcess Error: push faild.');
+            throw new \mix\exceptions\TaskException('LeftProcess Error: push faild, data: ' . $data);
         }
         if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON && !ProcessHelper::isRunning($this->mpid)) {
             $this->current->exit();

@@ -17,12 +17,16 @@ class CenterProcess extends BaseProcess
     // 从队列中提取数据
     public function pop($unserialize = true)
     {
-        if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
-            $finished = true;
-        } else {
+        if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
             $finished = !ProcessHelper::isRunning($this->mpid);
+        } else {
+            $finished = true;
         }
         if ($finished && $this->queueIsEmpty()) {
+            if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
+                $this->current->freeQueue();
+                $this->current->exit();
+            }
             if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
                 if ($this->table->get('crontabRunStatus', 'value') == LeftProcess::CRONTAB_STATUS_FINISH && $this->table->decr('crontabCenterUnfinished', 'value') === 0) {
                     $this->table->set('crontabRunStatus', ['value' => self::CRONTAB_STATUS_FINISH]);
@@ -32,10 +36,6 @@ class CenterProcess extends BaseProcess
                 if ($this->table->get('crontabRunStatus', 'value') >= self::CRONTAB_STATUS_FINISH) {
                     $this->current->exit();
                 }
-            }
-            if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
-                $this->current->freeQueue();
-                $this->current->exit();
             }
         }
         $data = $this->current->pop();
@@ -53,7 +53,7 @@ class CenterProcess extends BaseProcess
             throw new \mix\exceptions\TaskException('CenterProcess Error: method \'push\' is not available in MODE_PUSH mode.');
         }
         if (!$this->next->push($data)) {
-            throw new \mix\exceptions\TaskException('CenterProcess Error: push faild.');
+            throw new \mix\exceptions\TaskException('CenterProcess Error: push faild, data: ' . $data);
         }
         return true;
     }
@@ -63,7 +63,7 @@ class CenterProcess extends BaseProcess
     {
         $serialize and $data = serialize($data);
         if (!$this->current->push($data)) {
-            throw new \mix\exceptions\TaskException('CenterProcess Error: fallback faild.');
+            throw new \mix\exceptions\TaskException('CenterProcess Error: fallback faild, data: ' . $data);
         }
         return true;
     }

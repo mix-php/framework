@@ -17,12 +17,16 @@ class RightProcess extends BaseProcess
     // 从队列中提取数据
     public function pop($unserialize = true)
     {
-        if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
-            $finished = true;
-        } else {
+        if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
             $finished = !ProcessHelper::isRunning($this->mpid);
+        } else {
+            $finished = true;
         }
         if ($finished && $this->queueIsEmpty()) {
+            if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
+                $this->current->freeQueue();
+                $this->current->exit();
+            }
             if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
                 if ($this->table->get('crontabRunStatus', 'value') == CenterProcess::CRONTAB_STATUS_FINISH && $this->table->decr('crontabRightUnfinished', 'value') === 0) {
                     $this->table->set('crontabRunStatus', ['value' => self::CRONTAB_STATUS_FINISH]);
@@ -32,10 +36,6 @@ class RightProcess extends BaseProcess
                 if ($this->table->get('crontabRunStatus', 'value') >= self::CRONTAB_STATUS_FINISH) {
                     $this->current->exit();
                 }
-            }
-            if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
-                $this->current->freeQueue();
-                $this->current->exit();
             }
         }
         $data = $this->current->pop();
@@ -50,7 +50,7 @@ class RightProcess extends BaseProcess
     {
         $serialize and $data = serialize($data);
         if (!$this->current->push($data)) {
-            throw new \mix\exceptions\TaskException('RightProcess Error: fallback faild.');
+            throw new \mix\exceptions\TaskException('RightProcess Error: fallback faild, data: ' . $data);
         }
         return true;
     }

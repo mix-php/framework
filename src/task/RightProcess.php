@@ -23,16 +23,20 @@ class RightProcess extends BaseProcess
             $finished = !ProcessHelper::isRunning($this->mpid);
         }
         if ($finished && $this->queueIsEmpty()) {
-            if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB && $this->table->get('crontabRunStatus', 'value') == CenterProcess::CRONTAB_STATUS_FINISH) {
-                if ($this->table->decr('crontabRightUnfinished', 'value') === 0) {
+            if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
+                if ($this->table->get('crontabRunStatus', 'value') == CenterProcess::CRONTAB_STATUS_FINISH && $this->table->decr('crontabRightUnfinished', 'value') === 0) {
                     $this->table->set('crontabRunStatus', ['value' => self::CRONTAB_STATUS_FINISH]);
+                    $this->current->freeQueue();
+                    $this->current->exit();
                 }
-                $this->current->freeQueue();
+                if ($this->table->get('crontabRunStatus', 'value') >= self::CRONTAB_STATUS_FINISH) {
+                    $this->current->exit();
+                }
             }
             if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
                 $this->current->freeQueue();
+                $this->current->exit();
             }
-            $this->current->exit();
         }
         $data = $this->current->pop();
         if (!empty($data) && $unserialize) {

@@ -26,8 +26,8 @@ class BaseProcess extends BaseObject
     // 当前进程pid
     public $pid;
 
-    // POP退出等待时间 (秒)
-    public $popExitWait;
+    // 任务超时时间 (秒)
+    public $timeout;
 
     // 当前对象
     public $current;
@@ -44,7 +44,7 @@ class BaseProcess extends BaseObject
     // 队列是否为空，只在主进程关闭时使用
     protected function queueIsEmpty()
     {
-        $waitTime     = $this->popExitWait * 1000000;
+        $waitTime     = $this->timeout * 1000000;
         $intervalTime = 100000;
         while ($this->current->statQueue()['queue_num'] == 0) {
             if ($waitTime <= 0) {

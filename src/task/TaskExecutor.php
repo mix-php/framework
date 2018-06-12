@@ -42,8 +42,8 @@ class TaskExecutor extends BaseObject
     // 右进程数
     public $rightProcess = 0;
 
-    // POP退出等待时间 (秒)
-    public $popExitWait = 5;
+    // 任务超时时间 (秒)
+    public $timeout = 5;
 
     // 左进程启动事件回调函数
     protected $_onLeftStart;
@@ -169,26 +169,26 @@ class TaskExecutor extends BaseObject
                 }
                 break;
         }
-        $type        = $this->type;
-        $mode        = $this->mode;
-        $mpid        = ProcessHelper::getPid();
-        $popExitWait = $this->popExitWait;
-        $table       = $this->_table;
+        $type    = $this->type;
+        $mode    = $this->mode;
+        $mpid    = ProcessHelper::getPid();
+        $timeout = $this->timeout;
+        $table   = $this->_table;
         // 创建进程对象
-        $process = new \Swoole\Process(function ($worker) use ($callback, $taskClass, $next, $afterNext, $type, $mode, $mpid, $popExitWait, $table, $processType, $number) {
+        $process = new \Swoole\Process(function ($worker) use ($callback, $taskClass, $next, $afterNext, $type, $mode, $mpid, $timeout, $table, $processType, $number) {
             try {
                 ProcessHelper::setTitle("{$this->name} {$processType} #{$number}");
                 $taskProcess = new $taskClass([
-                    'type'        => $type,
-                    'mode'        => $mode,
-                    'number'      => $number,
-                    'mpid'        => $mpid,
-                    'pid'         => $worker->pid,
-                    'popExitWait' => $popExitWait,
-                    'current'     => $worker,
-                    'next'        => $next,
-                    'afterNext'   => $afterNext,
-                    'table'       => $table,
+                    'type'      => $type,
+                    'mode'      => $mode,
+                    'number'    => $number,
+                    'mpid'      => $mpid,
+                    'pid'       => $worker->pid,
+                    'timeout'   => $timeout,
+                    'current'   => $worker,
+                    'next'      => $next,
+                    'afterNext' => $afterNext,
+                    'table'     => $table,
                 ]);
                 call_user_func($callback, $taskProcess);
             } catch (\Exception $e) {

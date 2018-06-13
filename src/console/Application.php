@@ -104,26 +104,13 @@ class Application extends \mix\base\Application
     }
 
     // 打印变量的相关信息
-    public function varDump($var, $send = false)
+    public function dump($var, $send = false)
     {
         static $content = '';
         ob_start();
         var_dump($var);
         $dumpContent = ob_get_clean();
         $content     .= $dumpContent;
-        if ($send) {
-            throw new \mix\exceptions\DebugException($content);
-        }
-    }
-
-    // 打印关于变量的易于理解的信息
-    public function varPrint($var, $send = false)
-    {
-        static $content = '';
-        ob_start();
-        print_r($var);
-        $printContent = ob_get_clean();
-        $content      .= $printContent;
         if ($send) {
             throw new \mix\exceptions\DebugException($content);
         }

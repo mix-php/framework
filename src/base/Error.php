@@ -21,7 +21,8 @@ class Error
         }
         self::$registered = true;
         // 注册错误处理
-        error_reporting(E_ALL);
+        $level = \Mix::app()->error->level;
+        error_reporting($level);
         set_error_handler(['mix\base\Error', 'appError']);
         set_exception_handler(['mix\base\Error', 'appException']);
         register_shutdown_function(['mix\base\Error', 'appShutdown']);

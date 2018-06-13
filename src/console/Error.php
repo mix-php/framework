@@ -11,6 +11,9 @@ use mix\base\Component;
 class Error extends Component
 {
 
+    // 错误级别
+    public $level = E_ALL;
+
     // 异常处理
     public function handleException(\Exception $e, $exit = false)
     {

@@ -20,6 +20,9 @@ class Error extends Component
     // 输出格式
     public $format = self::FORMAT_HTML;
 
+    // 错误级别，只在 Apache/PHP-FPM 传统环境下有效
+    public $level = E_ALL;
+
     // 异常处理
     public function handleException(\Exception $e)
     {

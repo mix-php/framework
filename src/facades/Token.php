@@ -8,6 +8,7 @@ use mix\base\Facade;
  * Token 门面类
  * @author 刘健 <coder.liu@qq.com>
  *
+ * @method createTokenId() static
  * @method set($name, $value) static
  * @method setUniqueIndex($uniqueId) static
  * @method get($name = null) static

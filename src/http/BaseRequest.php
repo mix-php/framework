@@ -161,7 +161,7 @@ class BaseRequest extends Component
     // 获取协议
     protected function scheme()
     {
-        return $this->server('request_scheme') ?: $this->header('request_scheme');
+        return $this->server('request_scheme') ?: $this->header('scheme');
     }
 
 }

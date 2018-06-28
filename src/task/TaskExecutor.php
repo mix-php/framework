@@ -86,7 +86,7 @@ class TaskExecutor extends BaseObject
         $table->column('value', \Swoole\Table::TYPE_INT);
         $table->create();
         if ($this->type == self::TYPE_CRONTAB) {
-            $table->set('crontabRunStatus', ['value' => 0]);
+            $table->set('crontabStatus', ['value' => LeftProcess::CRONTAB_STATUS_START]);
             $table->set('crontabCenterUnfinished', ['value' => $this->centerProcess]);
             $table->set('crontabRightUnfinished', ['value' => $this->rightProcess]);
         }
@@ -258,9 +258,9 @@ class TaskExecutor extends BaseObject
             unset($this->_leftProcesses[$pid]);
             // 定时任务进程状态处理
             if ($this->type == self::TYPE_CRONTAB) {
-                switch ($processType . ':' . $this->_table->get('crontabRunStatus', 'value')) {
+                switch ($processType . ':' . $this->_table->get('crontabStatus', 'value')) {
                     case 'left:' . LeftProcess::CRONTAB_STATUS_START:
-                        $this->_table->set('crontabRunStatus', ['value' => LeftProcess::CRONTAB_STATUS_FINISH]);
+                        $this->_table->set('crontabStatus', ['value' => LeftProcess::CRONTAB_STATUS_FINISH]);
                         return;
                     case 'center:' . CenterProcess::CRONTAB_STATUS_FINISH:
                         if ($this->mode == self::MODE_PUSH) {

@@ -31,12 +31,12 @@ class CenterProcess extends BaseProcess
                 $this->current->exit();
             }
             if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {
-                if ($this->table->get('crontabRunStatus', 'value') == LeftProcess::CRONTAB_STATUS_FINISH && $this->table->decr('crontabCenterUnfinished', 'value') === 0) {
-                    $this->table->set('crontabRunStatus', ['value' => self::CRONTAB_STATUS_FINISH]);
+                if ($this->table->get('crontabStatus', 'value') == LeftProcess::CRONTAB_STATUS_FINISH && $this->table->decr('crontabCenterUnfinished', 'value') === 0) {
+                    $this->table->set('crontabStatus', ['value' => self::CRONTAB_STATUS_FINISH]);
                     $this->current->freeQueue();
                     $this->current->exit();
                 }
-                if ($this->table->get('crontabRunStatus', 'value') >= self::CRONTAB_STATUS_FINISH) {
+                if ($this->table->get('crontabStatus', 'value') >= self::CRONTAB_STATUS_FINISH) {
                     $this->current->exit();
                 }
             }

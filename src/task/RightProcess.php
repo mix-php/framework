@@ -19,6 +19,9 @@ class RightProcess extends BaseProcess
     {
         if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
             $finished = !ProcessHelper::isRunning($this->mpid);
+            if ($finished && $this->table->get('daemonImmediatelyExit', 'value')) {
+                $this->current->exit();
+            }
         } else {
             $finished = true;
         }

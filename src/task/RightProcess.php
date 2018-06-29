@@ -53,7 +53,7 @@ class RightProcess extends BaseProcess
     {
         $serialize and $data = serialize($data);
         if (!$this->current->push($data)) {
-            throw new \mix\exceptions\TaskException('RightProcess Error: fallback faild, data: ' . $data);
+            throw new \mix\exceptions\TaskException("RightProcess Error: fallback faild, Data: '{$data}'");
         }
         return true;
     }

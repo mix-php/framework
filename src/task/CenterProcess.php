@@ -59,7 +59,7 @@ class CenterProcess extends BaseProcess
             throw new \mix\exceptions\TaskException('CenterProcess Error: method \'push\' is not available in MODE_PUSH mode.');
         }
         if (!$this->next->push($data)) {
-            throw new \mix\exceptions\TaskException("CenterProcess Error: push faild, Data: '{$data}'");
+            throw new \mix\exceptions\TaskException("CenterProcess Error: push failed. Data: '{$data}'.");
         }
         return true;
     }
@@ -69,7 +69,7 @@ class CenterProcess extends BaseProcess
     {
         $serialize and $data = serialize($data);
         if (!$this->current->push($data)) {
-            throw new \mix\exceptions\TaskException("CenterProcess Error: fallback faild, Data: '{$data}'");
+            throw new \mix\exceptions\TaskException("CenterProcess Error: fallback failed. Data: '{$data}'.");
         }
         return true;
     }

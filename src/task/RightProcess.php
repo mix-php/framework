@@ -27,7 +27,9 @@ class RightProcess extends BaseProcess
         }
         if ($finished && $this->queueIsEmpty()) {
             if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON) {
-                $this->current->freeQueue();
+                if ($this->table->decr('daemonRightUnfinished', 'value') === 0) {
+                    $this->current->freeQueue();
+                }
                 $this->current->exit();
             }
             if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB) {

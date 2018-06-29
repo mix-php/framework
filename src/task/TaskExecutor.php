@@ -91,6 +91,8 @@ class TaskExecutor extends BaseObject
             $table->set('crontabRightUnfinished', ['value' => $this->rightProcess]);
         }
         if ($this->type == self::TYPE_DAEMON) {
+            $table->set('daemonCenterUnfinished', ['value' => $this->centerProcess]);
+            $table->set('daemonRightUnfinished', ['value' => $this->rightProcess]);
             $table->set('daemonImmediatelyExit', ['value' => 0]);
         }
         $this->_table = $table;

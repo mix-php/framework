@@ -35,6 +35,7 @@ class Error extends Component
         // 错误参数定义
         $statusCode = $e instanceof \mix\exceptions\NotFoundException ? 404 : 500;
         $errors     = [
+            'status'  => $statusCode,
             'code'    => $e->getCode(),
             'message' => $e->getMessage(),
             'file'    => $e->getFile(),
@@ -62,13 +63,13 @@ class Error extends Component
         if (!MIX_DEBUG) {
             if ($statusCode == 404) {
                 $errors = [
-                    'code'    => 404,
+                    'status'  => 404,
                     'message' => $e->getMessage(),
                 ];
             }
             if ($statusCode == 500) {
                 $errors = [
-                    'code'    => 500,
+                    'status'  => 500,
                     'message' => '服务器内部错误',
                 ];
             }

@@ -25,9 +25,6 @@ class LeftProcess extends BaseProcess
         if ($this->type == \mix\task\TaskExecutor::TYPE_DAEMON && !ProcessHelper::isRunning($this->mpid)) {
             $this->current->exit();
         }
-        if ($this->type == \mix\task\TaskExecutor::TYPE_CRONTAB && $this->table->get('crontabStatus', 'value') < self::CRONTAB_STATUS_START) {
-            $this->table->set('crontabStatus', ['value' => self::CRONTAB_STATUS_START]);
-        }
         return true;
     }
 

@@ -34,6 +34,9 @@ class CenterProcess extends BaseProcess
                 if ($this->table->get('crontabStatus', 'value') == LeftProcess::CRONTAB_STATUS_FINISH && $this->table->decr('crontabCenterUnfinished', 'value') === 0) {
                     $this->table->set('crontabStatus', ['value' => self::CRONTAB_STATUS_FINISH]);
                     $this->current->freeQueue();
+                    for ($i = 0; $i < $this->table->get('crontabRightUnfinished', 'value'); $i++) {
+                        $this->push(false);
+                    }
                     $this->current->exit();
                 }
                 if ($this->table->get('crontabStatus', 'value') >= self::CRONTAB_STATUS_FINISH) {

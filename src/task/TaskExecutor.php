@@ -162,7 +162,7 @@ class TaskExecutor extends BaseObject
     }
 
     // 创建进程
-    protected function createProcess($processType, $number)
+    protected function createProcess($processType, $index)
     {
         // 定义变量
         switch ($processType) {
@@ -200,13 +200,13 @@ class TaskExecutor extends BaseObject
         $timeout = $this->timeout;
         $table   = $this->_table;
         // 创建进程对象
-        $process = new \Swoole\Process(function ($worker) use ($callback, $taskClass, $next, $afterNext, $type, $mode, $mpid, $timeout, $table, $processType, $number) {
+        $process = new \Swoole\Process(function ($worker) use ($callback, $taskClass, $next, $afterNext, $type, $mode, $mpid, $timeout, $table, $processType, $index) {
             try {
-                ProcessHelper::setTitle("{$this->name} {$processType} #{$number}");
+                ProcessHelper::setTitle("{$this->name} {$processType} #{$index}");
                 $taskProcess = new $taskClass([
                     'type'      => $type,
                     'mode'      => $mode,
-                    'number'    => $number,
+                    'index'     => $index,
                     'mpid'      => $mpid,
                     'pid'       => $worker->pid,
                     'timeout'   => $timeout,

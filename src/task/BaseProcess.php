@@ -17,8 +17,8 @@ class BaseProcess extends BaseObject
     // 模式
     public $mode;
 
-    // 进程编号
-    public $number;
+    // 进程标志
+    public $index;
 
     // 主进程pid
     public $mpid;

@@ -232,7 +232,7 @@ class TaskExecutor extends BaseObject
         // 启动
         $pid = $process->start();
         // 保存实例
-        $this->_workers[$pid] = [$processType, $number];
+        $this->_workers[$pid] = [$processType, $index];
         switch ($processType) {
             case 'right':
                 $this->_rightProcesses[$pid] = $process;
@@ -252,7 +252,7 @@ class TaskExecutor extends BaseObject
         $pid = $ret['pid'];
         if (isset($this->_workers[$pid])) {
             // 取出进程信息
-            list($processType, $number) = $this->_workers[$pid];
+            list($processType, $index) = $this->_workers[$pid];
             // 删除旧引用
             unset($this->_workers[$pid]);
             unset($this->_rightProcesses[$pid]);
@@ -275,7 +275,7 @@ class TaskExecutor extends BaseObject
                 }
             }
             // 重建进程
-            $this->createProcess($processType, $number);
+            $this->createProcess($processType, $index);
             // 返回
             return;
         }

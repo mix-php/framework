@@ -10,8 +10,14 @@ class Mix
     // App实例
     protected static $_app;
 
+    // App实例集合
+    protected static $_apps;
+
     // 主机
     protected static $_host;
+
+    // 虚拟主机配置
+    protected static $_virtualHosts;
 
     // 公共容器
     public static $container;
@@ -41,11 +47,11 @@ class Mix
      */
     protected static function getApp()
     {
-        if (is_object(self::$_app)) {
-            return self::$_app;
+        if (isset(self::$_apps)) {
+            return self::$_apps[self::$_host];
         }
-        if (is_array(self::$_app)) {
-            return self::$_app[self::$_host];
+        if (isset(self::$_app)) {
+            return self::$_app;
         }
         return null;
     }
@@ -56,29 +62,45 @@ class Mix
         self::$_app = $app;
     }
 
-    // 设置Apps
-    public static function setApps($apps)
+    // 设置虚拟主机配置
+    public static function setVirtualHosts($virtualHosts)
     {
-        self::$_app = $apps;
+        self::$_virtualHosts = $virtualHosts;
     }
 
     // 设置host
     public static function setHost($host)
     {
-        self::$_host = null;
-        $vHosts      = array_keys(self::$_app);
-        foreach ($vHosts as $vHost) {
-            if ($vHost == '*') {
+        // 切换当前host
+        self::$_host  = null;
+        $virtualHosts = self::$_virtualHosts;
+        foreach ($virtualHosts as $virtualHost => $configFile) {
+            if ($virtualHost == '*') {
                 continue;
             }
-            if (preg_match("/{$vHost}/i", $host)) {
-                self::$_host = $vHost;
+            if (preg_match("/{$virtualHost}/i", $host)) {
+                self::$_host = $virtualHost;
                 break;
             }
         }
         if (is_null(self::$_host)) {
-            self::$_host = isset(self::$_app['*']) ? '*' : array_shift($vHosts);
+            self::$_host = isset($virtualHosts['*']) ? '*' : array_shift($virtualHosts);
         }
+        // 动态实例化App
+        self::createAppByHost(self::$_host);
+    }
+
+    // 实例化 App 通过 host
+    protected static function createAppByHost($host)
+    {
+        if (isset(self::$_apps[$host])) {
+            return;
+        }
+        $configFile = self::$_virtualHosts[$host];
+        $config     = require $configFile;
+        $app        = new \mix\http\Application($config);
+        $app->loadAllComponent();
+        self::$_apps[$host] = $app;
     }
 
     // 使用配置创建对象

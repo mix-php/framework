@@ -75,15 +75,8 @@ class HttpServer extends BaseObject
             } else {
                 ProcessHelper::setTitle("mix-httpd: task #{$workerId}");
             }
-            // 实例化Apps
-            $apps = [];
-            foreach ($this->virtualHosts as $host => $configFile) {
-                $config = require $configFile;
-                $app    = new Application($config);
-                $app->loadAllComponent();
-                $apps[$host] = $app;
-            }
-            \Mix::setApps($apps);
+            // 设置虚拟主机配置
+            \Mix::setVirtualHosts($this->virtualHosts);
         });
     }
 
@@ -91,6 +84,7 @@ class HttpServer extends BaseObject
     protected function onRequest()
     {
         $this->server->on('request', function ($request, $response) {
+            // 切换当前host
             $host = isset($request->header['host']) ? $request->header['host'] : '';
             \Mix::setHost($host);
             // 执行请求

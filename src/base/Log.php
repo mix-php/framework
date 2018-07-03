@@ -29,6 +29,9 @@ class Log extends Component
     // 换行符
     public $newline = PHP_EOL;
 
+    // 在写入时加独占锁
+    public $writeLock = false;
+
     // 调试日志
     public function debug($message)
     {
@@ -75,7 +78,11 @@ class Log extends Component
         while (file_exists($file) && $this->maxFileSize > 0 && filesize($file) >= $this->maxFileSize) {
             $file = $dir . '/' . $filename . '_' . ++$number . '.log';
         }
-        file_put_contents($file, $message . $this->newline, FILE_APPEND | LOCK_EX);
+        $flags = FILE_APPEND;
+        if ($this->writeLock) {
+            $flags = FILE_APPEND | LOCK_EX;
+        }
+        file_put_contents($file, $message . $this->newline, $flags);
     }
 
 }

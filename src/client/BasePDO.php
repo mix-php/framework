@@ -156,12 +156,15 @@ class BasePDO extends Component
         $this->_values   = [];
     }
 
-    // 返回多行
-    public function queryAll()
+    /**
+     * 返回结果集
+     * @return \PDOStatement
+     */
+    public function query()
     {
         $this->prepare();
         $this->_pdoStatement->execute();
-        return $this->_pdoStatement->fetchAll();
+        return $this->_pdoStatement;
     }
 
     // 返回一行
@@ -170,6 +173,14 @@ class BasePDO extends Component
         $this->prepare();
         $this->_pdoStatement->execute();
         return $this->_pdoStatement->fetch($this->attribute[\PDO::ATTR_DEFAULT_FETCH_MODE]);
+    }
+
+    // 返回多行
+    public function queryAll()
+    {
+        $this->prepare();
+        $this->_pdoStatement->execute();
+        return $this->_pdoStatement->fetchAll();
     }
 
     // 返回一列 (第一列)

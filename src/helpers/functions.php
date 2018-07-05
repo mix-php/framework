@@ -20,3 +20,11 @@ if (!function_exists('create_object')) {
         return \Mix::createObject($config);
     }
 }
+
+if (!function_exists('env')) {
+    // 获取一个环境变量的值
+    function env($name)
+    {
+        return \mix\base\Env::get($name);
+    }
+}

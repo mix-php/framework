@@ -24,7 +24,7 @@ class Error extends Component
     public $level = E_ALL;
 
     // 异常处理
-    public function handleException(\Exception $e)
+    public function handleException($e)
     {
         // debug处理 & exit处理
         if ($e instanceof \mix\exceptions\DebugException || $e instanceof \mix\exceptions\EndException) {

@@ -21,7 +21,9 @@ class ProcessHelper
         if (PhpInfoHelper::isMac()) {
             return false;
         }
-        cli_set_process_title($title);
+        if (function_exists('cli_set_process_title')) {
+            return @cli_set_process_title($title);
+        }
         return true;
     }
 

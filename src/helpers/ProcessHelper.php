@@ -21,10 +21,10 @@ class ProcessHelper
         if (PhpInfoHelper::isMac()) {
             return false;
         }
-        if (function_exists('cli_set_process_title')) {
-            return @cli_set_process_title($title);
+        if (!function_exists('cli_set_process_title')) {
+            return false;
         }
-        return true;
+        return @cli_set_process_title($title);
     }
 
     // 检查 PID 是否运行

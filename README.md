@@ -12,4 +12,4 @@
 
 ## License
 
-GNU General Public License, version 2 see https://www.gnu.org/licenses/gpl-2.0.html
+Apache License Version 2.0, http://www.apache.org/licenses/

@@ -19,20 +19,20 @@ class HttpServer extends BaseObject
     public $port;
 
     // 运行时的各项参数
-    public $setting = [];
+    public $settings = [];
 
     // 虚拟主机
     public $virtualHosts = [];
 
     // Server对象
-    protected $server;
+    protected $_server;
 
     // 初始化事件
     public function onInitialize()
     {
         parent::onInitialize();
         // 实例化服务器
-        $this->server = new \Swoole\Http\Server($this->host, $this->port);
+        $this->_server = new \Swoole\Http\Server($this->host, $this->port);
     }
 
     // 启动服务
@@ -43,14 +43,14 @@ class HttpServer extends BaseObject
         $this->onManagerStart();
         $this->onWorkerStart();
         $this->onRequest();
-        $this->server->set($this->setting);
-        $this->server->start();
+        $this->_server->set($this->settings);
+        $this->_server->start();
     }
 
     // 主进程启动事件
     protected function onStart()
     {
-        $this->server->on('Start', function ($server) {
+        $this->_server->on('Start', function ($server) {
             // 进程命名
             ProcessHelper::setTitle("mix-httpd: master {$this->host}:{$this->port}");
         });
@@ -59,7 +59,7 @@ class HttpServer extends BaseObject
     // 管理进程启动事件
     protected function onManagerStart()
     {
-        $this->server->on('ManagerStart', function ($server) {
+        $this->_server->on('ManagerStart', function ($server) {
             // 进程命名
             ProcessHelper::setTitle("mix-httpd: manager");
         });
@@ -68,7 +68,7 @@ class HttpServer extends BaseObject
     // 工作进程启动事件
     protected function onWorkerStart()
     {
-        $this->server->on('WorkerStart', function ($server, $workerId) {
+        $this->_server->on('WorkerStart', function ($server, $workerId) {
             // 进程命名
             if ($workerId < $server->setting['worker_num']) {
                 ProcessHelper::setTitle("mix-httpd: worker #{$workerId}");
@@ -83,7 +83,7 @@ class HttpServer extends BaseObject
     // 请求事件
     protected function onRequest()
     {
-        $this->server->on('request', function ($request, $response) {
+        $this->_server->on('request', function ($request, $response) {
             // 切换当前host
             $host = isset($request->header['host']) ? $request->header['host'] : '';
             \Mix::setHost($host);

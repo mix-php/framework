@@ -13,26 +13,37 @@ class BasePDO extends Component
 
     // 数据源格式
     public $dsn = '';
+
     // 数据库用户名
     public $username = 'root';
+
     // 数据库密码
     public $password = '';
+
     // 设置PDO属性
     public $attribute = [];
+
     // PDO
     protected $_pdo;
+
     // PDOStatement
     protected $_pdoStatement;
+
     // sql
     protected $_sql = '';
-    // sql缓存
-    protected $_sqlCache = [];
-    // sql原始数据
-    protected $sqlRawData = [];
+
     // params
     protected $_params = [];
+
     // values
     protected $_values = [];
+
+    // sql原始数据
+    protected $_sqlRawData = [];
+
+    // sql缓存
+    protected $_sqlCache = [];
+
     // 默认属性
     protected $_defaultAttribute = [
         \PDO::ATTR_EMULATE_PREPARES   => false,
@@ -134,22 +145,23 @@ class BasePDO extends Component
         // 准备与参数绑定
         if (!empty($this->_params)) {
             // 有参数
-            list($sql, $params) = $this->sqlRawData = self::bindArrayParams($this->_sql, $this->_params);
+            list($sql, $params) = self::bindArrayParams($this->_sql, $this->_params);
             $this->_pdoStatement = $this->_pdo->prepare($sql);
+            $this->_sqlRawData   = [$sql, $params, []]; // 必须在 bindParam 前，才能避免类型被转换
             foreach ($params as $key => &$value) {
                 $this->_pdoStatement->bindParam($key, $value);
             }
         } elseif (!empty($this->_values)) {
             // 批量插入
             $this->_pdoStatement = $this->_pdo->prepare($this->_sql);
+            $this->_sqlRawData   = [$this->_sql, [], $this->_values];
             foreach ($this->_values as $key => $value) {
                 $this->_pdoStatement->bindValue($key + 1, $value);
             }
-            $this->sqlRawData = [$this->_sql, [], $this->_values];
         } else {
             // 无参数
             $this->_pdoStatement = $this->_pdo->prepare($this->_sql);
-            $this->sqlRawData    = [];
+            $this->_sqlRawData   = [];
         }
         $this->_sqlCache = [];
         $this->_params   = [];
@@ -349,8 +361,8 @@ class BasePDO extends Component
     // 返回原生SQL语句
     public function getRawSql()
     {
-        if (!empty($this->sqlRawData)) {
-            list($sql, $params, $values) = $this->sqlRawData;
+        if (!empty($this->_sqlRawData)) {
+            list($sql, $params, $values) = $this->_sqlRawData;
             $values = self::quotes($values);
             $params = self::quotes($params);
             // 先处理 values，避免 params 中包含 ? 号污染结果

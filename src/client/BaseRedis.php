@@ -13,12 +13,16 @@ class BaseRedis extends Component
 
     // 主机
     public $host = '';
+    
     // 端口
     public $port = '';
+    
     // 数据库
     public $database = '';
+    
     // 密码
     public $password = '';
+    
     // redis对象
     protected $_redis;
 

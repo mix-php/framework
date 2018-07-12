@@ -11,12 +11,16 @@ class BasePDOMasterSlave extends BasePDO
 
     // 主服务器组
     public $masters = [];
+
     // 配置主服务器
     public $masterConfig = [];
+
     // 从服务器组
     public $slaves = [];
+
     // 配置从服务器
     public $slaveConfig = [];
+
     // pdo池
     protected $_pdos;
 

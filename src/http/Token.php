@@ -41,7 +41,7 @@ class Token extends Component
     {
         parent::onInitialize();
         // 前缀处理
-        $this->_tokenPrefix       = $this->saveKeyPrefix . 'DATA:';
+        $this->_tokenPrefix       = $this->saveKeyPrefix;
         $this->_uniqueIndexPrefix = $this->saveKeyPrefix . 'UIDX:';
     }
 

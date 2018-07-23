@@ -13,10 +13,10 @@ class Json extends BaseObject
 {
 
     // 编码
-    public static function encode($array)
+    public static function encode($data)
     {
         // 不转义中文、斜杠
-        return JsonHelper::encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return JsonHelper::encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
 }

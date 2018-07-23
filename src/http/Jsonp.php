@@ -16,10 +16,10 @@ class Jsonp extends BaseObject
     public $name = 'callback';
 
     // 编码
-    public function encode($array)
+    public function encode($data)
     {
         // 不转义中文、斜杠
-        $jsonString = JsonHelper::encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $jsonString = JsonHelper::encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $callback   = \Mix::app()->request->get($this->name);
         if (is_null($callback)) {
             return $jsonString;

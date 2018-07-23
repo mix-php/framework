@@ -60,11 +60,28 @@ class BaseResponse extends Component
     // 预处理
     protected function prepare()
     {
+        // 设置默认 Content-Type 信息
+        $headers = array_change_key_case($this->headers, CASE_LOWER);
+        if (!isset($headers['content-type'])) {
+            switch ($this->format) {
+                case self::FORMAT_HTML:
+                    $this->setHeader('Content-Type', 'text/html; charset=utf-8');
+                    break;
+                case self::FORMAT_JSON:
+                    $this->setHeader('Content-Type', 'application/json; charset=utf-8');
+                    break;
+                case self::FORMAT_JSONP:
+                    $this->setHeader('Content-Type', 'application/json; charset=utf-8');
+                    break;
+                case self::FORMAT_XML:
+                    $this->setHeader('Content-Type', 'text/xml; charset=utf-8');
+                    break;
+            }
+        }
+        // 转换内容为字符型
         $content = $this->content;
-        // 空转换
         is_null($content) and $content = '';
-        // 数组转换
-        if (is_array($content)) {
+        if (is_array($content) || is_object($content)) {
             switch ($this->format) {
                 case self::FORMAT_JSON:
                     $content = $this->json->encode($content);
@@ -77,22 +94,6 @@ class BaseResponse extends Component
                     break;
             }
         }
-        // 设置 Header 信息
-        switch ($this->format) {
-            case self::FORMAT_HTML:
-                $this->setHeader('Content-Type', 'text/html; charset=utf-8');
-                break;
-            case self::FORMAT_JSON:
-                $this->setHeader('Content-Type', 'application/json; charset=utf-8');
-                break;
-            case self::FORMAT_JSONP:
-                $this->setHeader('Content-Type', 'application/json; charset=utf-8');
-                break;
-            case self::FORMAT_XML:
-                $this->setHeader('Content-Type', 'text/xml; charset=utf-8');
-                break;
-        }
-        // 修改内容
         $this->content = $content;
     }
 

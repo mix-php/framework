@@ -13,7 +13,7 @@ class InputQueue extends BaseQueue
     public function push($data, $serialize = true)
     {
         // 重启信号处理
-        if ($this->isLeftWorker() && $this->isRestart()) {
+        if ($this->isLeftWorker() && ($this->isRestart() || $this->isStopLeft())) {
             if (parent::push($data, $serialize)) {
                 $this->worker->exit();
             }
@@ -26,7 +26,7 @@ class InputQueue extends BaseQueue
     public function pop($unserialize = true)
     {
         // 重启信号处理
-        if ($this->isCenterWorker() && $this->isRestart()) {
+        if ($this->isCenterWorker() && ($this->isRestart() || $this->isStopAll())) {
             $this->worker->exit();
         }
         // 提取数据

@@ -13,7 +13,7 @@ class OutputQueue extends BaseQueue
     public function pop($unserialize = true)
     {
         // 重启信号处理
-        if ($this->isRightWorker() && $this->isRestart()) {
+        if ($this->isRightWorker() && ($this->isRestart() || $this->isStopAll())) {
             $this->worker->exit();
         }
         // 提取数据

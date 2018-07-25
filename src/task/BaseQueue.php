@@ -39,6 +39,12 @@ class BaseQueue extends BaseObject
         return $data;
     }
 
+    // 队列是否为空
+    public function isEmpty()
+    {
+        return $this->queue->statQueue()['queue_num'] == 0;
+    }
+
     // 是否在左进程
     protected function isLeftWorker()
     {
@@ -60,7 +66,19 @@ class BaseQueue extends BaseObject
     // 是否重启
     protected function isRestart()
     {
-        return $this->table->get('signal', 'value') == TaskExecutor::SIGNAL_RESTART;
+        return $this->table->get('signal', 'value') == ProcessPoolTaskExecutor::SIGNAL_RESTART;
+    }
+
+    // 是否停止左进程
+    protected function isStopLeft()
+    {
+        return $this->table->get('signal', 'value') == ProcessPoolTaskExecutor::SIGNAL_STOP_LEFT;
+    }
+
+    // 是否停止全部进程
+    protected function isStopAll()
+    {
+        return $this->table->get('signal', 'value') == ProcessPoolTaskExecutor::SIGNAL_STOP_ALL;
     }
 
 }

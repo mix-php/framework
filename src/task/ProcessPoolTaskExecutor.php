@@ -12,17 +12,14 @@ use mix\helpers\ProcessHelper;
 class ProcessPoolTaskExecutor extends BaseObject
 {
 
-    // 守护程序类型
-    const TYPE_DAEMON = 0;
-
-    // 定时任务类型
-    const TYPE_CRONTAB = 1;
+    // 守护执行
+    const MODE_DAEMON = 4;
 
     // 流水线模式
-    const MODE_ASSEMBLY_LINE = 0;
+    const MODE_ASSEMBLY_LINE = 1;
 
     // 推送模式
-    const MODE_PUSH = 1;
+    const MODE_PUSH = 2;
 
     // 默认信号
     const SIGNAL_NONE = 0;
@@ -30,17 +27,17 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 重启信号
     const SIGNAL_RESTART = 1;
 
-    // 停止信号
-    const SIGNAL_STOP = 2;
+    // 停止左进程信号
+    const SIGNAL_STOP_LEFT = 2;
+
+    // 停止全部进程信号
+    const SIGNAL_STOP_ALL = 3;
 
     // 程序名称
     public $name = '';
 
-    // 执行类型
-    public $type = self::TYPE_DAEMON;
-
     // 执行模式
-    public $mode = self::MODE_ASSEMBLY_LINE;
+    public $mode = 5;
 
     // 左进程数
     public $leftProcess = 0;
@@ -50,6 +47,9 @@ class ProcessPoolTaskExecutor extends BaseObject
 
     // 右进程数
     public $rightProcess = 0;
+
+    // 最大执行次数
+    public $maxExecutions = 16000;
 
     // 队列名称
     public $queueName = '';
@@ -85,12 +85,12 @@ class ProcessPoolTaskExecutor extends BaseObject
         $table->create();
         $table->set('signal', ['value' => self::SIGNAL_NONE]);
         $this->_table = $table;
-        // 调整定时任务类型下的左进程数
-        if ($this->type == self::TYPE_CRONTAB) {
+        // 调整非守护执行模式下的左进程数
+        if (($this->mode & self::MODE_DAEMON) !== self::MODE_DAEMON) {
             $this->leftProcess = 1;
         }
         // 调整推送模式下的右进程数
-        if ($this->mode == self::MODE_PUSH) {
+        if (($this->mode & self::MODE_PUSH) === self::MODE_PUSH) {
             $this->rightProcess = 0;
         }
     }
@@ -106,6 +106,12 @@ class ProcessPoolTaskExecutor extends BaseObject
         $this->createProcesses();
         // 信号处理
         $this->signalHandle();
+        // 非守护执行模式下触发停止信号
+        if (($this->mode & self::MODE_DAEMON) !== self::MODE_DAEMON) {
+            swoole_timer_after(1000, function () {
+                ProcessHelper::kill(ProcessHelper::getPid());
+            });
+        }
     }
 
     // 绑定事件回调函数
@@ -199,7 +205,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     // 执行回调
                     call_user_func($this->_onLeftStart, $leftWorker);
                 } catch (\Exception $e) {
-                    if ($this->type = self::TYPE_DAEMON) {
+                    if (($this->mode & self::MODE_DAEMON) === self::MODE_DAEMON) {
                         // 休息一会，避免 CPU 出现 100%
                         sleep(1);
                     }
@@ -232,7 +238,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     'workerPid'   => $worker->pid,
                 ]);
                 // 循环执行任务
-                for ($j = 0; $j < 16000; $j++) {
+                for ($j = 0; $j < $this->maxExecutions; $j++) {
                     $data = $centerWorker->inputQueue->pop();
                     if (empty($data)) {
                         continue;
@@ -275,7 +281,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     'workerPid'   => $worker->pid,
                 ]);
                 // 循环执行任务
-                for ($j = 0; $j < 16000; $j++) {
+                for ($j = 0; $j < $this->maxExecutions; $j++) {
                     // 从进程队列中抢占一条消息
                     $data = $rightWorker->outputQueue->pop();
                     if (empty($data)) {
@@ -310,8 +316,12 @@ class ProcessPoolTaskExecutor extends BaseObject
         list($processType, $workerId) = $this->_processPool[$workerPid];
         // 删除旧引用
         unset($this->_processPool[$workerPid]);
-        // 不重启
-        if ($this->_table->get('signal', 'value') > TaskExecutor::SIGNAL_NONE) {
+        // 根据信号判断是否不重建进程
+        $signal = $this->_table->get('signal', 'value');
+        if ($signal == self::SIGNAL_STOP_LEFT && $processType == 'left') {
+            return;
+        }
+        if (in_array($signal, [self::SIGNAL_RESTART, self::SIGNAL_STOP_ALL])) {
             return;
         }
         // 重建进程
@@ -344,7 +354,8 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 重启信号处理
     protected function restartSignalHandle()
     {
-        if ($this->type != self::TYPE_DAEMON) {
+        // 非守护执行模式下不处理该信号
+        if (($this->mode & self::MODE_DAEMON) !== self::MODE_DAEMON) {
             return;
         }
         // 平滑重启
@@ -382,9 +393,6 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 停止信号处理
     protected function stopSignalHandle()
     {
-        if ($this->type != self::TYPE_DAEMON) {
-            return;
-        }
         // 停止
         \Swoole\Process::signal(SIGTERM, function ($signal) {
             static $handled = false;
@@ -394,8 +402,30 @@ class ProcessPoolTaskExecutor extends BaseObject
             }
             $handled = true;
             // 修改信号
-            $this->_table->set('signal', ['value' => self::SIGNAL_STOP]);
-
+            $this->_table->set('signal', ['value' => self::SIGNAL_STOP_LEFT]);
+            // 定时处理
+            swoole_timer_tick(1000, function () {
+                $processPool = $this->_processPool;
+                // 退出主进程
+                if (empty($processPool)) {
+                    exit;
+                }
+                // 左进程是否停止完成
+                $processTypes = array_column(array_values($processPool), 0);
+                if (!in_array('left', $processTypes) && $this->_inputQueue->isEmpty() && $this->_outputQueue->isEmpty()) {
+                    // 修改信号
+                    $this->_table->set('signal', ['value' => self::SIGNAL_STOP_ALL]);
+                    // PUSH空数据解锁阻塞进程
+                    foreach ($processTypes as $processType) {
+                        if ($processType == 'center') {
+                            $this->_inputQueue->push(null);
+                        }
+                        if ($processType == 'right') {
+                            $this->_outputQueue->push(null);
+                        }
+                    }
+                }
+            });
         });
     }
 

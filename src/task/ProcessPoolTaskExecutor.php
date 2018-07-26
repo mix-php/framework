@@ -27,11 +27,14 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 重启信号
     const SIGNAL_RESTART = 1;
 
+    // 左进程完成信号
+    const SIGNAL_FINISH_LEFT = 2;
+
     // 停止左进程信号
-    const SIGNAL_STOP_LEFT = 2;
+    const SIGNAL_STOP_LEFT = 3;
 
     // 停止全部进程信号
-    const SIGNAL_STOP_ALL = 3;
+    const SIGNAL_STOP_ALL = 4;
 
     // 程序名称
     public $name = '';
@@ -75,6 +78,12 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 输出队列
     protected $_outputQueue;
 
+    // 是否为守护模式
+    protected $_isModDaemon;
+
+    // 是否为推送模式
+    protected $_isModPush;
+
     // 初始化事件
     public function onInitialize()
     {
@@ -85,12 +94,14 @@ class ProcessPoolTaskExecutor extends BaseObject
         $table->create();
         $table->set('signal', ['value' => self::SIGNAL_NONE]);
         $this->_table = $table;
-        // 调整非守护执行模式下的左进程数
-        if (($this->mode & self::MODE_DAEMON) !== self::MODE_DAEMON) {
+        // 模式判断
+        $this->_isModDaemon = (($this->mode & self::MODE_DAEMON) === self::MODE_DAEMON);
+        $this->_isModPush   = (($this->mode & self::MODE_PUSH) === self::MODE_PUSH);
+        // 进程数调整
+        if (!$this->_isModDaemon) {
             $this->leftProcess = 1;
         }
-        // 调整推送模式下的右进程数
-        if (($this->mode & self::MODE_PUSH) === self::MODE_PUSH) {
+        if ($this->_isModPush) {
             $this->rightProcess = 0;
         }
     }
@@ -107,8 +118,11 @@ class ProcessPoolTaskExecutor extends BaseObject
         // 信号处理
         $this->signalHandle();
         // 非守护执行模式下触发停止信号
-        if (($this->mode & self::MODE_DAEMON) !== self::MODE_DAEMON) {
-            swoole_timer_after(1000, function () {
+        if (!$this->_isModDaemon) {
+            // 修改信号
+            $this->_table->set('signal', ['value' => self::SIGNAL_FINISH_LEFT]);
+            // 异步触发停止信号
+            swoole_timer_after(1, function () {
                 ProcessHelper::kill(ProcessHelper::getPid());
             });
         }
@@ -205,8 +219,8 @@ class ProcessPoolTaskExecutor extends BaseObject
                     // 执行回调
                     call_user_func($this->_onLeftStart, $leftWorker);
                 } catch (\Exception $e) {
-                    if (($this->mode & self::MODE_DAEMON) === self::MODE_DAEMON) {
-                        // 休息一会，避免 CPU 出现 100%
+                    // 守护模式下，休息一会，避免 CPU 出现 100%
+                    if ($this->_isModDaemon) {
                         sleep(1);
                     }
                     // 抛出错误
@@ -318,7 +332,7 @@ class ProcessPoolTaskExecutor extends BaseObject
         unset($this->_processPool[$workerPid]);
         // 根据信号判断是否不重建进程
         $signal = $this->_table->get('signal', 'value');
-        if ($signal == self::SIGNAL_STOP_LEFT && $processType == 'left') {
+        if (($signal == self::SIGNAL_FINISH_LEFT || $signal == self::SIGNAL_STOP_LEFT) && $processType == 'left') {
             return;
         }
         if (in_array($signal, [self::SIGNAL_RESTART, self::SIGNAL_STOP_ALL])) {
@@ -355,7 +369,7 @@ class ProcessPoolTaskExecutor extends BaseObject
     protected function restartSignalHandle()
     {
         // 非守护执行模式下不处理该信号
-        if (($this->mode & self::MODE_DAEMON) !== self::MODE_DAEMON) {
+        if (!$this->_isModDaemon) {
             return;
         }
         // 平滑重启
@@ -401,8 +415,10 @@ class ProcessPoolTaskExecutor extends BaseObject
                 return;
             }
             $handled = true;
-            // 修改信号
-            $this->_table->set('signal', ['value' => self::SIGNAL_STOP_LEFT]);
+            // 守护模式下修改信号
+            if ($this->_isModDaemon) {
+                $this->_table->set('signal', ['value' => self::SIGNAL_STOP_LEFT]);
+            }
             // 定时处理
             swoole_timer_tick(1000, function () {
                 $processPool = $this->_processPool;

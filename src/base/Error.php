@@ -43,7 +43,7 @@ class Error
     }
 
     // 异常处理
-    public static function appException(\Throwable $e)
+    public static function appException($e)
     {
         \Mix::app()->error->handleException($e, true);
     }

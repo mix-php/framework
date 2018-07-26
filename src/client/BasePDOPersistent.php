@@ -35,7 +35,7 @@ class BasePDOPersistent extends BasePDO
         try {
             // 执行前准备
             parent::prepare();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             if (self::isDisconnectException($e)) {
                 // 断开连接异常处理
                 $this->reconnect();
@@ -48,7 +48,7 @@ class BasePDOPersistent extends BasePDO
     }
 
     // 判断是否为断开连接异常
-    protected static function isDisconnectException(\Exception $e)
+    protected static function isDisconnectException(\Throwable $e)
     {
         $disconnectMessages = [
             'server has gone away',

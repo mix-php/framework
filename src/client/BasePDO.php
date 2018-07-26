@@ -318,7 +318,7 @@ class BasePDO extends Component
             $closure();
             // 提交事务
             $this->commit();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // 回滚事务
             $this->rollBack();
             throw $e;

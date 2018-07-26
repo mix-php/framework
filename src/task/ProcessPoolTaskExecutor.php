@@ -218,7 +218,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                 try {
                     // 执行回调
                     call_user_func($this->_onLeftStart, $leftWorker);
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     // 守护模式下，休息一会，避免 CPU 出现 100%
                     if ($this->_isModDaemon) {
                         sleep(1);
@@ -226,7 +226,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     // 抛出错误
                     throw $e;
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 \Mix::app()->error->handleException($e);
             }
         }, false, false);
@@ -260,7 +260,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     try {
                         // 执行回调
                         call_user_func($this->_onCenterMessage, $centerWorker, $data);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         // 回退数据到消息队列
                         $centerWorker->inputQueue->push($data);
                         // 休息一会，避免 CPU 出现 100%
@@ -269,7 +269,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                         throw $e;
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 \Mix::app()->error->handleException($e);
             }
         }, false, false);
@@ -304,7 +304,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     try {
                         // 执行回调
                         call_user_func($this->_onRightMessage, $rightWorker, $data);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         // 回退数据到消息队列
                         $rightWorker->outputQueue->push($data);
                         // 休息一会，避免 CPU 出现 100%
@@ -313,7 +313,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                         throw $e;
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 \Mix::app()->error->handleException($e);
             }
         }, false, false);

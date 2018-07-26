@@ -37,7 +37,7 @@ class BaseRedisPersistent extends BaseRedis
             $this->_lastActiveTime = time();
             // 执行命令
             return parent::__call($name, $arguments);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             if (self::isDisconnectException($e)) {
                 // 断开连接异常处理
                 $this->reconnect();
@@ -50,7 +50,7 @@ class BaseRedisPersistent extends BaseRedis
     }
 
     // 判断是否为断开连接异常
-    protected static function isDisconnectException(\Exception $e)
+    protected static function isDisconnectException(\Throwable $e)
     {
         $disconnectMessages = [
             'failed with errno',

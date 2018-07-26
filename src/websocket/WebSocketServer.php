@@ -125,7 +125,7 @@ class WebSocketServer extends BaseObject
                     // 执行绑定的回调函数
                     list($object, $method) = $this->_onOpenCallback;
                     $object->$method($server, $request->fd, $mixRequest);
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     \Mix::app()->error->handleException($e);
                 }
             });
@@ -141,7 +141,7 @@ class WebSocketServer extends BaseObject
                     // 执行绑定的回调函数
                     list($object, $method) = $this->_onMessageCallback;
                     $object->$method($server, $frame);
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     \Mix::app()->error->handleException($e);
                 }
             });
@@ -161,7 +161,7 @@ class WebSocketServer extends BaseObject
                         list($object, $method) = $this->_onCloseCallback;
                         $object->$method($server, $fd);
                     }
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     \Mix::app()->error->handleException($e);
                 }
             });

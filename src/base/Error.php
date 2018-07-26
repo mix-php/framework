@@ -23,9 +23,9 @@ class Error
         // 注册错误处理
         $level = \Mix::app()->error->level;
         error_reporting($level);
-        set_error_handler(['mix\base\Error', 'appError']);
-        set_exception_handler(['mix\base\Error', 'appException']);
-        register_shutdown_function(['mix\base\Error', 'appShutdown']);
+        set_error_handler([__CLASS__, 'appError']);
+        set_exception_handler([__CLASS__, 'appException']);
+        register_shutdown_function([__CLASS__, 'appShutdown']);
     }
 
     // 错误处理
@@ -43,7 +43,7 @@ class Error
     }
 
     // 异常处理
-    public static function appException($e)
+    public static function appException(\Throwable $e)
     {
         \Mix::app()->error->handleException($e, true);
     }

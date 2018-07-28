@@ -71,31 +71,35 @@ class Http extends BaseObject
     // 执行请求
     public function request($url, $method, $body = null)
     {
-        // 定义变量
-        $this->_requestUrl    = $url;
-        $this->_requestMethod = $method;
-        $requestHeaders       = self::buildRequestHeaders($this->headers);
-        $requestCookies       = self::buildRequestCookies($this->cookies);
-        $this->_requestBody   = self::buildRequestBody($body);
+        // 构建请求参数
+        $requestHeaders = self::buildRequestHeaders($this->headers);
+        $requestCookies = self::buildRequestCookies($this->cookies);
+        $requestBody    = self::buildRequestBody($body);
         // 构造请求
         $ch = curl_init();
+        // 基础配置
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         curl_setopt($ch, CURLOPT_HEADER, true);
+        // 请求配置
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        // 参数配置
         isset($this->timeout) and curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        curl_setopt($ch, CURLOPT_URL, $this->_requestUrl);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->_requestMethod);
         empty($requestHeaders) or curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
         empty($requestCookies) or curl_setopt($ch, CURLOPT_COOKIE, $requestCookies);
-        empty($this->_requestBody) or curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_requestBody);
-        // 忽略 SSL
+        empty($requestBody) or curl_setopt($ch, CURLOPT_POSTFIELDS, $requestBody);
+        // 忽略SSL
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         // 响应数据
         $response              = curl_exec($ch);
         $headerSize            = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $this->_error          = curl_error($ch);
+        $this->_requestUrl     = $url;
+        $this->_requestMethod  = $method;
         $this->_requestHeaders = trim(curl_getinfo($ch)['request_header']);
+        $this->_requestBody    = $requestBody;
+        $this->_error          = curl_error($ch);
         $this->_statusCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->_headers        = trim(substr($response, 0, $headerSize));
         $this->_body           = substr($response, $headerSize);

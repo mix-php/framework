@@ -59,17 +59,17 @@ class Http extends BaseObject
     // GET 请求
     public function get($url)
     {
-        return $this->request($url, 'GET');
+        return $this->execute($url, 'GET');
     }
 
     // POST 请求
     public function post($url, $body)
     {
-        return $this->request($url, 'POST', $body);
+        return $this->execute($url, 'POST', $body);
     }
 
     // 执行请求
-    public function request($url, $method, $body = null)
+    public function execute($url, $method, $body = null)
     {
         // 构建请求参数
         $requestHeaders = self::buildRequestHeaders($this->headers);
@@ -92,8 +92,9 @@ class Http extends BaseObject
         // 忽略SSL
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        // 响应数据
-        $response              = curl_exec($ch);
+        // 执行请求
+        $response = curl_exec($ch);
+        // 获取响应数据
         $headerSize            = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $this->_requestUrl     = $url;
         $this->_requestMethod  = $method;

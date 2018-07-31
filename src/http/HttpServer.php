@@ -84,9 +84,9 @@ class HttpServer extends BaseObject
     protected function onRequest()
     {
         $this->_server->on('request', function ($request, $response) {
-            // 切换当前host
+            // 切换当前Host
             $host = isset($request->header['host']) ? $request->header['host'] : '';
-            \Mix::setHost($host);
+            \Mix::selectHost($host, $this->settings['enable_coroutine']);
             // 执行请求
             try {
                 \Mix::app()->request->setRequester($request);

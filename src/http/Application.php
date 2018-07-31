@@ -20,6 +20,9 @@ class Application extends \mix\base\Application
     // 全局中间件
     public $middleware = [];
 
+    // 协程间共享组件
+    public $coroutineShareComponents = [];
+
     // 执行功能
     public function run()
     {
@@ -117,9 +120,17 @@ class Application extends \mix\base\Application
     }
 
     // 装载全部组件
-    public function loadAllComponent()
+    public function loadAllComponents()
     {
         foreach (array_keys($this->components) as $name) {
+            $this->loadComponent($name);
+        }
+    }
+
+    // 装载协程共享组件
+    public function loadCoroutineShareComponents()
+    {
+        foreach ($this->coroutineShareComponents as $name) {
             $this->loadComponent($name);
         }
     }

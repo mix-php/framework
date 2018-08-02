@@ -112,7 +112,9 @@ class Application extends \mix\base\Application
                 // 创建协程组件
                 $this->_coroutineComponents[$coroutineId][$name] = clone $this->_components[$name];
                 // 触发请求开始事件
-                $this->_coroutineComponents[$coroutineId][$name]->onRequestStart();
+                if ($this->_coroutineComponents[$coroutineId][$name]->getStatus() == Component::STATUS_READY) {
+                    $this->_coroutineComponents[$coroutineId][$name]->onRequestStart();
+                }
             }
             return $this->_coroutineComponents[$coroutineId][$name];
         }
@@ -153,6 +155,13 @@ class Application extends \mix\base\Application
         // 删除协程组件
         $coroutineId = \Swoole\Coroutine::getuid();
         if ($coroutineId > -1 && isset($this->_coroutineComponents[$coroutineId])) {
+            // 触发请求结束事件
+            foreach ($this->_coroutineComponents[$coroutineId] as $component) {
+                if ($component->getStatus() == Component::STATUS_RUNNING) {
+                    $component->onRequestEnd();
+                }
+            }
+            // 删除协程组件
             $this->_coroutineComponents[$coroutineId] = null;
         }
     }

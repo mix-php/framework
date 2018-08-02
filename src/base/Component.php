@@ -10,12 +10,12 @@ class Component extends BaseObject
 {
 
     // 状态值
-    const STATUS_ORIGINAL = 0;
+    const STATUS_NONE = 0;
     const STATUS_READY = 1;
     const STATUS_RUNNING = 2;
 
     // 组件状态
-    private $_status = self::STATUS_ORIGINAL;
+    private $_status = self::STATUS_NONE;
 
     // 获取状态
     public function getStatus()

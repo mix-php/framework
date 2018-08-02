@@ -52,8 +52,6 @@ class Response extends BaseResponse
         $this->sendContent();
         // 清扫组件容器
         \Mix::app()->cleanComponents();
-        // 删除协程App
-        \Mix::removeCoroutineApplication();
     }
 
     // 发送 HTTP 状态码

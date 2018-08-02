@@ -20,8 +20,11 @@ class Application extends \mix\base\Application
     // 全局中间件
     public $middleware = [];
 
-    // 协程间共享组件
-    public $coroutineShareComponents = [];
+    // 协程组件
+    public $coroutineComponents = [];
+
+    // 协程组件容器
+    protected $_coroutineComponents = [];
 
     // 执行功能
     public function run()
@@ -102,6 +105,17 @@ class Application extends \mix\base\Application
         if (!is_null($this->_componentNamespace)) {
             $name = "{$this->_componentNamespace}.{$name}";
         }
+        // 返回协程组件单例
+        $coroutineId = \Swoole\Coroutine::getuid();
+        if ($coroutineId > -1 && in_array($name, $this->coroutineComponents)) {
+            if (!isset($this->_coroutineComponents[$coroutineId][$name])) {
+                // 创建协程组件
+                $this->_coroutineComponents[$coroutineId][$name] = clone $this->_components[$name];
+                // 触发请求开始事件
+                $this->_coroutineComponents[$coroutineId][$name]->onRequestStart();
+            }
+            return $this->_coroutineComponents[$coroutineId][$name];
+        }
         // 返回单例
         if (isset($this->_components[$name])) {
             // 触发请求开始事件
@@ -127,21 +141,19 @@ class Application extends \mix\base\Application
         }
     }
 
-    // 装载协程共享组件
-    public function loadCoroutineShareComponents()
-    {
-        foreach ($this->coroutineShareComponents as $name) {
-            $this->loadComponent($name);
-        }
-    }
-
     // 清扫组件容器
     public function cleanComponents()
     {
+        // 触发请求结束事件
         foreach ($this->_components as $component) {
             if ($component->getStatus() == Component::STATUS_RUNNING) {
                 $component->onRequestEnd();
             }
+        }
+        // 删除协程组件
+        $coroutineId = \Swoole\Coroutine::getuid();
+        if ($coroutineId > -1 && isset($this->_coroutineComponents[$coroutineId])) {
+            $this->_coroutineComponents[$coroutineId] = null;
         }
     }
 

@@ -3,6 +3,7 @@
 namespace mix\http;
 
 use mix\base\Component;
+use mix\helpers\PhpInfoHelper;
 
 /**
  * App类
@@ -19,9 +20,6 @@ class Application extends \mix\base\Application
 
     // 全局中间件
     public $middleware = [];
-
-    // 协程组件
-    public $coroutineComponents = [];
 
     // 协程组件容器
     protected $_coroutineComponents = [];
@@ -102,20 +100,26 @@ class Application extends \mix\base\Application
     // 获取组件
     public function __get($name)
     {
+        // 获取全名
         if (!is_null($this->_componentNamespace)) {
             $name = "{$this->_componentNamespace}.{$name}";
         }
         // 返回协程组件单例
-        $coroutineId = \Swoole\Coroutine::getuid();
-        if ($coroutineId > -1 && in_array($name, $this->coroutineComponents)) {
+        if (PhpInfoHelper::isCoroutine() && $this->_components[$name]->getCoroutineMode() != Component::COROUTINE_MODE_COMMON) {
+            $coroutineId = \Swoole\Coroutine::getuid();
+            // 创建协程组件
             if (!isset($this->_coroutineComponents[$coroutineId][$name])) {
-                // 创建协程组件
-                $this->_coroutineComponents[$coroutineId][$name] = clone $this->_components[$name];
+                if ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_NEW) {
+                    $this->_coroutineComponents[$coroutineId][$name] = $this->loadComponent($name, true);
+                } else {
+                    $this->_coroutineComponents[$coroutineId][$name] = clone $this->_components[$name];
+                }
                 // 触发请求开始事件
                 if ($this->_coroutineComponents[$coroutineId][$name]->getStatus() == Component::STATUS_READY) {
                     $this->_coroutineComponents[$coroutineId][$name]->onRequestStart();
                 }
             }
+            // 返回对象
             return $this->_coroutineComponents[$coroutineId][$name];
         }
         // 返回单例
@@ -153,16 +157,18 @@ class Application extends \mix\base\Application
             }
         }
         // 删除协程组件
-        $coroutineId = \Swoole\Coroutine::getuid();
-        if ($coroutineId > -1 && isset($this->_coroutineComponents[$coroutineId])) {
-            // 触发请求结束事件
-            foreach ($this->_coroutineComponents[$coroutineId] as $component) {
-                if ($component->getStatus() == Component::STATUS_RUNNING) {
-                    $component->onRequestEnd();
+        if (PhpInfoHelper::isCoroutine()) {
+            $coroutineId = \Swoole\Coroutine::getuid();
+            if (isset($this->_coroutineComponents[$coroutineId])) {
+                // 触发请求结束事件
+                foreach ($this->_coroutineComponents[$coroutineId] as $component) {
+                    if ($component->getStatus() == Component::STATUS_RUNNING) {
+                        $component->onRequestEnd();
+                    }
                 }
+                // 删除协程组件
+                $this->_coroutineComponents[$coroutineId] = null;
             }
-            // 删除协程组件
-            $this->_coroutineComponents[$coroutineId] = null;
         }
     }
 

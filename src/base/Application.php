@@ -63,7 +63,7 @@ class Application extends BaseObject
     }
 
     // 装载组件
-    public function loadComponent($name)
+    public function loadComponent($name, $return = false)
     {
         // 未注册
         if (!isset($this->components[$name])) {
@@ -74,6 +74,9 @@ class Application extends BaseObject
         // 组件效验
         if (!($object instanceof Component)) {
             throw new \mix\exceptions\ComponentException("不是组件类型：{$this->components[$name]['class']}");
+        }
+        if ($return) {
+            return $object;
         }
         // 装入容器
         $this->_components[$name] = $object;

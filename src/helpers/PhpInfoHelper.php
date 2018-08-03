@@ -27,4 +27,16 @@ class PhpInfoHelper
         return stripos(PHP_OS, 'Darwin') !== false;
     }
 
+    // 是否为协程环境
+    public static function isCoroutine()
+    {
+        if (!class_exists('\Swoole\Coroutine')) {
+            return false;
+        }
+        if (\Swoole\Coroutine::getuid() == -1) {
+            return false;
+        }
+        return true;
+    }
+
 }

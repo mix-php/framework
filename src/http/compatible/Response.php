@@ -36,14 +36,19 @@ class Response extends \mix\http\BaseResponse
     // 发送
     public function send()
     {
+        // 多次发送处理
+        if ($this->_isSent) {
+            return;
+        }
+        $this->_isSent = true;
         // 预处理
         $this->prepare();
+        // 清扫组件容器
+        \Mix::app()->cleanComponents();
         // 发送
         $this->sendStatusCode();
         $this->sendHeaders();
         $this->sendContent();
-        // 清扫组件容器
-        \Mix::app()->cleanComponents();
     }
 
     // 发送HTTP状态码
@@ -63,11 +68,6 @@ class Response extends \mix\http\BaseResponse
     // 发送内容
     protected function sendContent()
     {
-        // 多次发送处理
-        if ($this->_isSent) {
-            return;
-        }
-        $this->_isSent = true;
         // 非标量处理
         if (!is_scalar($this->content)) {
             $this->content = ucfirst(gettype($this->content));

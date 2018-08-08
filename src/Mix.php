@@ -19,9 +19,6 @@ class Mix
     // 虚拟主机配置
     protected static $_virtualHosts;
 
-    // 公共容器
-    public static $container;
-
     /**
      * 返回App，并设置组件命名空间
      *

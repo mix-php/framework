@@ -9,19 +9,6 @@ namespace mix\client;
 class BaseRedisPersistent extends BaseRedis
 {
 
-    // 重用连接(相同配置)
-    public $reusableConnection = false;
-
-    // 初始化
-    protected function initialize()
-    {
-        // 重用连接(相同配置)
-        if ($this->reusableConnection) {
-            $hash         = md5($this->host . $this->port . $this->database . $this->password);
-            $this->_redis = &\Mix::$container['redis_' . $hash];
-        }
-    }
-
     // 重新连接
     protected function reconnect()
     {

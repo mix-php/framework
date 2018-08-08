@@ -9,19 +9,6 @@ namespace mix\client;
 class BasePDOPersistent extends BasePDO
 {
 
-    // 重用连接(相同配置)
-    public $reusableConnection = false;
-
-    // 初始化
-    protected function initialize()
-    {
-        // 重用连接(相同配置)
-        if ($this->reusableConnection) {
-            $hash       = md5($this->dsn . $this->username . $this->password);
-            $this->_pdo = &\Mix::$container['pdo_' . $hash];
-        }
-    }
-
     // 重新连接
     protected function reconnect()
     {

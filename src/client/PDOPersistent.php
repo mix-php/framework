@@ -9,14 +9,6 @@ namespace mix\client;
 class PDOPersistent extends BasePDOPersistent
 {
 
-    // 初始化事件
-    public function onInitialize()
-    {
-        parent::onInitialize();
-        // 初始化
-        $this->initialize();
-    }
-
     // 析构事件
     public function onDestruct()
     {

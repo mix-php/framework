@@ -9,14 +9,6 @@ namespace mix\client;
 class RedisPersistent extends BaseRedisPersistent
 {
 
-    // 初始化事件
-    public function onInitialize()
-    {
-        parent::onInitialize();
-        // 初始化
-        $this->initialize();
-    }
-
     public function onRequestStart()
     {
         parent::onRequestStart();

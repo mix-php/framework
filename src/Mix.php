@@ -112,10 +112,20 @@ class Mix
         // 构建属性数组
         foreach ($config as $key => $value) {
             // 子类实例化
-            if (is_array($value) && isset($value['class'])) {
-                $subClass = $value['class'];
-                unset($value['class']);
-                $config[$key] = new $subClass($value);
+            if (is_array($value)) {
+                // 实例化
+                if (isset($value['class'])) {
+                    $config[$key] = self::createObject($value);
+                }
+                // 引用其他组件
+                if (isset($value['component'])) {
+                    $componentNamespace = null;
+                    $componentName      = $value['component'];
+                    if (strpos($value['component'], '.') !== false) {
+                        list($componentNamespace, $componentName) = explode('.', $value['component']);
+                    }
+                    $config[$key] = self::app($componentNamespace)->$componentName;
+                }
             }
         }
         // 实例化

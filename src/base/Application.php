@@ -59,7 +59,7 @@ class Application extends BaseObject
     // 创建对象
     public function createObject($name)
     {
-        return \Mix::createObject($this->objects[$name]);
+        return \Mix::createObject($this->objects[$name], $name);
     }
 
     // 装载组件
@@ -70,7 +70,7 @@ class Application extends BaseObject
             throw new \mix\exceptions\ComponentException("组件不存在：{$name}");
         }
         // 使用配置创建新对象
-        $object = \Mix::createObject($this->components[$name]);
+        $object = \Mix::createObject($this->components[$name], $name);
         // 组件效验
         if (!($object instanceof Component)) {
             throw new \mix\exceptions\ComponentException("不是组件类型：{$this->components[$name]['class']}");

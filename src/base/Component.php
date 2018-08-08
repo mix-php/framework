@@ -9,12 +9,20 @@ namespace mix\base;
 class Component extends BaseObject
 {
 
-    // 组件状态值
+    // 协程模式值
+    const COROUTINE_MODE_NEW = 0;
+    const COROUTINE_MODE_CLONE = 1;
+    const COROUTINE_MODE_REFERENCE = 2;
+
+    // 状态值
     const STATUS_READY = 0;
     const STATUS_RUNNING = 1;
 
-    // 组件状态
-    private $_status;
+    // 协程模式
+    private $_coroutineMode = self::COROUTINE_MODE_NEW;
+
+    // 状态
+    private $_status = self::STATUS_READY;
 
     // 获取状态
     public function getStatus()
@@ -28,11 +36,16 @@ class Component extends BaseObject
         $this->_status = $status;
     }
 
-    // 初始化事件
-    public function onInitialize()
+    // 获取协程模式
+    public function getCoroutineMode()
     {
-        parent::onInitialize();
-        $this->setStatus(self::STATUS_READY);
+        return $this->_coroutineMode;
+    }
+
+    // 设置协程模式
+    public function setCoroutineMode($coroutineMode)
+    {
+        $this->_coroutineMode = $coroutineMode;
     }
 
     // 请求开始事件

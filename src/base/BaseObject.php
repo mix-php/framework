@@ -43,4 +43,24 @@ class BaseObject
         $this->onDestruct();
     }
 
+    /**
+     * 创建实例
+     * @param $name
+     * @return $this
+     */
+    public static function newInstance($name = null)
+    {
+        // 直接实例化
+        if (is_null($name)) {
+            return new static();
+        }
+        // 根据配置实例化
+        $class  = get_called_class();
+        $object = \Mix::app()->createObject($name);
+        if (get_class($object) != $class) {
+            throw new \LibraryException('实例化类型与配置类型不符');
+        }
+        return $object;
+    }
+
 }

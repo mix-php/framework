@@ -31,8 +31,8 @@ class Application extends BaseObject
     // 组件配置
     public $components = [];
 
-    // 对象配置
-    public $objects = [];
+    // 类库配置
+    public $libraries = [];
 
     // 组件容器
     protected $_components;
@@ -59,7 +59,7 @@ class Application extends BaseObject
     // 创建对象
     public function createObject($name)
     {
-        return \Mix::createObject($this->objects[$name], $name);
+        return \Mix::createObject($this->libraries[$name], $name);
     }
 
     // 装载组件

@@ -83,7 +83,7 @@ class BaseValidator extends BaseObject
         } else {
             if ($this instanceof \mix\validators\FileValidator) {
                 // 实例化文件对象
-                $this->mainValidator->$attribute = \mix\http\UploadFile::getInstanceByName($attribute);
+                $this->mainValidator->$attribute = \mix\http\UploadFile::newInstance($attribute);
             } else {
                 // 属性赋值
                 $this->mainValidator->$attribute = $this->attributeValue;

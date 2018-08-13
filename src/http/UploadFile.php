@@ -24,8 +24,12 @@ class UploadFile
     // 文件尺寸
     public $size;
 
-    // 通过$_FILES获取实例
-    public static function getInstanceByName($name)
+    /**
+     * 创建实例，通过 input 名称
+     * @param $name
+     * @return $this
+     */
+    public static function newInstance($name)
     {
         $file = \Mix::app()->request->files($name);
         return is_null($file) ? $file : new self($file);
@@ -34,11 +38,11 @@ class UploadFile
     // 构造
     public function __construct($file)
     {
-        $this->name = $file['name'];
-        $this->type = $file['type'];
+        $this->name    = $file['name'];
+        $this->type    = $file['type'];
         $this->tmpName = $file['tmp_name'];
-        $this->error = $file['error'];
-        $this->size = $file['size'];
+        $this->error   = $file['error'];
+        $this->size    = $file['size'];
     }
 
     // 文件另存为
@@ -68,7 +72,7 @@ class UploadFile
     public function getRandomName()
     {
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-        $name = '';
+        $name  = '';
         for ($i = 0; $i < 32; $i++) {
             $name .= $chars{mt_rand(0, 61)};
         }

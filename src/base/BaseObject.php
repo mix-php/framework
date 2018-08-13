@@ -44,17 +44,12 @@ class BaseObject
     }
 
     /**
-     * 创建实例
+     * 创建实例，通过配置名
      * @param $name
      * @return $this
      */
     public static function newInstance($name = null)
     {
-        // 直接实例化
-        if (is_null($name)) {
-            return new static();
-        }
-        // 根据配置实例化
         $class  = get_called_class();
         $object = \Mix::app()->createObject($name);
         if (get_class($object) != $class) {

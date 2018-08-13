@@ -69,7 +69,7 @@ class Application extends \mix\base\Application
                 // 判断方法是否存在
                 if (method_exists($controllerInstance, $controllerAction)) {
                     // 执行中间件
-                    $middleware = $this->getAllMiddlewareInstance($route['middleware']);
+                    $middleware = $this->newMiddlewareInstance($route['middleware']);
                     if (!empty($middleware)) {
                         return $this->runMiddleware([$controllerInstance, $controllerAction], $middleware);
                     }
@@ -97,13 +97,13 @@ class Application extends \mix\base\Application
         });
     }
 
-    // 获取全部中间件实例
-    protected function getAllMiddlewareInstance($routeMiddleware)
+    // 实例化中间件
+    protected function newMiddlewareInstance($routeMiddleware)
     {
         $middleware = [];
         foreach (array_merge($this->middleware, $routeMiddleware) as $key => $name) {
-            $name             = "{$this->middlewareNamespace}\\{$name}Middleware";
-            $middleware[$key] = new $name();
+            $class            = "{$this->middlewareNamespace}\\{$name}Middleware";
+            $middleware[$key] = new $class();
         }
         return $middleware;
     }
@@ -123,14 +123,10 @@ class Application extends \mix\base\Application
                 // 创建协程组件
                 if (!isset($this->_components[$name])) {
                     $this->_coroutineComponents[$coroutineId][$name] = $this->loadComponent($name, true);
-                } elseif ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_CLONE) {
-                    $this->_coroutineComponents[$coroutineId][$name] = clone $this->_components[$name];
+                    // 触发请求开始事件
+                    $this->triggerRequestStart($this->_coroutineComponents[$coroutineId][$name]);
                 } elseif ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_REFERENCE) {
                     $this->_coroutineComponents[$coroutineId][$name] = $this->_components[$name];
-                }
-                // 触发请求开始事件
-                if ($this->_coroutineComponents[$coroutineId][$name]->getStatus() == Component::STATUS_READY) {
-                    $this->_coroutineComponents[$coroutineId][$name]->onRequestStart();
                 }
             }
             // 返回对象
@@ -139,17 +135,15 @@ class Application extends \mix\base\Application
         // 返回单例
         if (isset($this->_components[$name])) {
             // 触发请求开始事件
-            if ($this->_components[$name]->getStatus() == Component::STATUS_READY) {
-                $this->_components[$name]->onRequestStart();
-            }
+            $this->triggerRequestStart($this->_components[$name]);
             // 返回对象
             return $this->_components[$name];
         }
         // 装载组件
         $this->loadComponent($name);
         // 触发请求开始事件
-        $this->_components[$name]->onRequestStart();
-        // 返回对象
+        $this->triggerRequestStart($this->_components[$name]);
+        // 返回单例
         return $this->_components[$name];
     }
 
@@ -179,9 +173,7 @@ class Application extends \mix\base\Application
             if (isset($this->_coroutineComponents[$coroutineId])) {
                 // 触发请求结束事件
                 foreach ($this->_coroutineComponents[$coroutineId] as $component) {
-                    if ($component->getStatus() == Component::STATUS_RUNNING) {
-                        $component->onRequestEnd();
-                    }
+                    $this->triggerRequestEnd($component);
                 }
             }
             // 删除协程组件
@@ -190,9 +182,23 @@ class Application extends \mix\base\Application
         }
         // 触发请求结束事件
         foreach ($this->_components as $component) {
-            if ($component->getStatus() == Component::STATUS_RUNNING) {
-                $component->onRequestEnd();
-            }
+            $this->triggerRequestEnd($component);
+        }
+    }
+
+    // 触发请求开始事件
+    protected function triggerRequestStart($component)
+    {
+        if ($component->getStatus() == Component::STATUS_READY) {
+            $component->onRequestStart();
+        }
+    }
+
+    // 触发请求结束事件
+    protected function triggerRequestEnd($component)
+    {
+        if ($component->getStatus() == Component::STATUS_RUNNING) {
+            $component->onRequestEnd();
         }
     }
 

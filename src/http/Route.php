@@ -33,7 +33,7 @@ class Route extends Component
         // 初始化
         $this->initialize();
         // 设置协程模式
-        $this->setCoroutineMode(Component::COROUTINE_MODE_CLONE);
+        $this->setCoroutineMode(Component::COROUTINE_MODE_REFERENCE);
     }
 
     // 初始化，生成路由数据，将路由规则转换为正则表达式，并提取路由参数名

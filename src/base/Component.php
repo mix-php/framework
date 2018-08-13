@@ -11,8 +11,7 @@ class Component extends BaseObject
 
     // 协程模式值
     const COROUTINE_MODE_NEW = 0;
-    const COROUTINE_MODE_CLONE = 1;
-    const COROUTINE_MODE_REFERENCE = 2;
+    const COROUTINE_MODE_REFERENCE = 1;
 
     // 状态值
     const STATUS_READY = 0;

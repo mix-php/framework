@@ -38,7 +38,7 @@ class Error extends Component
         ];
         $time   = date('Y-m-d H:i:s');
         // 日志处理
-        if (isset(\Mix::app()->components['log']) && !($e instanceof \mix\exceptions\NotFoundException)) {
+        if (!($e instanceof \mix\exceptions\NotFoundException)) {
             $message = "[message] {$errors['message']}" . PHP_EOL;
             $message .= "[time] {$time}" . PHP_EOL;
             $message .= "[type] {$errors['type']} code {$errors['code']}" . PHP_EOL;

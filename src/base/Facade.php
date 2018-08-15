@@ -13,6 +13,9 @@ class Facade
     public static function __callStatic($name, $arguments)
     {
         $instance = static::getInstance();
+        if (is_array($instance)) {
+            $instance = array_shift($instance);
+        }
         return call_user_func_array([$instance, $name], $arguments);
     }
 

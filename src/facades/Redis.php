@@ -38,10 +38,25 @@ use mix\base\Facade;
 class Redis extends Facade
 {
 
-    // 获取实例
+    /**
+     * 获取实例
+     * @param $name
+     * @return \mix\client\Redis
+     */
+    public static function name($name)
+    {
+        return static::getInstance()[$name];
+    }
+
+    /**
+     * 获取实例集合
+     * @return array
+     */
     public static function getInstance()
     {
-        return \Mix::app()->redis;
+        return [
+            'default' => \Mix::app()->redis,
+        ];
     }
 
 }

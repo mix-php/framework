@@ -32,10 +32,25 @@ use mix\base\Facade;
 class RDB extends Facade
 {
 
-    // 获取实例
+    /**
+     * 获取实例
+     * @param $name
+     * @return \mix\client\PDO
+     */
+    public static function name($name)
+    {
+        return static::getInstance()[$name];
+    }
+
+    /**
+     * 获取实例集合
+     * @return array
+     */
     public static function getInstance()
     {
-        return \Mix::app()->rdb;
+        return [
+            'default' => \Mix::app()->rdb,
+        ];
     }
 
 }

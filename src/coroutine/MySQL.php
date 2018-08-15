@@ -5,10 +5,10 @@ namespace mix\coroutine;
 use mix\base\Component;
 
 /**
- * Redis组件
+ * MySQL组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Redis extends Component
+class MySQL extends Component
 {
 
     // 主机
@@ -33,7 +33,7 @@ class Redis extends Component
      * redis对象
      * @var \Swoole\Coroutine\Redis
      */
-    protected $_redis;
+    protected $_mysql;
 
 
     // 析构事件
@@ -47,14 +47,20 @@ class Redis extends Component
     // 创建连接
     protected function createConnection()
     {
-        $redis = new \Swoole\Coroutine\Redis();
-        if (!$redis->connect($this->host, $this->port)) {
-            throw new \mix\exceptions\ConnectionException('redis connection failed');
-        }
-        $redis->auth($this->password);
-        $redis->select($this->database);
         $this->pool->activeCountIncrement();
-        return $redis;
+        $mysql   = new \Swoole\Coroutine\MySQL();
+        $success = $mysql->connect([
+            'host'     => '192.168.1.200',
+            'port'     => 3306,
+            'user'     => 'root',
+            'password' => '123456',
+            'database' => 'test',
+        ]);
+        if (!$success) {
+            $this->pool->activeCountDecrement();
+            throw new \mix\exceptions\ConnectionException('mysql connection failed');
+        }
+        return $mysql;
     }
 
     // 获取连接
@@ -75,32 +81,22 @@ class Redis extends Component
     // 连接
     protected function connect()
     {
-        $this->_redis = $this->getConnection();
+        $this->_mysql = $this->getConnection();
     }
 
     // 关闭连接
     public function disconnect()
     {
-        if (isset($this->_redis)) {
-
-
-            $this->pool->push($this->_redis);
-            $this->pool->activeCountDecrement();
-            $this->_redis = null;
-
-            var_dump('disconnect');
-            var_dump("QueueCount: " . $this->pool->getQueueCount());
-            var_dump("ActiveCount: " . $this->pool->getActiveCount());
-            var_dump("CurrentCount: " . $this->pool->getCurrentCount());
-            var_dump('----------');
-
+        if (isset($this->_mysql)) {
+            $this->pool->push($this->_mysql);
+            $this->_mysql = null;
         }
     }
 
     // 自动连接
     protected function autoConnect()
     {
-        if (!isset($this->_redis)) {
+        if (!isset($this->_mysql)) {
             $this->connect();
         }
     }
@@ -111,7 +107,7 @@ class Redis extends Component
         // 自动连接
         $this->autoConnect();
         // 执行命令
-        return call_user_func_array([$this->_redis, $name], $arguments);
+        $res = $this->_mysql->query('select sleep(1)');
     }
 
 }

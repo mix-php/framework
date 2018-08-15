@@ -115,17 +115,24 @@ class Application extends \mix\base\Application
         if (!is_null($this->_componentNamespace)) {
             $name = "{$this->_componentNamespace}.{$name}";
         }
+        $this->setComponentNamespace(null);
         // 返回协程组件单例
         if ($this->_isCoroutine) {
             $coroutineId = \Swoole\Coroutine::getuid();
             // 创建协程组件
             if (!isset($this->_coroutineComponents[$coroutineId][$name])) {
-                // 创建协程组件
+                // 关联组件加载
                 if (!isset($this->_components[$name])) {
+                    $this->loadComponent($name);
+                }
+                // 创建协程组件
+                if ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_NEW) {
                     $this->_coroutineComponents[$coroutineId][$name] = $this->loadComponent($name, true);
                     // 触发请求开始事件
                     $this->triggerRequestStart($this->_coroutineComponents[$coroutineId][$name]);
-                } elseif ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_REFERENCE) {
+                }
+                // 引用协程组件
+                if ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_REFERENCE) {
                     $this->_coroutineComponents[$coroutineId][$name] = $this->_components[$name];
                 }
             }
@@ -150,18 +157,12 @@ class Application extends \mix\base\Application
     // 装载全部组件
     public function loadAllComponents()
     {
-        // 装载全部组件
         foreach (array_keys($this->components) as $name) {
             $this->loadComponent($name);
         }
-        // 移除协程模式为 COROUTINE_MODE_NEW 的组件
-        if ($this->_isCoroutine) {
-            foreach ($this->_components as $name => $component) {
-                if ($component->getCoroutineMode() == Component::COROUTINE_MODE_NEW) {
-                    $this->_components[$name] = null;
-                }
-            }
-        }
+
+        var_dump($this->_components['redis.container']);
+
     }
 
     // 清扫组件容器

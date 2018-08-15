@@ -65,6 +65,10 @@ class Application extends BaseObject
     // 装载组件
     public function loadComponent($name, $return = false)
     {
+        // 已加载
+        if (!$return && isset($this->_components[$name])) {
+            return;
+        }
         // 未注册
         if (!isset($this->components[$name])) {
             throw new \mix\exceptions\ComponentException("组件不存在：{$name}");

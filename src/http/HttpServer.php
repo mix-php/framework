@@ -113,11 +113,12 @@ _/ / / / / / / /\ \/ / /_/ / / / / /_/ /
 
 
 EOL;
-        self::send('Server    Name: mix-httpd');
-        self::send("PHP    Version: {$phpVersion}");
-        self::send("Swoole Version: {$swooleVersion}");
-        self::send("Listen    Addr: {$this->host}");
-        self::send("Listen    Port: {$this->port}");
+        self::send('Server      Name: mix-httpd');
+        self::send('Framework   Version: ' . \Mix::VERSION);
+        self::send("PHP         Version: {$phpVersion}");
+        self::send("Swoole      Version: {$swooleVersion}");
+        self::send("Listen      Addr: {$this->host}");
+        self::send("Listen      Port: {$this->port}");
     }
 
     // 发送至屏幕

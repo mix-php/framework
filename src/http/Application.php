@@ -116,6 +116,7 @@ class Application extends \mix\base\Application
             $name = "{$this->_componentPrefix}.{$name}";
         }
         $this->setComponentPrefix(null);
+        /* 协程模式 */
         // 返回协程组件单例
         if ($this->_isCoroutine) {
             $coroutineId = \Swoole\Coroutine::getuid();
@@ -139,6 +140,7 @@ class Application extends \mix\base\Application
             // 返回对象
             return $this->_coroutineComponents[$coroutineId][$name];
         }
+        /* 常驻模式 */
         // 返回单例
         if (isset($this->_components[$name])) {
             // 触发请求开始事件
@@ -146,6 +148,7 @@ class Application extends \mix\base\Application
             // 返回对象
             return $this->_components[$name];
         }
+        /* 传统模式 */
         // 装载组件
         $this->loadComponent($name);
         // 触发请求开始事件
@@ -160,9 +163,6 @@ class Application extends \mix\base\Application
         foreach (array_keys($this->components) as $name) {
             $this->loadComponent($name);
         }
-
-        var_dump($this->_components['redis.container']);
-
     }
 
     // 清扫组件容器

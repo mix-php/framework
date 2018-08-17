@@ -16,7 +16,7 @@ namespace mix\base;
  * @property \mix\http\Token $token
  * @property \mix\http\Session $session
  * @property \mix\http\Cookie $cookie
- * @property \mix\client\PDO $rdb
+ * @property \mix\client\PDO $pdo
  * @property \mix\client\Redis $redis
  * @property \mix\websocket\TokenReader $tokenReader
  * @property \mix\websocket\SessionReader $sessionReader

@@ -29,7 +29,7 @@ use mix\base\Facade;
  * @method rollback() static
  * @method getRawSql() static
  */
-class RDB extends Facade
+class PDO extends Facade
 {
 
     /**
@@ -49,7 +49,7 @@ class RDB extends Facade
     public static function getInstance()
     {
         return [
-            'default' => \Mix::app()->rdb,
+            'default' => \Mix::app()->pdo,
         ];
     }
 

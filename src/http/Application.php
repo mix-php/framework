@@ -112,10 +112,10 @@ class Application extends \mix\base\Application
     public function __get($name)
     {
         // 获取全名
-        if (!is_null($this->_componentNamespace)) {
-            $name = "{$this->_componentNamespace}.{$name}";
+        if (!is_null($this->_componentPrefix)) {
+            $name = "{$this->_componentPrefix}.{$name}";
         }
-        $this->setComponentNamespace(null);
+        $this->setComponentPrefix(null);
         // 返回协程组件单例
         if ($this->_isCoroutine) {
             $coroutineId = \Swoole\Coroutine::getuid();

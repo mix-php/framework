@@ -21,6 +21,7 @@ namespace mix\base;
  * @property \mix\websocket\TokenReader $tokenReader
  * @property \mix\websocket\SessionReader $sessionReader
  * @property \mix\websocket\MessageHandler $messageHandler
+ * @property \mix\coroutine\PoolManager $pool
  */
 class Application extends BaseObject
 {
@@ -38,7 +39,7 @@ class Application extends BaseObject
     protected $_components;
 
     // 组件命名空间
-    protected $_componentNamespace;
+    protected $_componentPrefix;
 
     // 初始化事件
     public function onInitialize()
@@ -51,9 +52,9 @@ class Application extends BaseObject
     }
 
     // 设置组件命名空间
-    public function setComponentNamespace($namespace)
+    public function setComponentPrefix($prefix)
     {
-        $this->_componentNamespace = $namespace;
+        $this->_componentPrefix = $prefix;
     }
 
     // 创建对象

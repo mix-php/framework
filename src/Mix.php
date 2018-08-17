@@ -27,7 +27,7 @@ class Mix
      *
      * @return \mix\http\Application|\mix\console\Application
      */
-    public static function app($componentNamespace = null)
+    public static function app($prefix = null)
     {
         // 获取App
         $app = self::getApp();
@@ -35,7 +35,7 @@ class Mix
             return $app;
         }
         // 设置组件命名空间
-        $app->setComponentNamespace($componentNamespace);
+        $app->setComponentPrefix($prefix);
         // 返回App
         return $app;
     }
@@ -119,12 +119,12 @@ class Mix
                 }
                 // 引用其他组件
                 if (isset($value['component'])) {
-                    $componentNamespace = null;
-                    $componentName      = $value['component'];
+                    $componentPrefix = null;
+                    $componentName   = $value['component'];
                     if (strpos($value['component'], '.') !== false) {
-                        list($componentNamespace, $componentName) = explode('.', $value['component']);
+                        list($componentPrefix, $componentName) = explode('.', $value['component']);
                     }
-                    $config[$key] = self::app($componentNamespace)->$componentName;
+                    $config[$key] = self::app($componentPrefix)->$componentName;
                 }
             }
         }

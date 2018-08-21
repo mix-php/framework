@@ -54,8 +54,8 @@ class UploadFile
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
-        file_put_contents($filename, file_get_contents($this->tmpName));
-        return true;
+        $bytes = file_put_contents($filename, file_get_contents($this->tmpName));
+        return $bytes ? true : false;
     }
 
     // 获取基础名称

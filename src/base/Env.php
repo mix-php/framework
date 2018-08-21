@@ -2,8 +2,6 @@
 
 namespace mix\base;
 
-use mix\exceptions\EnvException;
-
 /**
  * 环境类
  * @author 刘健 <coder.liu@qq.com>
@@ -18,7 +16,7 @@ class Env
     public static function load($envFile)
     {
         if (!is_file($envFile)) {
-            throw new EnvException('Environment file does not exist.');
+            throw new \mix\exceptions\EnvException('Environment file does not exist.');
         }
         $data       = parse_ini_file($envFile);
         self::$_env = array_merge($_ENV, $data);
@@ -31,7 +29,7 @@ class Env
             return self::$_env;
         }
         if (!isset(self::$_env[$name])) {
-            throw new EnvException("Environment config does not exist: {$name}.");
+            throw new \mix\exceptions\EnvException("Environment config does not exist: {$name}.");
         }
         return self::$_env[$name];
     }

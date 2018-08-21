@@ -87,6 +87,25 @@ class Application extends BaseObject
         $this->_components[$name] = $object;
     }
 
+    // 获取配置
+    public function config($name)
+    {
+        $message = "Config does not exist: {$name}.";
+        $name    = explode('.', $name);
+        $first   = array_shift($name);
+        if (!isset($this->$first)) {
+            throw new \mix\exceptions\ConfigException($message);
+        }
+        $current = $this->$first;
+        foreach ($name as $key) {
+            if (!isset($current[$key])) {
+                throw new \mix\exceptions\ConfigException($message);
+            }
+            $current = $current[$key];
+        }
+        return $current;
+    }
+
     // 获取配置目录路径
     public function getConfigPath()
     {

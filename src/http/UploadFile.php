@@ -2,6 +2,8 @@
 
 namespace mix\http;
 
+use mix\helpers\StringHelper;
+
 /**
  * UploadFile类
  * @author 刘健 <coder.liu@qq.com>
@@ -69,14 +71,9 @@ class UploadFile
     }
 
     // 获取随机文件名
-    public function getRandomName()
+    public function getRandomFileName()
     {
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-        $name  = '';
-        for ($i = 0; $i < 32; $i++) {
-            $name .= $chars{mt_rand(0, 61)};
-        }
-        return md5($name) . '.' . $this->getExtension();
+        return md5(StringHelper::getRandomString(32)) . '.' . $this->getExtension();
     }
 
 }

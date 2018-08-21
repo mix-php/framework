@@ -19,7 +19,7 @@ class WebSocketServer extends BaseObject
     public $port;
 
     // 运行时的各项参数
-    public $setting = [];
+    public $settings = [];
 
     // Server对象
     protected $_server;
@@ -62,7 +62,7 @@ class WebSocketServer extends BaseObject
         $this->onOpen();
         $this->onMessage();
         $this->onClose();
-        $this->_server->set($this->setting);
+        $this->_server->set($this->settings);
         $this->_server->start();
     }
 

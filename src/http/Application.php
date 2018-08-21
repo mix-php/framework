@@ -206,13 +206,13 @@ class Application extends \mix\base\Application
     // 获取公开目录路径
     public function getPublicPath()
     {
-        return $this->basePath . 'public' . DIRECTORY_SEPARATOR;
+        return $this->basePath . DIRECTORY_SEPARATOR . 'public';
     }
 
     // 获取视图目录路径
     public function getViewPath()
     {
-        return $this->basePath . 'views' . DIRECTORY_SEPARATOR;
+        return $this->basePath . DIRECTORY_SEPARATOR . 'views';
     }
 
     // 打印变量的相关信息

@@ -109,13 +109,13 @@ class Application extends BaseObject
     // 获取配置目录路径
     public function getConfigPath()
     {
-        return $this->basePath . 'config' . DIRECTORY_SEPARATOR;
+        return $this->basePath . DIRECTORY_SEPARATOR . 'config';
     }
 
     // 获取运行目录路径
     public function getRuntimePath()
     {
-        return $this->basePath . 'runtime' . DIRECTORY_SEPARATOR;
+        return $this->basePath . DIRECTORY_SEPARATOR . 'runtime';
     }
 
 }

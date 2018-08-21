@@ -78,7 +78,7 @@ class Log extends Component
         $filename = "{$filePrefix}_{$timeFormat}";
         $dir      = $this->logDir;
         if (pathinfo($this->logDir)['dirname'] == '.') {
-            $dir = \Mix::app()->getRuntimePath() . $this->logDir;
+            $dir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->logDir;
         }
         is_dir($dir) or mkdir($dir);
         $file   = $dir . '/' . $filename . '.log';

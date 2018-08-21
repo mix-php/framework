@@ -3,6 +3,7 @@
 namespace mix\http;
 
 use mix\base\BaseObject;
+use mix\facades\Output;
 use mix\helpers\ProcessHelper;
 
 /**
@@ -33,6 +34,12 @@ class HttpServer extends BaseObject
         parent::onInitialize();
         // 实例化服务器
         $this->_server = new \Swoole\Http\Server($this->host, $this->port);
+        // 协程配置处理
+        if (isset($this->settings['enable_coroutine']) && $this->settings['enable_coroutine'] == true) {
+            \Swoole\Runtime::enableCoroutine(); // Swoole >= 4.1.0
+        } else {
+            $this->settings['enable_coroutine'] = false;
+        }
     }
 
     // 启动服务
@@ -113,19 +120,19 @@ _/ / / / / / / /\ \/ / /_/ / / / / /_/ /
 
 
 EOL;
-        self::send('Server      Name: mix-httpd');
-        self::send('Framework   Version: ' . \Mix::VERSION);
-        self::send("PHP         Version: {$phpVersion}");
-        self::send("Swoole      Version: {$swooleVersion}");
-        self::send("Listen      Addr: {$this->host}");
-        self::send("Listen      Port: {$this->port}");
+        self::print('Server      Name: mix-httpd');
+        self::print('Framework   Version: ' . \Mix::VERSION);
+        self::print("PHP         Version: {$phpVersion}");
+        self::print("Swoole      Version: {$swooleVersion}");
+        self::print("Listen      Addr: {$this->host}");
+        self::print("Listen      Port: {$this->port}");
     }
 
-    // 发送至屏幕
-    protected static function send($msg)
+    // 打印至屏幕
+    protected static function print($msg)
     {
         $time = date('Y-m-d H:i:s');
-        echo "[{$time}] " . $msg . PHP_EOL;
+        Output::writeln("[{$time}] {$msg}");
     }
 
 }

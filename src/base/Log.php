@@ -96,11 +96,6 @@ class Log extends Component
         if ($this->writeLock) {
             $flags = FILE_APPEND | LOCK_EX;
         }
-        // 转换为字符型
-        if (is_array($message) || is_object($message)) {
-            // 不转义中文、斜杠
-            $message = JsonHelper::encode($message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        }
         // 写入文件
         file_put_contents($file, $message . $this->newline, $flags);
     }

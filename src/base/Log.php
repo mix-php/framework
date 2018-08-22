@@ -2,6 +2,8 @@
 
 namespace mix\base;
 
+use mix\helpers\JsonHelper;
+
 /**
  * Log组件
  * @author 刘健 <coder.liu@qq.com>
@@ -61,6 +63,13 @@ class Log extends Component
     // 写入日志
     public function write($filePrefix, $message)
     {
+        // 创建目录
+        $dir = $this->logDir;
+        if (pathinfo($this->logDir)['dirname'] == '.') {
+            $dir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->logDir;
+        }
+        is_dir($dir) or mkdir($dir);
+        // 生成文件名
         switch ($this->logRotate) {
             case self::ROTATE_HOUR:
                 $timeFormat = date('YmdH');
@@ -76,20 +85,23 @@ class Log extends Component
                 break;
         }
         $filename = "{$filePrefix}_{$timeFormat}";
-        $dir      = $this->logDir;
-        if (pathinfo($this->logDir)['dirname'] == '.') {
-            $dir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->logDir;
-        }
-        is_dir($dir) or mkdir($dir);
-        $file   = $dir . '/' . $filename . '.log';
+        $file     = $dir . '/' . $filename . '.log';
+        // 尺寸轮转
         $number = 0;
         while (file_exists($file) && $this->maxFileSize > 0 && filesize($file) >= $this->maxFileSize) {
             $file = $dir . '/' . $filename . '_' . ++$number . '.log';
         }
+        // 写锁
         $flags = FILE_APPEND;
         if ($this->writeLock) {
             $flags = FILE_APPEND | LOCK_EX;
         }
+        // 转换为字符型
+        if (is_array($message) || is_object($message)) {
+            // 不转义中文、斜杠
+            $message = JsonHelper::encode($message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
+        // 写入文件
         file_put_contents($file, $message . $this->newline, $flags);
     }
 

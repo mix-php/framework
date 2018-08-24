@@ -27,11 +27,11 @@ class UploadFile
     public $size;
 
     /**
-     * 创建实例，通过 input 名称
+     * 创建实例，通过表单名称
      * @param $name
      * @return $this
      */
-    public static function newInstance($name)
+    public static function newInstanceByName($name)
     {
         $file = \Mix::app()->request->files($name);
         return is_null($file) ? $file : new self($file);

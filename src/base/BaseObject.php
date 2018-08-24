@@ -48,7 +48,7 @@ class BaseObject
      * @param $name
      * @return $this
      */
-    public static function newInstance($name = null)
+    public static function newInstanceByConfig($name = null)
     {
         $class  = get_called_class();
         $object = \Mix::app()->createObject($name);

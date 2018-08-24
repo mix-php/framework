@@ -12,6 +12,7 @@ use mix\base\Facade;
  * @method info($message) static
  * @method error($message) static
  * @method write($filePrefix, $message) static
+ * @method writeln($filePrefix, $message) static
  */
 class Log extends Facade
 {

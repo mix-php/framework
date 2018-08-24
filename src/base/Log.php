@@ -17,7 +17,7 @@ class Log extends Component
     const ROTATE_WEEKLY = 2;
 
     // 日志目录
-    public $logDir = 'log';
+    public $logDir = 'logs';
 
     // 日志记录级别
     public $level = ['error', 'info', 'debug'];
@@ -27,12 +27,6 @@ class Log extends Component
 
     // 最大文件尺寸
     public $maxFileSize = 0;
-
-    // 换行符
-    public $newline = PHP_EOL;
-
-    // 在写入时加独占锁
-    public $writeLock = false;
 
     // 初始化事件
     public function onInitialize()
@@ -45,59 +39,108 @@ class Log extends Component
     // 调试日志
     public function debug($message)
     {
-        in_array('debug', $this->level) and $this->write('debug', $message);
+        if (in_array('debug', $this->level)) {
+            return $this->writeln('debug', $message);
+        }
+        return false;
     }
 
     // 信息日志
     public function info($message)
     {
-        in_array('info', $this->level) and $this->write('info', $message);
+        if (in_array('info', $this->level)) {
+            return $this->writeln('info', $message);
+        }
+        return false;
     }
 
     // 错误日志
     public function error($message)
     {
-        in_array('error', $this->level) and $this->write('error', $message);
+        if (in_array('error', $this->level)) {
+            $file    = $this->getFile('error');
+            $message = self::addTimeInfo($message, 'error');
+            return error_log($message . PHP_EOL, 3, $file);
+        }
+        return false;
     }
 
     // 写入日志
     public function write($filePrefix, $message)
     {
-        // 创建目录
-        $dir = $this->logDir;
-        if (pathinfo($this->logDir)['dirname'] == '.') {
-            $dir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->logDir;
-        }
-        is_dir($dir) or mkdir($dir);
+        $file    = $this->getFile($filePrefix);
+        $message = self::compoundToJsonString($message);
+        $message = self::addTimeInfo($message);
+        return error_log($message, 3, $file);
+    }
+
+    // 写入日志，带换行
+    public function writeln($filePrefix, $message)
+    {
+        $file    = $this->getFile($filePrefix);
+        $message = self::compoundToJsonString($message);
+        $message = self::addTimeInfo($message);
+        return error_log($message . PHP_EOL, 3, $file);
+    }
+
+    // 获取要写入的文件
+    protected function getFile($filePrefix)
+    {
         // 生成文件名
+        $logDir = $this->logDir;
+        if (pathinfo($this->logDir)['dirname'] == '.') {
+            $logDir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->logDir;
+        }
         switch ($this->logRotate) {
             case self::ROTATE_HOUR:
+                $subDir     = date('Ymd');
                 $timeFormat = date('YmdH');
                 break;
             case self::ROTATE_DAY:
+                $subDir     = date('Ym');
                 $timeFormat = date('Ymd');
                 break;
             case self::ROTATE_WEEKLY:
+                $subDir     = date('Y');
                 $timeFormat = date('YW');
                 break;
-            default:
-                $timeFormat = date('Ymd');
-                break;
         }
-        $filename = "{$filePrefix}_{$timeFormat}";
-        $file     = $dir . '/' . $filename . '.log';
+        $filename = "{$logDir}/{$subDir}/{$filePrefix}_{$timeFormat}";
+        $file     = "{$filename}.log";
+        // 创建目录
+        $dir = dirname($file);
+        is_dir($dir) or mkdir($dir, 0777, true);
         // 尺寸轮转
         $number = 0;
         while (file_exists($file) && $this->maxFileSize > 0 && filesize($file) >= $this->maxFileSize) {
-            $file = $dir . '/' . $filename . '_' . ++$number . '.log';
+            $file = "{$filename}_" . ++$number . '.log';
         }
-        // 写锁
-        $flags = FILE_APPEND;
-        if ($this->writeLock) {
-            $flags = FILE_APPEND | LOCK_EX;
+        // 返回
+        return $file;
+    }
+
+    // 复合类型转JSON
+    protected static function compoundToJsonString($data)
+    {
+        if (is_scalar($data)) {
+            return $data;
         }
-        // 写入文件
-        file_put_contents($file, $message . $this->newline, $flags);
+        // 不转义中文、斜杠
+        return JsonHelper::encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    // 增加时间信息
+    protected static function addTimeInfo($message, $level = '')
+    {
+        $time = date('Y-m-d H:i:s');
+        switch ($level) {
+            case 'error':
+                $message = "[time] {$time}" . PHP_EOL . $message;
+                break;
+            default:
+                $message = "[{$time}] {$message}";
+        }
+        return $message;
     }
 
 }

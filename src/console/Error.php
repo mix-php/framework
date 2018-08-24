@@ -40,7 +40,6 @@ class Error extends Component
         // 日志处理
         if (!($e instanceof \mix\exceptions\NotFoundException)) {
             $message = "[message] {$errors['message']}" . PHP_EOL;
-            $message .= "[time] {$time}" . PHP_EOL;
             $message .= "[type] {$errors['type']} code {$errors['code']}" . PHP_EOL;
             $message .= "[file] {$errors['file']} line {$errors['line']}" . PHP_EOL;
             $message .= "[trace] {$errors['trace']}" . PHP_EOL;

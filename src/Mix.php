@@ -134,4 +134,14 @@ class Mix
         return new $class($config);
     }
 
+    // 开启协程
+    public static function enableCoroutine()
+    {
+        static $enable = false;
+        if (!$enable) {
+            \Swoole\Runtime::enableCoroutine(); // Swoole >= 4.1.0
+            $enable = true;
+        }
+    }
+
 }

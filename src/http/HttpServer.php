@@ -34,12 +34,6 @@ class HttpServer extends BaseObject
         parent::onInitialize();
         // 实例化服务器
         $this->_server = new \Swoole\Http\Server($this->host, $this->port);
-        // 协程配置处理
-        if (isset($this->settings['enable_coroutine']) && $this->settings['enable_coroutine'] == true) {
-            \Swoole\Runtime::enableCoroutine(); // Swoole >= 4.1.0
-        } else {
-            $this->settings['enable_coroutine'] = false;
-        }
     }
 
     // 启动服务

@@ -12,7 +12,11 @@ class Facade
     // 执行静态方法
     public static function __callStatic($name, $arguments)
     {
-        $instance = static::getInstance();
+        if (method_exists(get_called_class(), 'getInstance')) {
+            $instance = static::getInstance();
+        } else {
+            $instance = static::getInstances();
+        }
         if (is_array($instance)) {
             $instance = array_shift($instance);
         }

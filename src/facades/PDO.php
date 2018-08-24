@@ -39,14 +39,14 @@ class PDO extends Facade
      */
     public static function name($name)
     {
-        return static::getInstance()[$name];
+        return static::getInstances()[$name];
     }
 
     /**
      * 获取实例集合
      * @return array
      */
-    public static function getInstance()
+    public static function getInstances()
     {
         return [
             'default' => \Mix::app()->pdo,

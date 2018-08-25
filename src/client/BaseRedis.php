@@ -13,30 +13,36 @@ class BaseRedis extends Component
 
     // 主机
     public $host = '';
-    
+
     // 端口
     public $port = '';
-    
+
     // 数据库
     public $database = '';
-    
+
     // 密码
     public $password = '';
-    
+
     // redis对象
     protected $_redis;
 
-    // 连接
-    protected function connect()
+    // 创建连接
+    protected function createConnection()
     {
         $redis = new \Redis();
         // connect 这里如果设置timeout，是全局有效的，执行brPop时会受影响
         if (!$redis->connect($this->host, $this->port)) {
-            throw new \RedisException('redis connection failed');
+            throw new \mix\exceptions\ConnectionException('redis connection failed.');
         }
         $redis->auth($this->password);
         $redis->select($this->database);
-        $this->_redis = $redis;
+        return $redis;
+    }
+
+    // 连接
+    protected function connect()
+    {
+        $this->_redis = $this->createConnection();
     }
 
     // 关闭连接

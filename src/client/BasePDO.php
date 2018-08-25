@@ -51,15 +51,22 @@ class BasePDO extends Component
         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
     ];
 
-    // 连接
-    protected function connect()
+    // 创建连接
+    protected function createConnection()
     {
-        $this->_pdo = new \PDO(
+        $pdo = new \PDO(
             $this->dsn,
             $this->username,
             $this->password,
             $this->attribute += $this->_defaultAttribute
         );
+        return $pdo;
+    }
+
+    // 连接
+    protected function connect()
+    {
+        $this->_pdo = $this->createConnection();
     }
 
     // 关闭连接

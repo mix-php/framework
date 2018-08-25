@@ -83,7 +83,7 @@ class ConnectionPool extends Component
         while (true) {
             list($connection, $activeTime) = $this->_queue->pop();
             if ($activeTime + $this->maxLifetime < time()) {
-                continue;
+                return false;
             }
             $this->activeCountIncrement();
             return $connection;

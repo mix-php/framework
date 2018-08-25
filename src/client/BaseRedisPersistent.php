@@ -20,8 +20,6 @@ class BaseRedisPersistent extends BaseRedis
     public function __call($name, $arguments)
     {
         try {
-            // 更新活动时间
-            $this->_lastActiveTime = time();
             // 执行命令
             return parent::__call($name, $arguments);
         } catch (\Throwable $e) {

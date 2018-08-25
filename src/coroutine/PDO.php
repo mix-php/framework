@@ -2,13 +2,13 @@
 
 namespace mix\coroutine;
 
-use mix\client\BaseRedis;
+use mix\client\BasePDO;
 
 /**
- * Redis组件
+ * BasePdo组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Redis extends BaseRedis
+class PDO extends BasePDO
 {
 
     /**
@@ -36,9 +36,9 @@ class Redis extends BaseRedis
     // 创建连接
     protected function createConnection()
     {
-        $redis = parent::createConnection();
+        $pdo = parent::createConnection();
         $this->connectionPool->activeCountIncrement();
-        return $redis;
+        return $pdo;
     }
 
     // 获取连接
@@ -62,25 +62,25 @@ class Redis extends BaseRedis
     // 连接
     protected function connect()
     {
-        $this->_redis = $this->getConnection();
+        $this->_pdo = $this->getConnection();
     }
 
     // 关闭连接
     public function disconnect()
     {
-        if (isset($this->_redis)) {
-            $this->connectionPool->push($this->_redis);
+        if (isset($this->_pdo)) {
+            $this->connectionPool->push($this->_pdo);
             $this->connectionPool->activeCountDecrement();
         }
         parent::disconnect();
     }
 
-    // 执行命令
-    public function __call($name, $arguments)
+    // 执行前准备
+    protected function prepare()
     {
         try {
-            // 执行命令
-            return parent::__call($name, $arguments);
+            // 执行前准备
+            parent::prepare();
         } catch (\Throwable $e) {
             // 销毁失效连接
             parent::disconnect();

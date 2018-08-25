@@ -29,9 +29,9 @@ if (!function_exists('env')) {
     }
 }
 
-if (!function_exists('mixgo')) {
+if (!function_exists('tgo')) {
     // 创建一个带异常捕获的协程
-    function mixgo($function)
+    function tgo($function)
     {
         go(function () use ($function) {
             try {

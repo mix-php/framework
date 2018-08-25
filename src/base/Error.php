@@ -24,7 +24,7 @@ class Error
         $level = \Mix::app()->error->level;
         error_reporting($level);
         set_error_handler([__CLASS__, 'appError']);
-        set_exception_handler([__CLASS__, 'appException']);
+        set_exception_handler([__CLASS__, 'appException']); // swoole 不支持该函数
         register_shutdown_function([__CLASS__, 'appShutdown']);
     }
 

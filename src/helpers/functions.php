@@ -28,3 +28,18 @@ if (!function_exists('env')) {
         return \mix\base\Env::get($name);
     }
 }
+
+if (!function_exists('mixgo')) {
+    // 创建一个带异常捕获的协程
+    function mixgo($function)
+    {
+        go(function () use ($function) {
+            try {
+                call_user_func($function);
+            } catch (\Throwable $e) {
+                // 输出错误并退出
+                \Mix::app()->error->handleException($e, true);
+            }
+        });
+    }
+}

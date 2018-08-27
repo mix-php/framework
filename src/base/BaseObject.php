@@ -44,6 +44,15 @@ class BaseObject
     }
 
     /**
+     * 创建实例
+     * @return $this
+     */
+    public static function newInstance()
+    {
+        return new static();
+    }
+
+    /**
      * 创建实例，通过配置名
      * @param $name
      * @return $this

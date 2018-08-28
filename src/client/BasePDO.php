@@ -338,19 +338,19 @@ class BasePDO extends Component
         // 自动连接
         $this->autoConnect();
         // 开始事务
-        $this->_pdo->beginTransaction();
+        return $this->_pdo->beginTransaction();
     }
 
     // 提交事务
     public function commit()
     {
-        $this->_pdo->commit();
+        return $this->_pdo->commit();
     }
 
     // 回滚事务
     public function rollback()
     {
-        $this->_pdo->rollBack();
+        return $this->_pdo->rollBack();
     }
 
     // 给字符串加单引号

@@ -34,6 +34,24 @@ class BasePDOPersistent extends BasePDO
         }
     }
 
+    // 开始事务
+    public function beginTransaction()
+    {
+        try {
+            // 执行前准备
+            return parent::beginTransaction();
+        } catch (\Throwable $e) {
+            if (self::isDisconnectException($e)) {
+                // 断开连接异常处理
+                $this->reconnect();
+                return $this->beginTransaction();
+            } else {
+                // 抛出其他异常
+                throw $e;
+            }
+        }
+    }
+
     // 判断是否为断开连接异常
     protected static function isDisconnectException(\Throwable $e)
     {

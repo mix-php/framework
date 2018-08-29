@@ -44,15 +44,6 @@ class BaseObject
     }
 
     /**
-     * 创建实例
-     * @return $this
-     */
-    public static function newInstance()
-    {
-        return new static();
-    }
-
-    /**
      * 创建实例，通过配置名
      * @param $name
      * @return $this
@@ -62,7 +53,7 @@ class BaseObject
         $class  = get_called_class();
         $object = \Mix::app()->createObject($name);
         if (get_class($object) != $class) {
-            throw new \LibraryException('实例化类型与配置类型不符');
+            throw new \ConfigException('实例化类型与配置类型不符');
         }
         return $object;
     }

@@ -13,27 +13,30 @@ use mix\helpers\ProcessHelper;
 class HttpServer extends BaseObject
 {
 
-    // 主机
-    public $host;
-
-    // 端口
-    public $port;
+    // 虚拟主机
+    public $virtualHost = [];
 
     // 运行时的各项参数
     public $settings = [];
 
-    // 虚拟主机
-    public $virtualHosts = [];
-
-    // Server对象
+    // 服务器
     protected $_server;
+
+    // 主机
+    protected $_host;
+
+    // 端口
+    protected $_port;
 
     // 初始化事件
     public function onInitialize()
     {
         parent::onInitialize();
+        // 赋值
+        $this->_host = $this->virtualHost['host'];
+        $this->_port = $this->virtualHost['port'];
         // 实例化服务器
-        $this->_server = new \Swoole\Http\Server($this->host, $this->port);
+        $this->_server = new \Swoole\Http\Server($this->_host, $this->_port);
     }
 
     // 启动服务
@@ -53,7 +56,7 @@ class HttpServer extends BaseObject
     {
         $this->_server->on('Start', function ($server) {
             // 进程命名
-            ProcessHelper::setTitle("mix-httpd: master {$this->host}:{$this->port}");
+            ProcessHelper::setTitle("mix-httpd: master {$this->_host}:{$this->_port}");
         });
     }
 
@@ -76,8 +79,10 @@ class HttpServer extends BaseObject
             } else {
                 ProcessHelper::setTitle("mix-httpd: task #{$workerId}");
             }
-            // 设置虚拟主机配置
-            \Mix::setVirtualHosts($this->virtualHosts);
+            // 实例化App
+            $config = require $this->virtualHost['config'];
+            $app    = new \mix\http\Application($config);
+            $app->loadAllComponents();
         });
     }
 
@@ -85,9 +90,6 @@ class HttpServer extends BaseObject
     protected function onRequest()
     {
         $this->_server->on('request', function ($request, $response) {
-            // 切换当前Host
-            $host = isset($request->header['host']) ? $request->header['host'] : '';
-            \Mix::selectHost($host);
             // 执行请求
             try {
                 \Mix::app()->request->setRequester($request);
@@ -118,8 +120,8 @@ EOL;
         self::print('Framework   Version: ' . \Mix::VERSION);
         self::print("PHP         Version: {$phpVersion}");
         self::print("Swoole      Version: {$swooleVersion}");
-        self::print("Listen      Addr: {$this->host}");
-        self::print("Listen      Port: {$this->port}");
+        self::print("Listen      Addr: {$this->_host}");
+        self::print("Listen      Port: {$this->_port}");
     }
 
     // 打印至屏幕

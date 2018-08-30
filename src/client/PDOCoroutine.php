@@ -14,7 +14,7 @@ class PDOCoroutine extends BasePDO
 
     /**
      * 连接池
-     * @var \mix\coroutine\ConnectionPool
+     * @var \mix\pool\ConnectionPool
      */
     public $connectionPool;
 

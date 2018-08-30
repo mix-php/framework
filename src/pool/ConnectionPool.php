@@ -72,7 +72,7 @@ class ConnectionPool extends Component
     {
         $this->activeCountDecrement();
         if ($this->getQueueCount() < $this->min) {
-            return $this->_queue->push([$connection, time()]);
+            return $this->_queue->push($connection);
         }
         return false;
     }
@@ -81,10 +81,7 @@ class ConnectionPool extends Component
     public function pop()
     {
         while (true) {
-            list($connection, $activeTime) = $this->_queue->pop();
-            if ($activeTime + $this->maxLifetime < time()) {
-                return false;
-            }
+            $connection = $this->_queue->pop();
             $this->activeCountIncrement();
             return $connection;
         }

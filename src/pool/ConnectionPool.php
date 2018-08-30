@@ -33,6 +33,16 @@ class ConnectionPool extends Component
         $this->_queue = new \Swoole\Coroutine\Channel($this->min);
     }
 
+    // 获取连接池的统计信息
+    public function getStats()
+    {
+        return [
+            'current_count' => $this->getCurrentCount(),
+            'queue_count'   => $this->getQueueCount(),
+            'active_count'  => $this->getActiveCount(),
+        ];
+    }
+
     // 获取队列中的连接数
     public function getQueueCount()
     {

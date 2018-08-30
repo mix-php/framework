@@ -49,7 +49,7 @@ class PDO extends Facade
     public static function getInstances()
     {
         return [
-            'default' => \Mix::app()->pdo,
+            'db1' => \Mix::app('db1')->pdo,
         ];
     }
 

@@ -2,14 +2,13 @@
 
 namespace mix\client;
 
-use mix\client\BasePDO;
 use mix\helpers\CoroutineHelper;
 
 /**
- * BasePdo组件
+ * PDOCoroutine组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class PDOCoroutine extends BasePDO
+class PDOCoroutine extends BasePDOPersistent
 {
 
     /**
@@ -45,17 +44,11 @@ class PDOCoroutine extends BasePDO
     // 获取连接
     protected function getConnection()
     {
-        while ($this->connectionPool->getQueueCount() > 0) {
-            $connection = $this->connectionPool->pop();
-            if ($connection) {
-                return $connection;
-            }
+        if ($this->connectionPool->getQueueCount() > 0) {
+            return $this->connectionPool->pop();
         }
-        while ($this->connectionPool->getCurrentCount() >= $this->connectionPool->max) {
-            $connection = $this->connectionPool->pop();
-            if ($connection) {
-                return $connection;
-            }
+        if ($this->connectionPool->getCurrentCount() >= $this->connectionPool->max) {
+            return $this->connectionPool->pop();
         }
         return $this->createConnection();
     }
@@ -76,32 +69,12 @@ class PDOCoroutine extends BasePDO
         parent::disconnect();
     }
 
-    // 执行前准备
-    protected function prepare()
+    // 重新连接
+    protected function reconnect()
     {
-        try {
-            // 执行前准备
-            parent::prepare();
-        } catch (\Throwable $e) {
-            // 销毁失效连接
-            parent::disconnect();
-            // 抛出异常
-            throw $e;
-        }
-    }
-
-    // 开始事务
-    public function beginTransaction()
-    {
-        try {
-            // 执行前准备
-            return parent::beginTransaction();
-        } catch (\Throwable $e) {
-            // 销毁失效连接
-            parent::disconnect();
-            // 抛出异常
-            throw $e;
-        }
+        parent::disconnect();
+        $this->connectionPool->activeCountDecrement();
+        $this->connect();
     }
 
 }

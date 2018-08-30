@@ -5,7 +5,7 @@ namespace mix\client;
 use mix\helpers\CoroutineHelper;
 
 /**
- * Redis组件
+ * RedisCoroutine组件
  * @author 刘健 <coder.liu@qq.com>
  */
 class RedisCoroutine extends BaseRedisPersistent

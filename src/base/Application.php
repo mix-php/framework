@@ -21,7 +21,7 @@ namespace mix\base;
  * @property \mix\websocket\TokenReader $tokenReader
  * @property \mix\websocket\SessionReader $sessionReader
  * @property \mix\websocket\MessageHandler $messageHandler
- * @property \mix\coroutine\ConnectionPool $connectionPool
+ * @property \mix\pool\ConnectionPool $connectionPool
  */
 class Application extends BaseObject
 {

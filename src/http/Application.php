@@ -129,8 +129,8 @@ class Application extends \mix\base\Application
                 // 创建协程组件
                 if ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_NEW) {
                     $this->_coroutineComponents[$coroutineId][$name] = $this->loadComponent($name, true);
-                    // 触发请求开始事件
-                    $this->triggerRequestStart($this->_coroutineComponents[$coroutineId][$name]);
+                    // 触发请求前置事件
+                    $this->triggerRequestBefore($this->_coroutineComponents[$coroutineId][$name]);
                 }
                 // 引用协程组件
                 if ($this->_components[$name]->getCoroutineMode() == Component::COROUTINE_MODE_REFERENCE) {
@@ -143,16 +143,16 @@ class Application extends \mix\base\Application
         /* 常驻模式 */
         // 返回单例
         if (isset($this->_components[$name])) {
-            // 触发请求开始事件
-            $this->triggerRequestStart($this->_components[$name]);
+            // 触发请求前置事件
+            $this->triggerRequestBefore($this->_components[$name]);
             // 返回对象
             return $this->_components[$name];
         }
         /* 传统模式 */
         // 装载组件
         $this->loadComponent($name);
-        // 触发请求开始事件
-        $this->triggerRequestStart($this->_components[$name]);
+        // 触发请求前置事件
+        $this->triggerRequestBefore($this->_components[$name]);
         // 返回单例
         return $this->_components[$name];
     }
@@ -172,34 +172,34 @@ class Application extends \mix\base\Application
         if ($this->_isCoroutine) {
             $coroutineId = \Swoole\Coroutine::getuid();
             if (isset($this->_coroutineComponents[$coroutineId])) {
-                // 触发请求结束事件
+                // 触发请求后置事件
                 foreach ($this->_coroutineComponents[$coroutineId] as $component) {
-                    $this->triggerRequestEnd($component);
+                    $this->triggerRequestAfter($component);
                 }
             }
             // 删除协程组件
             $this->_coroutineComponents[$coroutineId] = null;
             return;
         }
-        // 触发请求结束事件
+        // 触发请求后置事件
         foreach ($this->_components as $component) {
-            $this->triggerRequestEnd($component);
+            $this->triggerRequestAfter($component);
         }
     }
 
-    // 触发请求开始事件
-    protected function triggerRequestStart($component)
+    // 触发请求前置事件
+    protected function triggerRequestBefore($component)
     {
         if ($component->getStatus() == Component::STATUS_READY) {
-            $component->onRequestStart();
+            $component->onRequestBefore();
         }
     }
 
-    // 触发请求结束事件
-    protected function triggerRequestEnd($component)
+    // 触发请求后置事件
+    protected function triggerRequestAfter($component)
     {
         if ($component->getStatus() == Component::STATUS_RUNNING) {
-            $component->onRequestEnd();
+            $component->onRequestAfter();
         }
     }
 

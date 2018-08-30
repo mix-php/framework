@@ -9,9 +9,9 @@ namespace mix\client;
 class RedisPersistent extends BaseRedisPersistent
 {
 
-    public function onRequestStart()
+    public function onRequestBefore()
     {
-        parent::onRequestStart();
+        parent::onRequestBefore();
         // 切换回默认数据库
         if (isset($this->_redis)) {
             $this->select($this->database);

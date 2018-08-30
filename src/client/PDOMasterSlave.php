@@ -9,10 +9,10 @@ namespace mix\client;
 class PDOMasterSlave extends BasePDOMasterSlave
 {
 
-    // 请求结束事件
-    public function onRequestEnd()
+    // 请求后置事件
+    public function onRequestAfter()
     {
-        parent::onRequestEnd();
+        parent::onRequestAfter();
         // 关闭连接
         $this->disconnect();
     }

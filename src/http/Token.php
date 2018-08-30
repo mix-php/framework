@@ -45,18 +45,18 @@ class Token extends Component
         $this->_uniqueIndexPrefix = $this->saveKeyPrefix . 'UIDX:';
     }
 
-    // 请求开始事件
-    public function onRequestStart()
+    // 请求前置事件
+    public function onRequestBefore()
     {
-        parent::onRequestStart();
+        parent::onRequestBefore();
         // 载入TokenID
         $this->loadTokenId();
     }
 
-    // 请求结束事件
-    public function onRequestEnd()
+    // 请求后置事件
+    public function onRequestAfter()
     {
-        parent::onRequestEnd();
+        parent::onRequestAfter();
         // 关闭连接
         $this->saveHandler->disconnect();
     }

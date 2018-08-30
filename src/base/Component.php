@@ -47,14 +47,14 @@ class Component extends BaseObject
         $this->_coroutineMode = $coroutineMode;
     }
 
-    // 请求开始事件
-    public function onRequestStart()
+    // 请求前置事件
+    public function onRequestBefore()
     {
         $this->setStatus(self::STATUS_RUNNING);
     }
 
-    // 请求结束事件
-    public function onRequestEnd()
+    // 请求后置事件
+    public function onRequestAfter()
     {
         $this->setStatus(self::STATUS_READY);
     }

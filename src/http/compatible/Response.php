@@ -9,10 +9,10 @@ namespace mix\http\compatible;
 class Response extends \mix\http\BaseResponse
 {
 
-    // 请求开始事件
-    public function onRequestStart()
+    // 请求前置事件
+    public function onRequestBefore()
     {
-        parent::onRequestStart();
+        parent::onRequestBefore();
         // 重置数据
         $this->format     = $this->defaultFormat;
         $this->statusCode = 200;

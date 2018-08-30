@@ -64,7 +64,6 @@ class RedisCoroutine extends BaseRedisPersistent
     {
         if (isset($this->_redis)) {
             $this->connectionPool->push($this->_redis);
-            $this->connectionPool->activeCountDecrement();
         }
         parent::disconnect();
     }

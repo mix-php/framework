@@ -64,7 +64,6 @@ class PDOCoroutine extends BasePDOPersistent
     {
         if (isset($this->_pdo)) {
             $this->connectionPool->push($this->_pdo);
-            $this->connectionPool->activeCountDecrement();
         }
         parent::disconnect();
     }

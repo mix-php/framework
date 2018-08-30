@@ -60,8 +60,14 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 左进程启动事件回调函数
     protected $_onLeftStart;
 
+    // 中进程启动事件回调函数
+    protected $_onCenterStart;
+
     // 中进程消息事件回调函数
     protected $_onCenterMessage;
+
+    // 右进程启动事件回调函数
+    protected $_onRightStart;
 
     // 右进程消息事件回调函数
     protected $_onRightMessage;
@@ -135,8 +141,14 @@ class ProcessPoolTaskExecutor extends BaseObject
             case 'LeftStart':
                 $this->_onLeftStart = $callback;
                 break;
+            case 'CenterStart':
+                $this->_onCenterStart = $callback;
+                break;
             case 'CenterMessage':
                 $this->_onCenterMessage = $callback;
+                break;
+            case 'RightStart':
+                $this->_onRightStart = $callback;
                 break;
             case 'RightMessage':
                 $this->_onRightMessage = $callback;
@@ -251,6 +263,8 @@ class ProcessPoolTaskExecutor extends BaseObject
                     'workerId'    => $workerId,
                     'workerPid'   => $worker->pid,
                 ]);
+                // 执行回调
+                isset($this->_onCenterStart) and call_user_func($this->_onCenterStart);
                 // 循环执行任务
                 for ($j = 0; $j < $this->maxExecutions; $j++) {
                     $data = $centerWorker->inputQueue->pop();
@@ -294,6 +308,8 @@ class ProcessPoolTaskExecutor extends BaseObject
                     'workerId'    => $workerId,
                     'workerPid'   => $worker->pid,
                 ]);
+                // 执行回调
+                isset($this->_onRightStart) and call_user_func($this->_onRightStart);
                 // 循环执行任务
                 for ($j = 0; $j < $this->maxExecutions; $j++) {
                     // 从进程队列中抢占一条消息

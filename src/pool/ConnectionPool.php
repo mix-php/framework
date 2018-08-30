@@ -17,9 +17,6 @@ class ConnectionPool extends Component
     // 最大连接数
     public $max;
 
-    // 生存时间
-    public $maxLifetime;
-
     // 队列
     protected $_queue;
 

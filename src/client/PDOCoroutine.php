@@ -9,7 +9,7 @@ use mix\helpers\CoroutineHelper;
  * BasePdo组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class PDO extends BasePDO
+class PDOCoroutine extends BasePDO
 {
 
     /**
@@ -82,6 +82,20 @@ class PDO extends BasePDO
         try {
             // 执行前准备
             parent::prepare();
+        } catch (\Throwable $e) {
+            // 销毁失效连接
+            parent::disconnect();
+            // 抛出异常
+            throw $e;
+        }
+    }
+
+    // 开始事务
+    public function beginTransaction()
+    {
+        try {
+            // 执行前准备
+            return parent::beginTransaction();
         } catch (\Throwable $e) {
             // 销毁失效连接
             parent::disconnect();

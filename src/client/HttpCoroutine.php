@@ -8,7 +8,7 @@ use mix\base\BaseObject;
  * Http类
  * @author 刘健 <coder.liu@qq.com>
  */
-class Http extends BaseObject
+class HttpCoroutine extends BaseObject
 {
 
     // 超时时间

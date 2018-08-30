@@ -60,7 +60,9 @@ class Mix
                     $componentPrefix = null;
                     $componentName   = $value['component'];
                     if (strpos($value['component'], '.') !== false) {
-                        list($componentPrefix, $componentName) = explode('.', $value['component']);
+                        $fragments       = explode('.', $value['component']);
+                        $componentName   = array_pop($fragments);
+                        $componentPrefix = implode('.', $fragments);
                     }
                     $config[$key] = self::app($componentPrefix)->$componentName;
                 }

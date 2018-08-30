@@ -1,15 +1,15 @@
 <?php
 
-namespace mix\coroutine;
+namespace mix\client;
 
-use mix\client\BasePDO;
+use mix\client\BaseRedis;
 use mix\helpers\CoroutineHelper;
 
 /**
- * BasePdo组件
+ * Redis组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class PDO extends BasePDO
+class Redis extends BaseRedis
 {
 
     /**
@@ -38,8 +38,8 @@ class PDO extends BasePDO
     protected function createConnection()
     {
         $this->connectionPool->activeCountIncrement();
-        $pdo = parent::createConnection();
-        return $pdo;
+        $redis = parent::createConnection();
+        return $redis;
     }
 
     // 获取连接
@@ -63,25 +63,25 @@ class PDO extends BasePDO
     // 连接
     protected function connect()
     {
-        $this->_pdo = $this->getConnection();
+        $this->_redis = $this->getConnection();
     }
 
     // 关闭连接
     public function disconnect()
     {
-        if (isset($this->_pdo)) {
-            $this->connectionPool->push($this->_pdo);
+        if (isset($this->_redis)) {
+            $this->connectionPool->push($this->_redis);
             $this->connectionPool->activeCountDecrement();
         }
         parent::disconnect();
     }
 
-    // 执行前准备
-    protected function prepare()
+    // 执行命令
+    public function __call($name, $arguments)
     {
         try {
-            // 执行前准备
-            parent::prepare();
+            // 执行命令
+            return parent::__call($name, $arguments);
         } catch (\Throwable $e) {
             // 销毁失效连接
             parent::disconnect();

@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\coroutine;
+namespace mix\client;
 
 use mix\base\BaseObject;
 

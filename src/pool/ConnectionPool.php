@@ -1,6 +1,6 @@
 <?php
 
-namespace mix\coroutine;
+namespace mix\pool;
 
 use mix\base\Component;
 

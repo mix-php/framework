@@ -55,7 +55,7 @@ class Redis extends Facade
     public static function getInstances()
     {
         return [
-            'config1' => \Mix::app('config1')->redis,
+            'default' => \Mix::app()->redis,
         ];
     }
 

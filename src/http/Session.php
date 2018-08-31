@@ -18,11 +18,26 @@ class Session extends Component
     // 保存的Key前缀
     public $saveKeyPrefix;
 
-    // 有效期
-    public $expires = 7200;
+    // 生存时间
+    public $maxLifetime = 7200;
 
     // session名
     public $name = 'mixssid';
+
+    // 过期时间
+    public $cookieExpires = 0;
+
+    // 有效的服务器路径
+    public $cookiePath = '/';
+
+    // 有效域名/子域名
+    public $cookieDomain = '';
+
+    // 仅通过安全的 HTTPS 连接传给客户端
+    public $cookieSecure = false;
+
+    // 仅可通过 HTTP 协议访问
+    public $cookieHttpOnly = false;
 
     // SessionKey
     protected $_sessionKey;
@@ -55,15 +70,15 @@ class Session extends Component
             $this->_sessionId = StringHelper::getRandomString(26);
         }
         $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
-        $this->saveHandler->expire($this->_sessionKey, $this->expires);
+        $this->saveHandler->expire($this->_sessionKey, $this->maxLifetime);
     }
 
     // 赋值
     public function set($name, $value)
     {
         $success = $this->saveHandler->hmset($this->_sessionKey, [$name => serialize($value)]);
-        $this->saveHandler->expire($this->_sessionKey, $this->expires);
-        \Mix::app()->response->setCookie($this->name, $this->_sessionId, 0, '/');
+        $this->saveHandler->expire($this->_sessionKey, $this->maxLifetime);
+        \Mix::app()->response->setCookie($this->name, $this->_sessionId, $this->cookieExpires, $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
         return $success ? true : false;
     }
 

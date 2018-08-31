@@ -22,9 +22,9 @@ class Response extends \mix\http\BaseResponse
     }
 
     // 设置Cookie
-    public function setCookie($name, $value = "", $expire = 0, $path = "", $domain = "", $secure = false, $httponly = false)
+    public function setCookie($name, $value = '', $expires = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
     {
-        setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+        return setcookie($name, $value, $expires, $path, $domain, $secure, $httpOnly);
     }
 
     // 重定向

@@ -12,7 +12,7 @@ class Cookie extends Component
 {
 
     // 过期时间
-    public $expire = 31536000;
+    public $expires = 31536000;
 
     // 有效的服务器路径
     public $path = '/';
@@ -24,7 +24,7 @@ class Cookie extends Component
     public $secure = false;
 
     // 仅可通过 HTTP 协议访问
-    public $httponly = false;
+    public $httpOnly = false;
 
     // 初始化事件
     public function onInitialize()
@@ -33,7 +33,7 @@ class Cookie extends Component
         // 设置协程模式
         $this->setCoroutineMode(Component::COROUTINE_MODE_REFERENCE);
     }
-    
+
     // 取值
     public function get($name = null)
     {
@@ -41,9 +41,9 @@ class Cookie extends Component
     }
 
     // 赋值
-    public function set($name, $value, $expire = null)
+    public function set($name, $value, $expires = null)
     {
-        \Mix::app()->response->setCookie($name, $value, time() + (is_null($expire) ? $this->expire : $expire), $this->path, $this->domain, $this->secure, $this->httponly);
+        return \Mix::app()->response->setCookie($name, $value, time() + (is_null($expires) ? $this->expires : $expires), $this->path, $this->domain, $this->secure, $this->httpOnly);
     }
 
     // 判断是否存在
@@ -55,7 +55,7 @@ class Cookie extends Component
     // 删除
     public function delete($name)
     {
-        $this->set($name, null);
+        return $this->set($name, null);
     }
 
     // 清空当前域所有cookie
@@ -64,6 +64,7 @@ class Cookie extends Component
         foreach (\Mix::app()->request->cookie() as $name => $value) {
             $this->set($name, null);
         }
+        return true;
     }
 
 }

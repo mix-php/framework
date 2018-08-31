@@ -29,9 +29,9 @@ class Response extends BaseResponse
     }
 
     // 设置Cookie
-    public function setCookie($name, $value = "", $expire = 0, $path = "", $domain = "", $secure = false, $httponly = false)
+    public function setCookie($name, $value = '', $expires = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
     {
-        $this->_responder->cookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+        return $this->_responder->cookie($name, $value, $expires, $path, $domain, $secure, $httpOnly);
     }
 
     // 重定向

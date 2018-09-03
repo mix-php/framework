@@ -16,7 +16,7 @@ class Token extends Component
     public $saveHandler;
 
     // 保存的Key前缀
-    public $saveKeyPrefix = 'MIXTKID:';
+    public $saveKeyPrefix = 'TOKEN:';
 
     // 有效期
     public $expiresIn = 604800;
@@ -29,6 +29,9 @@ class Token extends Component
 
     // TokenID
     protected $_tokenId;
+
+    // TokenID长度
+    protected $_tokenIdLength = 32;
 
     // 请求前置事件
     public function onRequestBefore()
@@ -58,19 +61,21 @@ class Token extends Component
     // 创建TokenID
     public function createTokenId()
     {
-        $this->_tokenId  = StringHelper::getRandomString(32);
-        $this->_tokenKey = $this->saveKeyPrefix . $this->_tokenId;
+        do {
+            $this->_tokenId  = StringHelper::getRandomString($this->_tokenIdLength);
+            $this->_tokenKey = $this->saveKeyPrefix . $this->_tokenId;
+        } while ($this->saveHandler->exists($this->_tokenKey));
     }
 
     // 设置唯一索引
-    public function setUniqueIndex($uniqueId, $indexPrefix = 'UIDX:')
+    public function setUniqueIndex($uniqueId, $uniqueIndexPrefix = 'client_credentials:')
     {
-        $uniqueKey = $this->saveKeyPrefix . $indexPrefix . $uniqueId;
+        $uniqueKey = $this->saveKeyPrefix . $uniqueIndexPrefix . $uniqueId;
         // 删除旧token数据
-        $beforeTokenId = $this->saveHandler->get($uniqueKey);
-        if (!empty($beforeTokenId)) {
-            $beforeTokenkey = $this->saveKeyPrefix . $beforeTokenId;
-            $this->saveHandler->del($beforeTokenkey);
+        $oldTokenId = $this->saveHandler->get($uniqueKey);
+        if (!empty($oldTokenId)) {
+            $oldTokenkey = $this->saveKeyPrefix . $oldTokenId;
+            $this->saveHandler->del($oldTokenkey);
         }
         // 更新唯一索引
         $this->saveHandler->setex($uniqueKey, $this->expiresIn, $this->_tokenId);
@@ -129,7 +134,7 @@ class Token extends Component
     }
 
     // 刷新token
-    public function refresh($indexPrefix = 'UIDX:')
+    public function refresh($uniqueIndexPrefix = 'client_credentials:')
     {
         // 判断 token 是否存在
         $tokenData = $this->saveHandler->hgetall($this->_tokenKey);
@@ -139,19 +144,19 @@ class Token extends Component
         // 定义变量
         $oldData     = $tokenData;
         $oldTokenKey = $this->_tokenKey;
-        $newTokenId  = StringHelper::getRandomString(32);
+        $newTokenId  = StringHelper::getRandomString($this->_tokenIdLength);
         $newTokenKey = $this->saveKeyPrefix . $newTokenId;
-        $uniqueKey   = $this->saveKeyPrefix . $indexPrefix . $oldData['__uidx__'];
-        // 删除旧数据
-        $this->saveHandler->del($oldTokenKey);
-        // 生成新数据
-        $this->saveHandler->hmset($newTokenKey, $oldData);
-        $this->saveHandler->expire($newTokenKey, $this->expiresIn);
+        $uniqueKey   = $this->saveKeyPrefix . $uniqueIndexPrefix . $oldData['__uidx__'];
         // 判断索引是否正确
         $exists = $this->saveHandler->exists($uniqueKey);
         if (empty($exists)) {
             return false;
         }
+        // 删除旧数据
+        $this->saveHandler->del($oldTokenKey);
+        // 生成新数据
+        $this->saveHandler->hmset($newTokenKey, $oldData);
+        $this->saveHandler->expire($newTokenKey, $this->expiresIn);
         // 更新索引信息
         $this->saveHandler->set($uniqueKey, $newTokenId);
         $this->saveHandler->expire($uniqueKey, $this->expiresIn);

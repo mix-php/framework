@@ -16,7 +16,7 @@ class Session extends Component
     public $saveHandler;
 
     // 保存的Key前缀
-    public $saveKeyPrefix = 'MIXSSID:';
+    public $saveKeyPrefix = 'SESSION:';
 
     // 生存时间
     public $maxLifetime = 7200;
@@ -45,6 +45,9 @@ class Session extends Component
     // SessionID
     protected $_sessionId;
 
+    // SessionID长度
+    protected $_sessionIdLength = 26;
+
     // 请求前置事件
     public function onRequestBefore()
     {
@@ -67,10 +70,20 @@ class Session extends Component
         $this->_sessionId = \Mix::app()->request->cookie($this->name);
         if (is_null($this->_sessionId)) {
             // 创建session_id
-            $this->_sessionId = StringHelper::getRandomString(26);
+            $this->_sessionId = StringHelper::getRandomString($this->_sessionIdLength);
         }
         $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
+        // 延长session有效期
         $this->saveHandler->expire($this->_sessionKey, $this->maxLifetime);
+    }
+
+    // 创建SessionId
+    public function createSessionId()
+    {
+        do {
+            $this->_sessionId  = StringHelper::getRandomString($this->_sessionIdLength);
+            $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
+        } while ($this->saveHandler->exists($this->_sessionKey));
     }
 
     // 赋值
@@ -78,7 +91,7 @@ class Session extends Component
     {
         $success = $this->saveHandler->hmset($this->_sessionKey, [$name => serialize($value)]);
         $this->saveHandler->expire($this->_sessionKey, $this->maxLifetime);
-        \Mix::app()->response->setCookie($this->name, $this->_sessionId, $this->cookieExpires, $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
+        $success and \Mix::app()->response->setCookie($this->name, $this->_sessionId, $this->cookieExpires, $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
         return $success ? true : false;
     }
 

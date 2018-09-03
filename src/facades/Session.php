@@ -8,6 +8,7 @@ use mix\base\Facade;
  * Session 门面类
  * @author 刘健 <coder.liu@qq.com>
  *
+ * @method createSessionId() static
  * @method set($name, $value) static
  * @method get($name = null) static
  * @method has($name) static

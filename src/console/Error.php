@@ -3,6 +3,8 @@
 namespace mix\console;
 
 use mix\base\Component;
+use mix\helpers\CoroutineHelper;
+use mix\helpers\PhpInfoHelper;
 
 /**
  * Error类
@@ -20,12 +22,13 @@ class Error extends Component
         // debug处理
         if ($e instanceof \mix\exceptions\DebugException) {
             $content = $e->getMessage();
-            exit($content);
+            echo $content;
+            $this->exit(ExitCode::OK);
         }
         // exit处理
         if ($e instanceof \mix\exceptions\EndException) {
             $exitCode = (int)$e->getMessage();
-            exit($exitCode);
+            $this->exit($exitCode);
         }
         // 错误参数定义
         $errors = [
@@ -62,6 +65,16 @@ class Error extends Component
         $output->writeln('');
         // 退出
         $exit and exit(ExitCode::EXCEPTION);
+    }
+
+    // 退出
+    protected function exit($exitCode)
+    {
+        if (!CoroutineHelper::isCoroutine()) {
+            $this->exit($exitCode);
+        } else {
+            ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);
+        }
     }
 
 }

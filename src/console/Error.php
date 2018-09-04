@@ -5,6 +5,7 @@ namespace mix\console;
 use mix\base\Component;
 use mix\helpers\CoroutineHelper;
 use mix\helpers\PhpInfoHelper;
+use mix\helpers\ProcessHelper;
 
 /**
  * Error类

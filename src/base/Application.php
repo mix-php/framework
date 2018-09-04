@@ -91,13 +91,25 @@ class Application extends BaseObject
     public function config($name)
     {
         $message = "Config does not exist: {$name}.";
-        $name    = explode('.', $name);
-        $first   = array_shift($name);
+        // 处理带前缀的名称
+        preg_match('/(\[[\w.]+\])/', $name, $matches);
+        $subname   = array_pop($matches);
+        $name      = str_replace($subname, str_replace('.', '|', $subname), $name);
+        $fragments = explode('.', $name);
+        foreach ($fragments as $key => $value) {
+            if (strpos($value, '[') !== false) {
+                $fragments[$key] = str_replace(['[', ']'], '', $value);
+                $fragments[$key] = str_replace('|', '.', $fragments[$key]);
+            }
+        }
+        // 判断一级配置是否存在
+        $first = array_shift($fragments);
         if (!isset($this->$first)) {
             throw new \mix\exceptions\ConfigException($message);
         }
+        // 判断其他配置是否存在
         $current = $this->$first;
-        foreach ($name as $key) {
+        foreach ($fragments as $key) {
             if (!isset($current[$key])) {
                 throw new \mix\exceptions\ConfigException($message);
             }

@@ -115,6 +115,10 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 启动
     public function start()
     {
+        // 关闭内置协程，使 exit; 可以正常在回调中使用
+        swoole_async_set([
+            'enable_coroutine' => false,
+        ]);
         // 修改进程标题
         ProcessHelper::setTitle("{$this->name} master");
         // 创建队列
@@ -404,8 +408,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                 $processPool = $this->_processPool;
                 // 退出主进程
                 if (empty($processPool) || $tickCount++ == 1) {
-                    ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);
-                    return;
+                    exit;
                 }
                 // PUSH空数据解锁阻塞进程
                 $processTypes = array_column(array_values($processPool), 0);
@@ -441,8 +444,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                 $processPool = $this->_processPool;
                 // 退出主进程
                 if (empty($processPool)) {
-                    ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);
-                    return;
+                    exit;
                 }
                 // 左进程是否停止完成
                 $processTypes = array_column(array_values($processPool), 0);

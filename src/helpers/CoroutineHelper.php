@@ -24,10 +24,22 @@ class CoroutineHelper
     // 开启协程
     public static function enableCoroutine()
     {
-        static $enable = false;
-        if (!$enable) {
+        static $trigger = false;
+        if (!$trigger) {
             \Swoole\Runtime::enableCoroutine(); // Swoole >= 4.1.0
-            $enable = true;
+            $trigger = true;
+        }
+    }
+
+    // 关闭协程
+    public static function disableCoroutine()
+    {
+        static $trigger = false;
+        if (!$trigger) {
+            swoole_async_set([
+                'enable_coroutine' => false,
+            ]);
+            $trigger = true;
         }
     }
 

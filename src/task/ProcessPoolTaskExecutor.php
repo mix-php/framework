@@ -3,6 +3,7 @@
 namespace mix\task;
 
 use mix\base\BaseObject;
+use mix\helpers\CoroutineHelper;
 use mix\helpers\ProcessHelper;
 
 /**
@@ -116,9 +117,7 @@ class ProcessPoolTaskExecutor extends BaseObject
     public function start()
     {
         // 关闭内置协程，使 exit; 可以正常在回调中使用
-        swoole_async_set([
-            'enable_coroutine' => false,
-        ]);
+        CoroutineHelper::disableCoroutine();
         // 修改进程标题
         ProcessHelper::setTitle("{$this->name} master");
         // 创建队列

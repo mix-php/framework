@@ -404,7 +404,8 @@ class ProcessPoolTaskExecutor extends BaseObject
                 $processPool = $this->_processPool;
                 // 退出主进程
                 if (empty($processPool) || $tickCount++ == 1) {
-                    exit;
+                    ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);
+                    return;
                 }
                 // PUSH空数据解锁阻塞进程
                 $processTypes = array_column(array_values($processPool), 0);
@@ -440,7 +441,8 @@ class ProcessPoolTaskExecutor extends BaseObject
                 $processPool = $this->_processPool;
                 // 退出主进程
                 if (empty($processPool)) {
-                    exit;
+                    ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);
+                    return;
                 }
                 // 左进程是否停止完成
                 $processTypes = array_column(array_values($processPool), 0);

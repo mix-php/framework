@@ -64,7 +64,7 @@ class Error extends Component
         $output->writeln($message, Output::NONE);
         $output->writeln('');
         // 退出
-        $exit and exit(ExitCode::EXCEPTION);
+        $exit and $this->exit(ExitCode::EXCEPTION);
     }
 
     // 退出

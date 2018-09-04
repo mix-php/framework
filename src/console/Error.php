@@ -71,7 +71,7 @@ class Error extends Component
     protected function exit($exitCode)
     {
         if (!CoroutineHelper::isCoroutine()) {
-            $this->exit($exitCode);
+            exit($exitCode);
         } else {
             ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);
         }

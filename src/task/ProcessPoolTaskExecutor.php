@@ -267,7 +267,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     'workerPid'   => $worker->pid,
                 ]);
                 // 执行回调
-                isset($this->_onCenterStart) and call_user_func($this->_onCenterStart);
+                isset($this->_onCenterStart) and call_user_func($this->_onCenterStart, $centerWorker);
                 // 循环执行任务
                 for ($j = 0; $j < $this->maxExecutions; $j++) {
                     $data = $centerWorker->inputQueue->pop();
@@ -312,7 +312,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     'workerPid'   => $worker->pid,
                 ]);
                 // 执行回调
-                isset($this->_onRightStart) and call_user_func($this->_onRightStart);
+                isset($this->_onRightStart) and call_user_func($this->_onRightStart, $rightWorker);
                 // 循环执行任务
                 for ($j = 0; $j < $this->maxExecutions; $j++) {
                     // 从进程队列中抢占一条消息

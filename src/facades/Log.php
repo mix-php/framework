@@ -8,11 +8,16 @@ use mix\base\Facade;
  * Log 门面类
  * @author 刘健 <coder.liu@qq.com>
  *
- * @method debug($message) static
- * @method info($message) static
- * @method error($message) static
- * @method write($filePrefix, $message) static
- * @method writeln($filePrefix, $message) static
+ * @method emergency($message, array $context = []) static
+ * @method alert($message, array $context = []) static
+ * @method critical($message, array $context = []) static
+ * @method error($message, array $context = []) static
+ * @method warning($message, array $context = []) static
+ * @method notice($message, array $context = []) static
+ * @method info($message, array $context = []) static
+ * @method debug($message, array $context = []) static
+ * @method log($level, $message, array $context = []) static
+ * @method write($filePrefix, $message, array $context = []) static
  */
 class Log extends Facade
 {

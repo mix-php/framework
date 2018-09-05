@@ -17,13 +17,13 @@ class Log extends Component
     const ROTATE_WEEKLY = 2;
 
     // 日志目录
-    public $logDir = 'logs';
+    public $dir = 'logs';
 
     // 日志记录级别
-    public $level = ['error', 'info', 'debug'];
+    public $level = ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug'];
 
     // 日志轮转类型
-    public $logRotate = self::ROTATE_DAY;
+    public $rotate = self::ROTATE_DAY;
 
     // 最大文件尺寸
     public $maxFileSize = 0;
@@ -36,50 +36,68 @@ class Log extends Component
         $this->setCoroutineMode(Component::COROUTINE_MODE_REFERENCE);
     }
 
-    // 调试日志
-    public function debug($message)
+    // emergency日志
+    public function emergency($message, array $context = [])
     {
-        if (in_array('debug', $this->level)) {
-            return $this->writeln('debug', $message);
-        }
-        return false;
+        return $this->log(__FUNCTION__, $message, $context);
     }
 
-    // 信息日志
-    public function info($message)
+    // alert日志
+    public function alert($message, array $context = [])
     {
-        if (in_array('info', $this->level)) {
-            return $this->writeln('info', $message);
-        }
-        return false;
+        return $this->log(__FUNCTION__, $message, $context);
     }
 
-    // 错误日志
-    public function error($message)
+    // critical日志
+    public function critical($message, array $context = [])
     {
-        if (in_array('error', $this->level)) {
-            $file    = $this->getFile('error');
-            $message = self::addTimeInfo($message, 'error');
-            return error_log($message . PHP_EOL, 3, $file);
+        return $this->log(__FUNCTION__, $message, $context);
+    }
+
+    // error日志
+    public function error($message, array $context = [])
+    {
+        return $this->log(__FUNCTION__, $message, $context);
+    }
+
+    // warning日志
+    public function warning($message, array $context = [])
+    {
+        return $this->log(__FUNCTION__, $message, $context);
+    }
+
+    // notice日志
+    public function notice($message, array $context = [])
+    {
+        return $this->log(__FUNCTION__, $message, $context);
+    }
+
+    // info日志
+    public function info($message, array $context = [])
+    {
+        return $this->log(__FUNCTION__, $message, $context);
+    }
+
+    // debug日志
+    public function debug($message, array $context = [])
+    {
+        return $this->log(__FUNCTION__, $message, $context);
+    }
+
+    // 记录日志
+    public function log($level, $message, array $context = [])
+    {
+        if (in_array($level, $this->level)) {
+            return $this->write($level, $message, $context);
         }
         return false;
     }
 
     // 写入日志
-    public function write($filePrefix, $message)
+    public function write($filePrefix, $message, array $context = [])
     {
         $file    = $this->getFile($filePrefix);
-        $message = self::compoundToJsonString($message);
-        $message = self::addTimeInfo($message);
-        return error_log($message, 3, $file);
-    }
-
-    // 写入日志，带换行
-    public function writeln($filePrefix, $message)
-    {
-        $file    = $this->getFile($filePrefix);
-        $message = self::compoundToJsonString($message);
-        $message = self::addTimeInfo($message);
+        $message = $this->getMessage($message, $context);
         return error_log($message . PHP_EOL, 3, $file);
     }
 
@@ -87,11 +105,11 @@ class Log extends Component
     protected function getFile($filePrefix)
     {
         // 生成文件名
-        $logDir = $this->logDir;
-        if (pathinfo($this->logDir)['dirname'] == '.') {
-            $logDir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->logDir;
+        $logDir = $this->dir;
+        if (pathinfo($this->dir)['dirname'] == '.') {
+            $logDir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->dir;
         }
-        switch ($this->logRotate) {
+        switch ($this->rotate) {
             case self::ROTATE_HOUR:
                 $subDir     = date('Ymd');
                 $timeFormat = date('YmdH');
@@ -119,27 +137,18 @@ class Log extends Component
         return $file;
     }
 
-    // 复合类型转JSON
-    protected static function compoundToJsonString($data)
+    // 获取要写入的消息
+    protected function getMessage($message, array $context = [])
     {
-        if (is_scalar($data)) {
-            return $data;
+        // 替换占位符
+        $replace = [];
+        foreach ($context as $key => $val) {
+            $replace['{' . $key . '}'] = $val;
         }
-        // 不转义中文、斜杠
-        return JsonHelper::encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    }
-
-    // 增加时间信息
-    protected static function addTimeInfo($message, $level = '')
-    {
-        $time = date('Y-m-d H:i:s');
-        switch ($level) {
-            case 'error':
-                $message = "[time] {$time}" . PHP_EOL . $message;
-                break;
-            default:
-                $message = "[{$time}] {$message}";
-        }
+        $message = strtr($message, $replace);
+        // 增加时间
+        $time    = date('Y-m-d H:i:s');
+        $message = "[time] {$time} [message] {$message}";
         return $message;
     }
 

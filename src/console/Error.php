@@ -47,7 +47,7 @@ class Error extends Component
             $message .= "[type] {$errors['type']} [code] {$errors['code']}" . PHP_EOL;
             $message .= "[file] {$errors['file']} [line] {$errors['line']}" . PHP_EOL;
             $message .= "[trace] {$errors['trace']}" . PHP_EOL;
-            $message .= '$_SERVER' . substr(print_r($_SERVER, true), 5);
+            $message .= '$_SERVER' . substr(print_r($_SERVER, true), 5, -1);
             \Mix::app()->log->error($message);
         }
         // 清空系统错误

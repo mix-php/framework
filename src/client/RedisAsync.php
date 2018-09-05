@@ -1,24 +1,28 @@
 <?php
 
-namespace mix\async;
+namespace mix\client;
 
 use mix\base\BaseObject;
 
 /**
- * Redis异步类
+ * RedisAsync类
  * @author 刘健 <coder.liu@qq.com>
  */
-class Redis extends BaseObject
+class RedisAsync extends BaseObject
 {
 
     // 主机
     public $host = '';
+
     // 端口
     public $port = '';
+
     // 数据库
     public $database = '';
+
     // 密码
     public $password = '';
+
     // redis对象
     protected $_redis;
 

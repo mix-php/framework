@@ -80,7 +80,7 @@ class HttpServer extends BaseObject
                 ProcessHelper::setTitle("mix-httpd: task #{$workerId}");
             }
             // 实例化App
-            $config = require $this->virtualHost['config'];
+            $config = require $this->virtualHost['configFile'];
             $app    = new \mix\http\Application($config);
             $app->loadAllComponents();
         });

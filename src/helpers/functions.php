@@ -31,11 +31,11 @@ if (!function_exists('env')) {
 
 if (!function_exists('tgo')) {
     // 创建一个带异常捕获的协程
-    function tgo($function)
+    function tgo($closure)
     {
-        go(function () use ($function) {
+        go(function () use ($closure) {
             try {
-                call_user_func($function);
+                $closure();
             } catch (\Throwable $e) {
                 // 输出错误并退出
                 \Mix::app()->error->handleException($e, true);

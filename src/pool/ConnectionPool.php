@@ -63,32 +63,19 @@ class ConnectionPool extends Component
     }
 
     // 活跃连接数自增
-    public function activeCountIncrement()
+    protected function activeCountIncrement()
     {
         return ++$this->_activeCount;
     }
 
     // 活跃连接数自减
-    public function activeCountDecrement()
+    protected function activeCountDecrement()
     {
         return --$this->_activeCount;
     }
 
-    // 获取连接
-    public function getConnection($closure)
-    {
-        if ($this->getQueueCount() > 0) {
-            return $this->pop();
-        }
-        if ($this->getCurrentCount() >= $this->max) {
-            return $this->pop();
-        }
-        $this->activeCountIncrement();
-        return $closure();
-    }
-
     // 放入连接
-    public function push($connection)
+    protected function push($connection)
     {
         $this->activeCountDecrement();
         if ($this->getQueueCount() < $this->min) {
@@ -98,13 +85,48 @@ class ConnectionPool extends Component
     }
 
     // 弹出连接
-    public function pop()
+    protected function pop()
     {
         while (true) {
             $connection = $this->_queue->pop();
             $this->activeCountIncrement();
             return $connection;
         }
+    }
+
+    // 获取连接
+    public function getConnection($closure)
+    {
+        // 队列有连接，从队列取
+        if ($this->getQueueCount() > 0) {
+            return $this->pop();
+        }
+        // 达到最大连接数，从队列取
+        if ($this->getCurrentCount() >= $this->max) {
+            return $this->pop();
+        }
+        // 活跃连接数自增
+        $this->activeCountIncrement();
+        // 执行创建连接的匿名函数并返回
+        return $closure();
+    }
+
+    // 释放连接
+    public function releaseConnection($connection, $closure)
+    {
+        // 放入连接
+        $this->push($connection);
+        // 执行销毁连接的匿名函数
+        $closure();
+    }
+
+    // 销毁连接
+    public function destroyConnection($closure)
+    {
+        // 执行销毁连接的匿名函数
+        $closure();
+        // 活跃连接数自减
+        $this->activeCountDecrement();
     }
 
 }

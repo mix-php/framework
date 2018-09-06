@@ -36,25 +36,37 @@ class PDOCoroutine extends BasePDOPersistent
     // 连接
     protected function connect()
     {
-        $this->_pdo = $this->connectionPool->getConnection(function () {
-            return parent::createConnection();
-        });
+        if (isset($this->connectionPool)) {
+            $this->_pdo = $this->connectionPool->getConnection(function () {
+                return parent::createConnection();
+            });
+        } else {
+            $this->_pdo = parent::createConnection();
+        }
     }
 
     // 关闭连接
     public function disconnect()
     {
-        if (isset($this->_pdo)) {
-            $this->connectionPool->push($this->_pdo);
+        if (isset($this->connectionPool) && isset($this->_pdo)) {
+            $this->connectionPool->releaseConnection($this->_pdo, function () {
+                parent::disconnect();
+            });
+        } else {
+            parent::disconnect();
         }
-        parent::disconnect();
     }
 
     // 重新连接
     protected function reconnect()
     {
-        parent::disconnect();
-        $this->connectionPool->activeCountDecrement();
+        if (isset($this->connectionPool)) {
+            $this->connectionPool->destroyConnection(function () {
+                parent::disconnect();
+            });
+        } else {
+            parent::disconnect();
+        }
         $this->connect();
     }
 

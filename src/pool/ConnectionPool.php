@@ -77,13 +77,13 @@ class ConnectionPool extends Component
     // 获取连接
     public function getConnection($closure)
     {
-        if ($this->connectionPool->getQueueCount() > 0) {
-            return $this->connectionPool->pop();
+        if ($this->getQueueCount() > 0) {
+            return $this->pop();
         }
-        if ($this->connectionPool->getCurrentCount() >= $this->connectionPool->max) {
-            return $this->connectionPool->pop();
+        if ($this->getCurrentCount() >= $this->max) {
+            return $this->pop();
         }
-        $this->connectionPool->activeCountIncrement();
+        $this->activeCountIncrement();
         return $closure();
     }
 

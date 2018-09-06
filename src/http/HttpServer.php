@@ -116,19 +116,14 @@ _/ / / / / / / /\ \/ / /_/ / / / / /_/ /
 
 
 EOL;
-        self::print('Server      Name: mix-httpd');
-        self::print('Framework   Version: ' . \Mix::VERSION);
-        self::print("PHP         Version: {$phpVersion}");
-        self::print("Swoole      Version: {$swooleVersion}");
-        self::print("Listen      Addr: {$this->_host}");
-        self::print("Listen      Port: {$this->_port}");
-    }
-
-    // 打印至屏幕
-    protected static function print($msg)
-    {
-        $time = date('Y-m-d H:i:s');
-        Output::writeln("[{$time}] {$msg}");
+        Output::writeln('Server      Name: mix-httpd');
+        Output::writeln('Framework   Version: ' . \Mix::VERSION);
+        Output::writeln("PHP         Version: {$phpVersion}");
+        Output::writeln("Swoole      Version: {$swooleVersion}");
+        Output::writeln("Listen      Addr: {$this->_host}");
+        Output::writeln("Listen      Port: {$this->_port}");
+        Output::writeln('Coroutine   Mode: ' . ($this->settings['enable_coroutine'] ? 'enable' : 'disable'));
+        Output::writeln("Config      File: {$this->virtualHost['configFile']}");
     }
 
 }

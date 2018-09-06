@@ -33,30 +33,12 @@ class RedisCoroutine extends BaseRedisPersistent
         $this->disconnect();
     }
 
-    // 创建连接
-    protected function createConnection()
-    {
-        $this->connectionPool->activeCountIncrement();
-        $redis = parent::createConnection();
-        return $redis;
-    }
-
-    // 获取连接
-    protected function getConnection()
-    {
-        if ($this->connectionPool->getQueueCount() > 0) {
-            return $this->connectionPool->pop();
-        }
-        if ($this->connectionPool->getCurrentCount() >= $this->connectionPool->max) {
-            return $this->connectionPool->pop();
-        }
-        return $this->createConnection();
-    }
-
     // 连接
     protected function connect()
     {
-        $this->_redis = $this->getConnection();
+        $this->_redis = $this->connectionPool->getConnection(function () {
+            return parent::createConnection();
+        });
     }
 
     // 关闭连接

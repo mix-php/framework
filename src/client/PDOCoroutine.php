@@ -33,30 +33,12 @@ class PDOCoroutine extends BasePDOPersistent
         $this->disconnect();
     }
 
-    // 创建连接
-    protected function createConnection()
-    {
-        $this->connectionPool->activeCountIncrement();
-        $pdo = parent::createConnection();
-        return $pdo;
-    }
-
-    // 获取连接
-    protected function getConnection()
-    {
-        if ($this->connectionPool->getQueueCount() > 0) {
-            return $this->connectionPool->pop();
-        }
-        if ($this->connectionPool->getCurrentCount() >= $this->connectionPool->max) {
-            return $this->connectionPool->pop();
-        }
-        return $this->createConnection();
-    }
-
     // 连接
     protected function connect()
     {
-        $this->_pdo = $this->getConnection();
+        $this->_pdo = $this->connectionPool->getConnection(function () {
+            return parent::createConnection();
+        });
     }
 
     // 关闭连接

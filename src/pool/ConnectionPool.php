@@ -74,6 +74,19 @@ class ConnectionPool extends Component
         return --$this->_activeCount;
     }
 
+    // 获取连接
+    public function getConnection($closure)
+    {
+        if ($this->connectionPool->getQueueCount() > 0) {
+            return $this->connectionPool->pop();
+        }
+        if ($this->connectionPool->getCurrentCount() >= $this->connectionPool->max) {
+            return $this->connectionPool->pop();
+        }
+        $this->connectionPool->activeCountIncrement();
+        return $closure();
+    }
+
     // 放入连接
     public function push($connection)
     {

@@ -29,6 +29,9 @@ class BasePDO extends Component
     // PDOStatement
     protected $_pdoStatement;
 
+    // sql片段
+    protected $_sqlFragments = [];
+
     // sql
     protected $_sql = '';
 
@@ -39,10 +42,7 @@ class BasePDO extends Component
     protected $_values = [];
 
     // sql原始数据
-    protected $_sqlRawData = [];
-
-    // sql缓存
-    protected $_sqlCache = [];
+    protected $_sqlPrepareData = [];
 
     // 默认属性
     protected $_defaultAttribute = [
@@ -77,21 +77,25 @@ class BasePDO extends Component
     }
 
     // 查询构建
-    public function queryBuilder($sqlItem)
+    public function queryBuilder($item)
     {
-        if (isset($sqlItem['if']) && $sqlItem['if'] == false) {
+        if (isset($item['if']) && $item['if'] == false) {
             return $this;
         }
-        if (isset($sqlItem['params'])) {
-            $this->bindParams($sqlItem['params']);
+        if (isset($item['params'])) {
+            $this->bindParams($item['params']);
         }
-        $this->_sqlCache[] = array_shift($sqlItem);
+        $this->_sqlFragments[] = array_shift($item);
         return $this;
     }
 
     // 创建命令
     public function createCommand($sql = null)
     {
+        // 清扫数据
+        $this->_sql    = '';
+        $this->_params = [];
+        $this->_values = [];
         // 字符串构建
         if (is_string($sql)) {
             $this->_sql = $sql;
@@ -101,11 +105,14 @@ class BasePDO extends Component
             foreach ($sql as $item) {
                 $this->queryBuilder($item);
             }
-            $this->_sql = implode(' ', $this->_sqlCache);
+            $this->_sql = implode(' ', $this->_sqlFragments);
         }
         if (is_null($sql)) {
-            $this->_sql = implode(' ', $this->_sqlCache);
+            $this->_sql = implode(' ', $this->_sqlFragments);
         }
+        // 清扫数据
+        $this->_sqlFragments = [];
+        // 返回
         return $this;
     }
 
@@ -153,26 +160,27 @@ class BasePDO extends Component
         if (!empty($this->_params)) {
             // 有参数
             list($sql, $params) = self::bindArrayParams($this->_sql, $this->_params);
-            $this->_pdoStatement = $this->_pdo->prepare($sql);
-            $this->_sqlRawData   = [$sql, $params, []]; // 必须在 bindParam 前，才能避免类型被转换
+            $this->_pdoStatement   = $this->_pdo->prepare($sql);
+            $this->_sqlPrepareData = [$sql, $params, []]; // 必须在 bindParam 前，才能避免类型被转换
             foreach ($params as $key => &$value) {
                 $this->_pdoStatement->bindParam($key, $value);
             }
         } elseif (!empty($this->_values)) {
             // 批量插入
-            $this->_pdoStatement = $this->_pdo->prepare($this->_sql);
-            $this->_sqlRawData   = [$this->_sql, [], $this->_values];
+            $this->_pdoStatement   = $this->_pdo->prepare($this->_sql);
+            $this->_sqlPrepareData = [$this->_sql, [], $this->_values];
             foreach ($this->_values as $key => $value) {
                 $this->_pdoStatement->bindValue($key + 1, $value);
             }
         } else {
             // 无参数
-            $this->_pdoStatement = $this->_pdo->prepare($this->_sql);
-            $this->_sqlRawData   = [];
+            $this->_pdoStatement   = $this->_pdo->prepare($this->_sql);
+            $this->_sqlPrepareData = [$this->_sql];
         }
-        $this->_sqlCache = [];
-        $this->_params   = [];
-        $this->_values   = [];
+        // 清扫数据
+        $this->_sql    = '';
+        $this->_params = [];
+        $this->_values = [];
     }
 
     /**
@@ -368,8 +376,9 @@ class BasePDO extends Component
     // 返回原生SQL语句
     public function getRawSql()
     {
-        if (!empty($this->_sqlRawData)) {
-            list($sql, $params, $values) = $this->_sqlRawData;
+        $sqlPrepareData = $this->_sqlPrepareData;
+        if (count($sqlPrepareData) > 1) {
+            list($sql, $params, $values) = $sqlPrepareData;
             $values = self::quotes($values);
             $params = self::quotes($params);
             // 先处理 values，避免 params 中包含 ? 号污染结果
@@ -381,7 +390,7 @@ class BasePDO extends Component
             }
             return $sql;
         }
-        return $this->_sql;
+        return array_shift($sqlPrepareData);
     }
 
 }

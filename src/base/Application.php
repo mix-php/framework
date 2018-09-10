@@ -57,12 +57,6 @@ class Application extends BaseObject
         $this->_componentPrefix = $prefix;
     }
 
-    // 创建对象
-    public function createObject($name)
-    {
-        return \Mix::createObject($this->libraries[$name], $name);
-    }
-
     // 装载组件
     public function loadComponent($name, $return = false)
     {

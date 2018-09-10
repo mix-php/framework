@@ -16,8 +16,24 @@ class HttpServer extends BaseObject
     // 虚拟主机
     public $virtualHost = [];
 
-    // 运行时的各项参数
+    // 运行参数
     public $settings = [];
+
+    // 默认运行参数
+    protected $_settings = [
+        // 开启协程
+        'enable_coroutine' => false,
+        // 进程的最大任务数
+        'max_request'      => 10000,
+        // 异步安全重启
+        'reload_async'     => true,
+        // 退出等待时间
+        'max_wait_time'    => 60,
+        // PID 文件
+        'pid_file'         => '/var/run/mix-httpd.pid',
+        // 日志文件路径
+        'log_file'         => '/tmp/mix-httpd.log',
+    ];
 
     // 服务器
     protected $_server;
@@ -28,13 +44,13 @@ class HttpServer extends BaseObject
     // 端口
     protected $_port;
 
-    // 初始化事件
-    public function onInitialize()
+    // 初始化
+    protected function initialize()
     {
-        parent::onInitialize();
-        // 赋值
-        $this->_host = $this->virtualHost['host'];
-        $this->_port = $this->virtualHost['port'];
+        // 初始化参数
+        $this->_host    = $this->virtualHost['host'];
+        $this->_port    = $this->virtualHost['port'];
+        $this->settings += $this->_settings;
         // 实例化服务器
         $this->_server = new \Swoole\Http\Server($this->_host, $this->_port);
     }
@@ -42,6 +58,7 @@ class HttpServer extends BaseObject
     // 启动服务
     public function start()
     {
+        $this->initialize();
         $this->welcome();
         $this->onStart();
         $this->onManagerStart();
@@ -116,14 +133,15 @@ _/ / / / / / / /\ \/ / /_/ / / / / /_/ /
 
 
 EOL;
-        Output::writeln('Server      Name: mix-httpd');
-        Output::writeln('Framework   Version: ' . \Mix::VERSION);
-        Output::writeln("PHP         Version: {$phpVersion}");
-        Output::writeln("Swoole      Version: {$swooleVersion}");
-        Output::writeln("Listen      Addr: {$this->_host}");
-        Output::writeln("Listen      Port: {$this->_port}");
-        Output::writeln('Coroutine   Mode: ' . ($this->settings['enable_coroutine'] ? 'enable' : 'disable'));
-        Output::writeln("Config      File: {$this->virtualHost['configFile']}");
+        Output::writeln('Server      Name:      mix-httpd');
+        Output::writeln('Framework   Version:   ' . \Mix::VERSION);
+        Output::writeln("PHP         Version:   {$phpVersion}");
+        Output::writeln("Swoole      Version:   {$swooleVersion}");
+        Output::writeln("Listen      Addr:      {$this->_host}");
+        Output::writeln("Listen      Port:      {$this->_port}");
+        Output::writeln('Hot         Update:    ' . ($this->settings['max_request'] == 1 ? 'enable' : 'disable'));
+        Output::writeln('Coroutine   Mode:      ' . ($this->settings['enable_coroutine'] ? 'enable' : 'disable'));
+        Output::writeln("Config      File:      {$this->virtualHost['configFile']}");
     }
 
 }

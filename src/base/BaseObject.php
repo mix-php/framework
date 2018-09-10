@@ -9,6 +9,10 @@ namespace mix\base;
 class BaseObject
 {
 
+    // 配置类型值
+    const CONFIG_COMPONENTS = 'components';
+    const CONFIG_LIBRARIES = 'libraries';
+
     // 构造
     public function __construct($attributes = [])
     {
@@ -48,10 +52,11 @@ class BaseObject
      * @param $name
      * @return $this
      */
-    public static function newInstanceByConfig($name = null)
+    public static function newInstanceByConfig($name = null, $parent = self::CONFIG_LIBRARIES)
     {
         $class  = get_called_class();
-        $object = \Mix::app()->createObject($name);
+        $config = app()->config("{$parent}.[{$name}]");
+        $object = create_object($config);
         if (get_class($object) != $class) {
             throw new \ConfigException('实例化类型与配置类型不符');
         }

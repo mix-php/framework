@@ -10,13 +10,13 @@ use mix\base\Facade;
  *
  * @method createTokenId() static
  * @method set($name, $value) static
- * @method setUniqueIndex($uniqueId) static
+ * @method setUniqueIndex($uniqueId, $uniqueIndexPrefix = 'client_credentials:') static
  * @method get($name = null) static
  * @method has($name) static
  * @method delete($name) static
  * @method clear() static
  * @method getTokenId() static
- * @method refresh() static
+ * @method refresh($uniqueIndexPrefix = 'client_credentials:') static
  */
 class Token extends Facade
 {

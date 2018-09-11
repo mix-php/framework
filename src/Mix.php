@@ -44,6 +44,15 @@ class Mix
         self::$_app = $app;
     }
 
+    // 配置
+    public static function configure($object, $attributes)
+    {
+        foreach ($attributes as $name => $value) {
+            $object->$name = $value;
+        }
+        return $object;
+    }
+
     // 使用配置创建对象
     public static function createObject($config)
     {

@@ -71,7 +71,7 @@ class Application extends BaseObject
         // 使用配置创建新对象
         $object = \Mix::createObject($this->components[$name], $name);
         // 组件效验
-        if (!($object instanceof Component)) {
+        if (!($object instanceof ComponentInterface)) {
             throw new \mix\exceptions\ComponentException("不是组件类型：{$this->components[$name]['class']}");
         }
         if ($return) {

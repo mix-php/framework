@@ -20,6 +20,12 @@ trait BaseObjectTrait
         $this->onInitialize();
     }
 
+    // 析构
+    public function __destruct()
+    {
+        $this->onDestruct();
+    }
+
     // 构造事件
     public function onConstruct()
     {
@@ -33,29 +39,6 @@ trait BaseObjectTrait
     // 析构事件
     public function onDestruct()
     {
-    }
-
-    // 析构
-    public function __destruct()
-    {
-        $this->onDestruct();
-    }
-
-    /**
-     * 创建实例，通过配置名
-     * @param null $name
-     * @param string $parent
-     * @return $this
-     */
-    public static function newInstanceByConfig($name = null, $parent = self::CONFIG_LIBRARIES)
-    {
-        $class  = get_called_class();
-        $config = app()->config("{$parent}.[{$name}]");
-        $object = create_object($config);
-        if (get_class($object) != $class) {
-            throw new \ConfigException('实例化类型与配置类型不符');
-        }
-        return $object;
     }
 
 }

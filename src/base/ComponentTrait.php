@@ -10,10 +10,10 @@ trait ComponentTrait
 {
 
     // 协程模式
-    private $_coroutineMode = self::COROUTINE_MODE_NEW;
+    private $_coroutineMode = ComponentInterface::COROUTINE_MODE_NEW;
 
     // 状态
-    private $_status = self::STATUS_READY;
+    private $_status = ComponentInterface::STATUS_READY;
 
     // 获取状态
     public function getStatus()
@@ -42,13 +42,13 @@ trait ComponentTrait
     // 请求前置事件
     public function onRequestBefore()
     {
-        $this->setStatus(self::STATUS_RUNNING);
+        $this->setStatus(ComponentInterface::STATUS_RUNNING);
     }
 
     // 请求后置事件
     public function onRequestAfter()
     {
-        $this->setStatus(self::STATUS_READY);
+        $this->setStatus(ComponentInterface::STATUS_READY);
     }
 
 }

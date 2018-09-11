@@ -112,6 +112,8 @@ class BasePDO extends Component
         }
         // 清扫数据
         $this->_sqlFragments = [];
+        // 保存SQL
+        $this->_sqlPrepareData = [$this->_sql];
         // 返回
         return $this;
     }

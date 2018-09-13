@@ -139,8 +139,8 @@ EOL;
         Output::writeln("Swoole      Version:   {$swooleVersion}");
         Output::writeln("Listen      Addr:      {$this->_host}");
         Output::writeln("Listen      Port:      {$this->_port}");
-        Output::writeln('Hot         Update:    ' . ($this->settings['max_request'] == 1 ? 'enable' : 'disable'));
-        Output::writeln('Coroutine   Mode:      ' . ($this->settings['enable_coroutine'] ? 'enable' : 'disable'));
+        Output::writeln('Hot         Update:    ' . ($this->settings['max_request'] == 1 ? 'enabled' : 'disabled'));
+        Output::writeln('Coroutine   Mode:      ' . ($this->settings['enable_coroutine'] ? 'enabled' : 'disabled'));
         Output::writeln("Config      File:      {$this->virtualHost['configFile']}");
     }
 

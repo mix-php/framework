@@ -20,7 +20,7 @@ trait StaticInstanceTrait
         $config = app()->config($name);
         $object = create_object($config);
         if (get_class($object) != $class) {
-            throw new \ConfigException('实例化类型与配置类型不符');
+            throw new \mix\exceptions\ConfigException('实例化类型与配置类型不符');
         }
         return $object;
     }

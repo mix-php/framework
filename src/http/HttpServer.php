@@ -33,6 +33,8 @@ class HttpServer extends BaseObject
         'pid_file'         => '/var/run/mix-httpd.pid',
         // 日志文件路径
         'log_file'         => '/tmp/mix-httpd.log',
+        // 开启后，PDO 协程多次 prepare 才不会有 40ms 延迟
+        'open_tcp_nodelay' => true,
     ];
 
     // 服务器

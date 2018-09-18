@@ -59,7 +59,7 @@ class ProcessPoolTaskExecutor extends BaseObject
     public $queueName = '';
 
     // 临时文件目录
-    public $tempDir = '/tmp';
+    public $tempDir = '/dev/shm';
 
     // 左进程启动事件回调函数
     protected $_onLeftStart;

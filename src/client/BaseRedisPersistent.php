@@ -20,12 +20,13 @@ class BaseRedisPersistent extends BaseRedis
     public function __call($name, $arguments)
     {
         try {
-            // 执行命令
+            // 执行父类命令
             return parent::__call($name, $arguments);
         } catch (\Throwable $e) {
             if (self::isDisconnectException($e)) {
                 // 断开连接异常处理
                 $this->reconnect();
+                // 重新执行命令
                 return $this->__call($name, $arguments);
             } else {
                 // 抛出其他异常

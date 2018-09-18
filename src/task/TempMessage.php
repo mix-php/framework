@@ -24,7 +24,9 @@ class TempMessage
     // 获取内容
     public function getContent()
     {
-        return file_get_contents($this->file);
+        $content = file_get_contents($this->file);
+        unlink($this->file);
+        return $content;
     }
 
     // 设置文件

@@ -10,9 +10,9 @@ class CenterWorker extends BaseWorker
 {
 
     // 发送消息到右进程
-    public function send($data, $serialize = true)
+    public function send($data)
     {
-        return $this->outputQueue->push($data, $serialize);
+        return $this->outputQueue->push($data);
     }
     
 }

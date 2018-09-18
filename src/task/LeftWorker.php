@@ -10,9 +10,9 @@ class LeftWorker extends BaseWorker
 {
 
     // 发送消息到右进程
-    public function send($data, $serialize = true)
+    public function send($data)
     {
-        return $this->inputQueue->push($data, $serialize);
+        return $this->inputQueue->push($data);
     }
 
 }

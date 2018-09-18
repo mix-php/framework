@@ -58,6 +58,9 @@ class ProcessPoolTaskExecutor extends BaseObject
     // 队列名称
     public $queueName = '';
 
+    // 临时文件目录
+    public $tempDir = '\tmp';
+
     // 左进程启动事件回调函数
     protected $_onLeftStart;
 
@@ -168,12 +171,12 @@ class ProcessPoolTaskExecutor extends BaseObject
         $inputQueue = new \Swoole\Process(function () {
         });
         $inputQueue->useQueue($messageKey + 1, $mode);
-        $this->_inputQueue = new InputQueue(['queue' => $inputQueue]);
+        $this->_inputQueue = new InputQueue(['queue' => $inputQueue, 'tempDir' => $this->tempDir]);
         // 输出队列
         $outputQueue = new \Swoole\Process(function () {
         });
         $outputQueue->useQueue($messageKey + 2, $mode);
-        $this->_outputQueue = new OutputQueue(['queue' => $outputQueue]);
+        $this->_outputQueue = new OutputQueue(['queue' => $outputQueue, 'tempDir' => $this->tempDir]);
     }
 
     // 创建进程

@@ -14,6 +14,9 @@ class BaseQueue extends BaseObject
     // 队列对象
     public $queue;
 
+    // 临时文件目录
+    public $tempDir;
+
     // 进程对象
     public $worker;
 
@@ -21,20 +24,24 @@ class BaseQueue extends BaseObject
     public $table;
 
     // 投递数据
-    public function push($data, $serialize = true)
+    public function push($data)
     {
-        if ($serialize) {
-            $data = serialize($data);
+        $data = serialize($data);
+        if (strlen($data) > 8000) {
+            $data = serialize(new TempMessage($data, $this->tempDir));
         }
         return $this->queue->push($data);
     }
 
     // 提取数据
-    public function pop($unserialize = true)
+    public function pop()
     {
         $data = $this->queue->pop();
-        if ($unserialize && !empty($data)) {
+        if (!empty($data)) {
             $data = unserialize($data);
+            if ($data instanceof TempMessage) {
+                $data = unserialize($data->getContent());
+            }
         }
         return $data;
     }

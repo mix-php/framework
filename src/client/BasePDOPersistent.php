@@ -16,35 +16,75 @@ class BasePDOPersistent extends BasePDO
         $this->connect();
     }
 
-    // 执行前准备
-    protected function prepare()
+    /**
+     * 返回结果集
+     * @return \PDOStatement
+     */
+    public function query()
     {
-        try {
-            // 执行前准备
-            parent::prepare();
-        } catch (\Throwable $e) {
-            if (self::isDisconnectException($e)) {
-                // 断开连接异常处理
-                $this->reconnect();
-                $this->prepare();
-            } else {
-                // 抛出其他异常
-                throw $e;
-            }
-        }
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 返回一行
+    public function queryOne()
+    {
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 返回多行
+    public function queryAll()
+    {
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 返回一列 (第一列)
+    public function queryColumn($columnNumber = 0)
+    {
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 返回一个标量值
+    public function queryScalar()
+    {
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 执行SQL语句
+    public function execute()
+    {
+        return $this->call(__FUNCTION__, func_get_args());
     }
 
     // 开始事务
     public function beginTransaction()
     {
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 提交事务
+    public function commit()
+    {
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 回滚事务
+    public function rollback()
+    {
+        return $this->call(__FUNCTION__, func_get_args());
+    }
+
+    // 执行方法
+    public function call($name, $arguments)
+    {
         try {
-            // 执行前准备
-            return parent::beginTransaction();
+            // 执行父类方法
+            return call_user_func_array("parent::{$name}", $arguments);
         } catch (\Throwable $e) {
             if (self::isDisconnectException($e)) {
                 // 断开连接异常处理
                 $this->reconnect();
-                return $this->beginTransaction();
+                // 重新执行方法
+                return $this->call($name, $arguments);
             } else {
                 // 抛出其他异常
                 throw $e;

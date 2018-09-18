@@ -164,7 +164,7 @@ class BasePDO extends Component
         }
     }
 
-    // 执行前准备
+    // 预处理
     protected function prepare()
     {
         // 自动连接
@@ -190,7 +190,11 @@ class BasePDO extends Component
             $this->_pdoStatement   = $this->_pdo->prepare($this->_sql);
             $this->_sqlPrepareData = [$this->_sql];
         }
-        // 清扫数据
+    }
+
+    // 清扫预处理数据
+    protected function clearPrepare()
+    {
         $this->_sql    = '';
         $this->_params = [];
         $this->_values = [];
@@ -204,6 +208,7 @@ class BasePDO extends Component
     {
         $this->prepare();
         $this->_pdoStatement->execute();
+        $this->clearPrepare();
         return $this->_pdoStatement;
     }
 
@@ -212,6 +217,7 @@ class BasePDO extends Component
     {
         $this->prepare();
         $this->_pdoStatement->execute();
+        $this->clearPrepare();
         return $this->_pdoStatement->fetch($this->_driverOptions[\PDO::ATTR_DEFAULT_FETCH_MODE]);
     }
 
@@ -220,6 +226,7 @@ class BasePDO extends Component
     {
         $this->prepare();
         $this->_pdoStatement->execute();
+        $this->clearPrepare();
         return $this->_pdoStatement->fetchAll();
     }
 
@@ -228,6 +235,7 @@ class BasePDO extends Component
     {
         $this->prepare();
         $this->_pdoStatement->execute();
+        $this->clearPrepare();
         $column = [];
         while ($row = $this->_pdoStatement->fetchColumn($columnNumber)) {
             $column[] = $row;
@@ -240,6 +248,7 @@ class BasePDO extends Component
     {
         $this->prepare();
         $this->_pdoStatement->execute();
+        $this->clearPrepare();
         return $this->_pdoStatement->fetchColumn();
     }
 
@@ -247,7 +256,9 @@ class BasePDO extends Component
     public function execute()
     {
         $this->prepare();
-        return $this->_pdoStatement->execute();
+        $success = $this->_pdoStatement->execute();
+        $this->clearPrepare();
+        return $success;
     }
 
     // 返回最后插入行的ID或序列值

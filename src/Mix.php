@@ -8,7 +8,7 @@ class Mix
 {
 
     // 版本号
-    const VERSION = '1.1.0-RC';
+    const VERSION = '1.1.0-RC2';
 
     // App实例
     protected static $_app;

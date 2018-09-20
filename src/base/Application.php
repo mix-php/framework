@@ -26,6 +26,9 @@ namespace mix\base;
 class Application extends BaseObject
 {
 
+    // 初始化回调函数
+    public $initializeCallback = [];
+
     // 基础路径
     public $basePath = '';
 
@@ -49,6 +52,10 @@ class Application extends BaseObject
         \Mix::setApp($this);
         // 错误注册
         \mix\base\Error::register();
+        // 调用初始化回调函数
+        foreach ($this->initializeCallback as $callback) {
+            call_user_func($callback);
+        }
     }
 
     // 设置组件命名空间

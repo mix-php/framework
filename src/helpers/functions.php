@@ -23,7 +23,7 @@ if (!function_exists('create_object')) {
 
 if (!function_exists('env')) {
     // 获取一个环境变量的值
-    function env($name)
+    function env($name = null)
     {
         return \mix\base\Env::get($name);
     }

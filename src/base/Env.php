@@ -18,7 +18,7 @@ class Env
         if (!is_file($envFile)) {
             throw new \mix\exceptions\EnvException('Environment file does not exist.');
         }
-        $data       = parse_ini_file($envFile);
+        $data       = parse_ini_file($envFile, true);
         self::$_env = array_merge($_ENV, $data);
     }
 
@@ -28,10 +28,15 @@ class Env
         if (is_null($name)) {
             return self::$_env;
         }
-        if (!isset(self::$_env[$name])) {
-            throw new \mix\exceptions\EnvException("Environment config does not exist: {$name}.");
+        $fragments = explode('.', $name);
+        $current   = self::$_env;
+        foreach ($fragments as $key) {
+            if (!isset($current[$key])) {
+                throw new \mix\exceptions\EnvException("Environment config does not exist: {$name}.");
+            }
+            $current = $current[$key];
         }
-        return self::$_env[$name];
+        return $current;
     }
 
 }

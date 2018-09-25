@@ -22,7 +22,7 @@ class Session extends Component
     public $maxLifetime = 7200;
 
     // session名
-    public $name = 'SessionID';
+    public $name = 'session_id';
 
     // 过期时间
     public $cookieExpires = 0;

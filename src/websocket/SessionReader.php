@@ -13,12 +13,16 @@ class SessionReader extends Component
 
     // 保存处理者
     public $saveHandler;
+
     // 保存的Key前缀
-    public $saveKeyPrefix;
+    public $saveKeyPrefix = 'SESSION:';
+
     // session名
-    public $name = 'mixssid';
+    public $name = 'session_id';
+
     // SessionKey
     protected $_sessionKey;
+
     // SessionID
     protected $_sessionId;
 

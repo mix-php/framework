@@ -13,14 +13,19 @@ class TokenReader extends Component
 
     // 保存处理者
     public $saveHandler;
+
     // 保存的Key前缀
-    public $saveKeyPrefix;
+    public $saveKeyPrefix = 'TOKEN:';
+
     // session名
     public $name = 'access_token';
+
     // TokenKey
     protected $_tokenKey;
+
     // TokenID
     protected $_tokenId;
+
     // Token前缀
     protected $_tokenPrefix;
 
@@ -29,7 +34,7 @@ class TokenReader extends Component
     {
         parent::onInitialize();
         // 前缀处理
-        $this->_tokenPrefix = $this->saveKeyPrefix . 'DATA:';
+        $this->_tokenPrefix = $this->saveKeyPrefix;
     }
 
     // 载入TokenID

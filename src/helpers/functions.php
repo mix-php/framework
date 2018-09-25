@@ -34,11 +34,15 @@ if (!function_exists('tgo')) {
     function tgo($closure)
     {
         go(function () use ($closure) {
+            $hook = new \mix\base\ChannelHook();
             try {
-                $closure();
+                $closure($hook);
             } catch (\Throwable $e) {
-                // 输出错误并退出
-                \Mix::app()->error->handleException($e, true);
+                // 钩子处理
+                if (!$hook->handle($e)) {
+                    // 输出错误
+                    \Mix::app()->error->handleException($e);
+                }
             }
         });
     }

@@ -61,18 +61,6 @@ class BasePDOPersistent extends BasePDO
         return $this->call(__FUNCTION__, func_get_args());
     }
 
-    // 提交事务
-    public function commit()
-    {
-        return $this->call(__FUNCTION__, func_get_args());
-    }
-
-    // 回滚事务
-    public function rollback()
-    {
-        return $this->call(__FUNCTION__, func_get_args());
-    }
-
     // 执行方法
     public function call($name, $arguments)
     {

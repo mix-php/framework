@@ -17,8 +17,8 @@ trait StaticInstanceTrait
     public static function newInstanceByConfig($name)
     {
         $class  = get_called_class();
-        $config = app()->config($name);
-        $object = create_object($config);
+        $config = \Mix::app()->config($name);
+        $object = \Mix::createObject($config);
         if (get_class($object) != $class) {
             throw new \mix\exceptions\ConfigException('实例化类型与配置类型不符');
         }

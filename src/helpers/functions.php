@@ -13,14 +13,6 @@ if (!function_exists('app')) {
     }
 }
 
-if (!function_exists('create_object')) {
-    // 使用配置创建对象
-    function create_object($config)
-    {
-        return \Mix::createObject($config);
-    }
-}
-
 if (!function_exists('env')) {
     // 获取一个环境变量的值
     function env($name = null)

@@ -44,25 +44,15 @@ class Mix
         self::$_app = $app;
     }
 
-    // 配置
-    public static function configure($object, $attributes)
+    // 构建配置
+    public static function configure($config, $instantiation = false)
     {
-        foreach ($attributes as $name => $value) {
-            $object->$name = $value;
-        }
-        return $object;
-    }
-
-    // 使用配置创建对象
-    public static function createObject($config)
-    {
-        // 构建属性数组
         foreach ($config as $key => $value) {
             // 子类实例化
             if (is_array($value)) {
                 // 实例化
                 if (isset($value['class'])) {
-                    $config[$key] = self::createObject($value);
+                    $config[$key] = self::configure($value, true);
                 }
                 // 引用其他组件
                 if (isset($value['component'])) {
@@ -77,7 +67,25 @@ class Mix
                 }
             }
         }
-        // 实例化
+        if ($instantiation) {
+            $class = $config['class'];
+            unset($config['class']);
+            return new $class($config);
+        }
+        return $config;
+    }
+
+    // 导入属性
+    public static function importAttributes($object, $config)
+    {
+        foreach ($config as $name => $value) {
+            $object->$name = $value;
+        }
+    }
+
+    // 使用配置创建对象
+    public static function createObject($config)
+    {
         $class = $config['class'];
         unset($config['class']);
         return new $class($config);

@@ -16,8 +16,10 @@ abstract class BaseObject implements StaticInstanceInterface
     {
         // 执行构造事件
         $this->onConstruct();
+        // 构建配置
+        $config = \Mix::configure($config);
         // 导入属性
-        \Mix::configure($this, $config);
+        \Mix::importAttributes($this, $config);
         // 执行初始化事件
         $this->onInitialize();
     }

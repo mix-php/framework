@@ -26,7 +26,7 @@ class CoroutineHelper
     {
         static $trigger = false;
         if (!$trigger) {
-            \Swoole\Runtime::enableCoroutine(); // Swoole >= 4.1.0
+            \Swoole\Runtime::enableCoroutine(true); // Swoole >= 4.1.0
             $trigger = true;
         }
     }

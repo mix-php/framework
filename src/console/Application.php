@@ -25,11 +25,15 @@ class Application extends \mix\base\Application
         $command = $input->getCommand();
         $options = $input->getOptions();
         if (empty($command)) {
-            throw new \mix\exceptions\NotFoundException("Please input command, '-h' view help.");
+            throw new \mix\exceptions\NotFoundException("Please input command, '-h/--help' view help.");
         }
-        if ($command == '-h') {
+        if (in_array($command, ['-h', '--help'])) {
             $this->help();
-            return ExitCode::UNSPECIFIED_ERROR;
+            return ExitCode::OK;
+        }
+        if (in_array($command, ['-v', '--version'])) {
+            $this->version();
+            return ExitCode::OK;
         }
         return $this->runAction($command, $options);
     }
@@ -39,12 +43,33 @@ class Application extends \mix\base\Application
     {
         $input  = \Mix::app()->input;
         $output = \Mix::app()->output;
-        $output->writeln("Usage: {$input->getScriptFileName()} [command] [options]");
-        $this->commandList();
+        $output->writeln("Usage: {$input->getScriptFileName()} [OPTIONS] COMMAND [OPTIONS]");
+        $this->printOptions();
+        $this->printCommands();
+        $output->writeln('');
     }
 
-    // 命令列表
-    protected function commandList()
+    // 版本
+    protected function version()
+    {
+        $input   = \Mix::app()->input;
+        $output  = \Mix::app()->output;
+        $version = \Mix::VERSION;
+        $output->writeln("MixPHP Framework Version {$version}");
+    }
+
+    // 打印选项列表
+    protected function printOptions()
+    {
+        $output = \Mix::app()->output;
+        $output->writeln('');
+        $output->writeln('Options:');
+        $output->writeln("  -h/--help\tPrint usage");
+        $output->writeln("  -v/--version\tPrint version information");
+    }
+
+    // 打印命令列表
+    protected function printCommands()
     {
         $output = \Mix::app()->output;
         $output->writeln('');
@@ -54,12 +79,11 @@ class Application extends \mix\base\Application
             $prefix = explode(' ', $command)[0];
             if ($prefix != $prevPrefix) {
                 $prevPrefix = $prefix;
-                $output->writeln('- ' . $prefix);
+                $output->writeln('  ' . $prefix);
             }
             $output->write(str_repeat(' ', 4) . $command, Output::FG_GREEN);
-            $output->writeln((isset($item['description']) ? "\t\t{$item['description']}" : ''), Output::NONE);
+            $output->writeln((isset($item['description']) ? "\t{$item['description']}" : ''), Output::NONE);
         }
-        $output->writeln('');
     }
 
     // 执行功能并返回

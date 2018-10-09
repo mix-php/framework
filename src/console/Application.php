@@ -43,7 +43,7 @@ class Application extends \mix\base\Application
     {
         $input  = \Mix::app()->input;
         $output = \Mix::app()->output;
-        $output->writeln("Usage: {$input->getScriptFileName()} [OPTIONS] COMMAND [OPTIONS]");
+        $output->writeln("Usage: {$input->getScriptFileName()} [OPTIONS] [COMMAND [OPTIONS]]");
         $this->printOptions();
         $this->printCommands();
         $output->writeln('');

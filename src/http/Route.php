@@ -60,7 +60,6 @@ class Route extends Component
         }
         // 转正则
         foreach ($this->rules as $rule => $route) {
-            // method
             if ($blank = strpos($rule, ' ')) {
                 $method = substr($rule, 0, $blank);
                 $method = "(?:{$method}) ";
@@ -68,7 +67,6 @@ class Route extends Component
             } else {
                 $method = '(?:CLI|GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) ';
             }
-            // path
             $fragment = explode('/', $rule);
             $names    = [];
             foreach ($fragment as $k => $v) {
@@ -83,7 +81,8 @@ class Route extends Component
                     $names[] = $fname;
                 }
             }
-            $this->_rules['/^' . $method . implode('\/', $fragment) . '\/*$/i'] = [$route, $names];
+            $pattern        = '/^' . $method . implode('\/', $fragment) . '\/*$/i';
+            $this->_rules[] = [$pattern, $route, $names];
         }
     }
 
@@ -96,9 +95,9 @@ class Route extends Component
         }
         // 匹配
         $result = [];
-        foreach ($this->_rules as $pattern => $item) {
+        foreach ($this->_rules as $item) {
+            list($pattern, $route, $names) = $item;
             if (preg_match($pattern, $action, $matches)) {
-                list($route, $names) = $item;
                 $queryParams = [];
                 // 提取路由查询参数
                 foreach ($names as $k => $v) {

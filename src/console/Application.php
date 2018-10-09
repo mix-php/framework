@@ -64,8 +64,8 @@ class Application extends \mix\base\Application
         $output = \Mix::app()->output;
         $output->writeln('');
         $output->writeln('Options:');
-        $output->writeln("  -h/--help\tPrint usage");
-        $output->writeln("  -v/--version\tPrint version information");
+        $output->writeln("  -h/--help\tPrint usage.");
+        $output->writeln("  -v/--version\tPrint version information.");
     }
 
     // 打印命令列表

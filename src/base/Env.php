@@ -18,8 +18,8 @@ class Env
         if (!is_file($envFile)) {
             throw new \mix\exceptions\EnvException('Environment file does not exist.');
         }
-        $data       = parse_ini_file($envFile, true);
-        self::$_env = array_merge($_ENV, $data);
+        $env        = parse_ini_file($envFile, true);
+        self::$_env = array_merge($env, $_SERVER, $_ENV);
     }
 
     // 获取配置

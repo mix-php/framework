@@ -20,9 +20,6 @@ class Route extends Component
     // 路由规则
     public $rules = [];
 
-    // URL后缀
-    public $suffix = '';
-
     // 转化后的路由规则
     protected $_rules = [];
 
@@ -43,7 +40,7 @@ class Route extends Component
         $rules = [];
         foreach ($this->rules as $rule => $route) {
             $rules[$rule] = $route;
-            if (strpos($rule, ':controller') !== false && strpos($rule, ':action') !== false) {
+            if (strpos($rule, '{controller}') !== false && strpos($rule, '{action}') !== false) {
                 $prev    = dirname($rule);
                 $prevTwo = dirname($prev);
                 $prevTwo = $prevTwo == '.' ? '' : $prevTwo;
@@ -51,7 +48,7 @@ class Route extends Component
                 // 增加上两级的路由
                 $prevRules = [
                     $prev    => [$controller, 'Index'],
-                    $prevTwo => [str_replace(':controller', 'Index', $controller), 'Index'],
+                    $prevTwo => [str_replace('{controller}', 'Index', $controller), 'Index'],
                 ];
                 // 附上中间件
                 if (isset($route['middleware'])) {
@@ -73,13 +70,13 @@ class Route extends Component
             $fragment = explode('/', $rule);
             $names    = [];
             foreach ($fragment as $k => $v) {
-                $prefix = substr($v, 0, 1);
-                $fname  = substr($v, 1);
-                if ($prefix == ':') {
+                preg_match('/{([\w-]+)}/i', $v, $matches);
+                if (!empty($matches)) {
+                    list($fname) = $matches;
                     if (isset($this->patterns[$fname])) {
-                        $fragment[$k] = '(' . $this->patterns[$fname] . ')';
+                        $fragment[$k] = str_replace("{$fname}", "({$this->patterns[$fname]})", $fragment[$k]);
                     } else {
-                        $fragment[$k] = '(' . $this->defaultPattern . ')';
+                        $fragment[$k] = str_replace("{$fname}", "({$this->defaultPattern})", $fragment[$k]);
                     }
                     $names[] = $fname;
                 }
@@ -92,10 +89,6 @@ class Route extends Component
     // 匹配功能，由于路由歧义，会存在多条路由规则都可匹配的情况
     public function match($action)
     {
-        // 去除 URL 后缀
-        if (!empty($this->suffix)) {
-            $action = substr($action, 0, strpos($action, ".{$this->suffix}"));
-        }
         // 匹配
         $result = [];
         foreach ($this->_rules as $item) {
@@ -110,9 +103,9 @@ class Route extends Component
                 $fragments   = explode('/', $route[0]);
                 $fragments[] = $route[1];
                 foreach ($fragments as $k => $v) {
-                    $prefix = substr($v, 0, 1);
-                    $fname  = substr($v, 1);
-                    if ($prefix == ':') {
+                    preg_match('/{([\w-]+)}/i', $v, $matches);
+                    if (!empty($matches)) {
+                        list($fname) = $matches;
                         if (isset($queryParams[$fname])) {
                             $fragments[$k] = $queryParams[$fname];
                         }

@@ -40,26 +40,29 @@ class Route extends Component
     public function initialize()
     {
         // URL 目录处理
+        $rules = [];
         foreach ($this->rules as $rule => $route) {
+            $rules[$rule] = $route;
             if (strpos($rule, ':controller') !== false && strpos($rule, ':action') !== false) {
-                $controller = dirname($rule);
-                $prefix     = dirname($controller);
-                $prefix     = $prefix == '.' ? '' : $prefix;
+                $prev    = dirname($rule);
+                $prevTwo = dirname($prev);
+                $prevTwo = $prevTwo == '.' ? '' : $prevTwo;
+                list($controller) = $route;
                 // 增加上两级的路由
-                $rules = [
-                    $controller => [$controller, 'Index'],
-                    $prefix     => [($prefix == '' ? '' : "{$prefix}/") . 'Index', 'Index'],
+                $prevRules = [
+                    $prev    => [$controller, 'Index'],
+                    $prevTwo => [str_replace(':controller', 'Index', $controller), 'Index'],
                 ];
                 // 附上中间件
                 if (isset($route['middleware'])) {
-                    $rules[$controller]['middleware'] = $route['middleware'];
-                    $rules[$prefix]['middleware']     = $route['middleware'];
+                    $prevRules[$prev]['middleware']    = $route['middleware'];
+                    $prevRules[$prevTwo]['middleware'] = $route['middleware'];
                 }
-                $this->rules += $rules;
+                $rules += $prevRules;
             }
         }
         // 转正则
-        foreach ($this->rules as $rule => $route) {
+        foreach ($rules as $rule => $route) {
             if ($blank = strpos($rule, ' ')) {
                 $method = substr($rule, 0, $blank);
                 $method = "(?:{$method}) ";
@@ -90,8 +93,8 @@ class Route extends Component
     public function match($action)
     {
         // 去除 URL 后缀
-        if ($position = strpos($action, $this->suffix)) {
-            $action = substr($action, 0, $position);
+        if (!empty($this->suffix)) {
+            $action = substr($action, 0, strpos($action, ".{$this->suffix}"));
         }
         // 匹配
         $result = [];

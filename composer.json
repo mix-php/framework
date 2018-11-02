@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "mix\\": "src/"
+      "Mix\\": "src/"
     },
     "files": [
       "src/Mix.php",

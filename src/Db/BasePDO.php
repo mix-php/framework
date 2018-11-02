@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Client;
+namespace Mix\Db;
 
 use Mix\Base\Component;
 

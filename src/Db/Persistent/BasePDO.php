@@ -1,12 +1,12 @@
 <?php
 
-namespace Mix\Client;
+namespace Mix\Db\Persistent;
 
 /**
  * BasePdoPersistent组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class BasePDOPersistent extends BasePDO
+class BasePDO extends \Mix\Db\BasePDO
 {
 
     // 重新连接

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Client;
+namespace Mix\Redis\Async;
 
 use Mix\Base\BaseObject;
 
@@ -8,7 +8,7 @@ use Mix\Base\BaseObject;
  * RedisAsync类
  * @author 刘健 <coder.liu@qq.com>
  */
-class RedisAsync extends BaseObject
+class Redis extends BaseObject
 {
 
     // 主机

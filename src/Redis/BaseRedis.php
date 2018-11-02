@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Client;
+namespace Mix\Redis;
 
 use Mix\Base\Component;
 

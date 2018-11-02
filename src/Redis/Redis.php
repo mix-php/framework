@@ -1,12 +1,12 @@
 <?php
 
-namespace Mix\Client;
+namespace Mix\Redis;
 
 /**
- * Pdo组件
+ * redis组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class PDO extends BasePDO
+class Redis extends BaseRedis
 {
 
     // 请求后置事件

@@ -1,12 +1,12 @@
 <?php
 
-namespace Mix\Client;
+namespace Mix\Redis\Persistent;
 
 /**
  * BaseRedisPersistent组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class BaseRedisPersistent extends BaseRedis
+class BaseRedis extends \Mix\Redis\BaseRedis
 {
 
     // 重新连接

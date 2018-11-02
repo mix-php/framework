@@ -41,7 +41,7 @@ class Redis extends Facade
     /**
      * 获取实例
      * @param $name
-     * @return \Mix\Client\Redis
+     * @return \Mix\Redis\Redis
      */
     public static function name($name)
     {

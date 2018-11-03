@@ -34,7 +34,7 @@ use Mix\Base\Component;
  * @method publish($channel, $message)
  * @method ttl($key)
  */
-class BaseRedis extends Component
+class BaseRedisConnection extends Component
 {
 
     // 主机

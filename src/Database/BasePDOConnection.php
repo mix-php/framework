@@ -8,7 +8,7 @@ use Mix\Base\Component;
  * BasePdo组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class BasePDO extends Component
+class BasePDOConnection extends Component
 {
 
     // 数据源格式

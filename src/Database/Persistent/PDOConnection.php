@@ -1,12 +1,12 @@
 <?php
 
-namespace Mix\Redis\Persistent;
+namespace Mix\Db\Persistent;
 
 /**
- * redis长连接组件
+ * PdoPersistent组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Redis extends BaseRedis
+class PDOConnection extends BasePDOConnection
 {
 
     // 析构事件

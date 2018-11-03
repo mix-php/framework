@@ -8,7 +8,7 @@ use Mix\Base\BaseObject;
  * RedisAsync类
  * @author 刘健 <coder.liu@qq.com>
  */
-class Redis extends BaseObject
+class RedisConnection extends BaseObject
 {
 
     // 主机

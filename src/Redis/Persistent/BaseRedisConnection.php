@@ -6,7 +6,7 @@ namespace Mix\Redis\Persistent;
  * BaseRedisPersistent组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class BaseRedis extends \Mix\Redis\BaseRedis
+class BaseRedisConnection extends \Mix\Redis\BaseRedisConnection
 {
 
     // 重新连接

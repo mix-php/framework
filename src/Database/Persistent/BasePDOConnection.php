@@ -6,7 +6,7 @@ namespace Mix\Db\Persistent;
  * BasePdoPersistent组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class BasePDO extends \Mix\Db\BasePDO
+class BasePDOConnection extends \Mix\Db\BasePDOConnection
 {
 
     // 重新连接

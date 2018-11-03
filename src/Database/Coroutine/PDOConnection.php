@@ -1,14 +1,14 @@
 <?php
 
-namespace Mix\Redis\Coroutine;
+namespace Mix\Db\Coroutine;
 
 use Mix\Helpers\CoroutineHelper;
 
 /**
- * RedisCoroutine组件
+ * PDOCoroutine组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Redis extends \Mix\Redis\Persistent\BaseRedis
+class PDOConnection extends \Mix\Db\Persistent\PDOConnection
 {
 
     /**
@@ -37,19 +37,19 @@ class Redis extends \Mix\Redis\Persistent\BaseRedis
     protected function connect()
     {
         if (isset($this->connectionPool)) {
-            $this->_redis = $this->connectionPool->getConnection(function () {
+            $this->_pdo = $this->connectionPool->getConnection(function () {
                 return parent::createConnection();
             });
         } else {
-            $this->_redis = parent::createConnection();
+            $this->_pdo = parent::createConnection();
         }
     }
 
     // 关闭连接
     public function disconnect()
     {
-        if (isset($this->connectionPool) && isset($this->_redis)) {
-            $this->connectionPool->releaseConnection($this->_redis, function () {
+        if (isset($this->connectionPool) && isset($this->_pdo)) {
+            $this->connectionPool->releaseConnection($this->_pdo, function () {
                 parent::disconnect();
             });
         } else {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Mix\Db\MasterSlave;
+namespace Mix\Redis;
 
 /**
- * PdoMasterSlave组件
+ * redis组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class PDO extends BasePDO
+class RedisConnection extends BaseRedisConnection
 {
 
     // 请求后置事件

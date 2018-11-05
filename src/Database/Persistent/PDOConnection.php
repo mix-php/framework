@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Db\Persistent;
+namespace Mix\Database\Persistent;
 
 /**
  * PdoPersistent组件

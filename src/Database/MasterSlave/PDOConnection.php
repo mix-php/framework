@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Db\MasterSlave;
+namespace Mix\Database\MasterSlave;
 
 /**
  * PdoMasterSlave组件

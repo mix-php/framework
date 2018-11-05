@@ -9,9 +9,9 @@ use Mix\Base\Facade;
  * @author 刘健 <coder.liu@qq.com>
  *
  * @method disconnect() static
- * @method \Mix\Db\PDO queryBuilder($sqlItem) static
- * @method \Mix\Db\PDO createCommand($sql = null) static
- * @method \Mix\Db\PDO bindParams($data) static
+ * @method \Mix\Database\PDO queryBuilder($sqlItem) static
+ * @method \Mix\Database\PDO createCommand($sql = null) static
+ * @method \Mix\Database\PDO bindParams($data) static
  * @method queryAll() static
  * @method queryOne() static
  * @method queryColumn($columnNumber = 0) static
@@ -19,10 +19,10 @@ use Mix\Base\Facade;
  * @method execute() static
  * @method getLastInsertId() static
  * @method getRowCount() static
- * @method \Mix\Db\PDO insert($table, $data) static
- * @method \Mix\Db\PDO batchInsert($table, $data) static
- * @method \Mix\Db\PDO update($table, $data, $where) static
- * @method \Mix\Db\PDO delete($table, $where) static
+ * @method \Mix\Database\PDO insert($table, $data) static
+ * @method \Mix\Database\PDO batchInsert($table, $data) static
+ * @method \Mix\Database\PDO update($table, $data, $where) static
+ * @method \Mix\Database\PDO delete($table, $where) static
  * @method transaction($closure) static
  * @method beginTransaction() static
  * @method commit() static
@@ -35,7 +35,7 @@ class PDO extends Facade
     /**
      * 获取实例
      * @param $name
-     * @return \Mix\Db\PDO
+     * @return \Mix\Database\PDO
      */
     public static function name($name)
     {

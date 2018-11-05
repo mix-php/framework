@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Db\Coroutine;
+namespace Mix\Database\Coroutine;
 
 use Mix\Helpers\CoroutineHelper;
 
@@ -8,7 +8,7 @@ use Mix\Helpers\CoroutineHelper;
  * PDOCoroutine组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class PDOConnection extends \Mix\Db\Persistent\PDOConnection
+class PDOConnection extends \Mix\Database\Persistent\PDOConnection
 {
 
     /**

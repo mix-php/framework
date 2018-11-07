@@ -2,7 +2,7 @@
 
 namespace Mix\Pool;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 
 /**
  * ConnectionPool组件

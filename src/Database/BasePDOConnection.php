@@ -2,7 +2,7 @@
 
 namespace Mix\Database;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 
 /**
  * BasePdo组件

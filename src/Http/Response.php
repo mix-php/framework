@@ -52,7 +52,7 @@ class Response extends BaseResponse
         // 预处理
         $this->prepare();
         // 清扫组件容器
-        \Mix::app()->cleanComponents();
+        \Mix::$app->cleanComponents();
         // 发送
         $this->sendStatusCode();
         $this->sendHeaders();

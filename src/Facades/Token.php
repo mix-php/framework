@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Token 门面类
@@ -24,7 +24,7 @@ class Token extends Facade
     // 获取实例
     public static function getInstance()
     {
-        return \Mix::app()->token;
+        return \Mix::$app->token;
     }
 
 }

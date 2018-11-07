@@ -2,7 +2,7 @@
 
 namespace Mix\WebSocket;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 use Mix\Helpers\ProcessHelper;
 
 /**
@@ -126,7 +126,7 @@ class WebSocketServer extends BaseObject
                     list($object, $method) = $this->_onOpenCallback;
                     $object->$method($server, $request->fd, $mixRequest);
                 } catch (\Throwable $e) {
-                    \Mix::app()->error->handleException($e);
+                    \Mix::$app->error->handleException($e);
                 }
             });
         }
@@ -142,7 +142,7 @@ class WebSocketServer extends BaseObject
                     list($object, $method) = $this->_onMessageCallback;
                     $object->$method($server, $frame);
                 } catch (\Throwable $e) {
-                    \Mix::app()->error->handleException($e);
+                    \Mix::$app->error->handleException($e);
                 }
             });
         }
@@ -162,7 +162,7 @@ class WebSocketServer extends BaseObject
                         $object->$method($server, $fd);
                     }
                 } catch (\Throwable $e) {
-                    \Mix::app()->error->handleException($e);
+                    \Mix::$app->error->handleException($e);
                 }
             });
         }

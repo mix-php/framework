@@ -2,7 +2,7 @@
 
 namespace Mix\Validators;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 
 /**
  * 基础验证器类

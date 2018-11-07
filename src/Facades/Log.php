@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Log 门面类
@@ -25,7 +25,7 @@ class Log extends Facade
     // 获取实例
     public static function getInstance()
     {
-        return \Mix::app()->log;
+        return \Mix::$app->log;
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 use Mix\Facades\Output;
 use Mix\Helpers\ProcessHelper;
 
@@ -10,7 +10,7 @@ use Mix\Helpers\ProcessHelper;
  * Http服务器类
  * @author 刘健 <coder.liu@qq.com>
  */
-class HttpServer extends BaseObject
+class Server extends BaseObject
 {
 
     // 虚拟主机
@@ -101,7 +101,6 @@ class HttpServer extends BaseObject
             // 实例化App
             $config = require $this->virtualHost['configFile'];
             $app    = new \Mix\Http\Application($config);
-            $app->loadAllComponents();
         });
     }
 
@@ -111,11 +110,11 @@ class HttpServer extends BaseObject
         $this->_server->on('request', function ($request, $response) {
             // 执行请求
             try {
-                \Mix::app()->request->setRequester($request);
-                \Mix::app()->response->setResponder($response);
-                \Mix::app()->run();
+                \Mix::$app->request->setRequester($request);
+                \Mix::$app->response->setResponder($response);
+                \Mix::$app->run();
             } catch (\Throwable $e) {
-                \Mix::app()->error->handleException($e);
+                \Mix::$app->error->handleException($e);
             }
         });
     }

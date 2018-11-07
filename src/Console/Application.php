@@ -6,7 +6,7 @@ namespace Mix\Console;
  * App类
  * @author 刘健 <coder.liu@qq.com>
  */
-class Application extends \Mix\Base\Application
+class Application extends \Mix\Core\Application
 {
 
     // 命令命名空间
@@ -21,7 +21,7 @@ class Application extends \Mix\Base\Application
         if (PHP_SAPI != 'cli') {
             throw new \RuntimeException('Please run in CLI mode.');
         }
-        $input   = \Mix::app()->input;
+        $input   = \Mix::$app->input;
         $command = $input->getCommand();
         $options = $input->getOptions();
         if (empty($command)) {
@@ -41,8 +41,8 @@ class Application extends \Mix\Base\Application
     // 帮助
     protected function help()
     {
-        $input  = \Mix::app()->input;
-        $output = \Mix::app()->output;
+        $input  = \Mix::$app->input;
+        $output = \Mix::$app->output;
         $output->writeln("Usage: {$input->getScriptFileName()} [OPTIONS] [COMMAND [OPTIONS]]");
         $this->printOptions();
         $this->printCommands();
@@ -52,8 +52,8 @@ class Application extends \Mix\Base\Application
     // 版本
     protected function version()
     {
-        $input   = \Mix::app()->input;
-        $output  = \Mix::app()->output;
+        $input   = \Mix::$app->input;
+        $output  = \Mix::$app->output;
         $version = \Mix::VERSION;
         $output->writeln("MixPHP Framework Version {$version}");
     }
@@ -61,7 +61,7 @@ class Application extends \Mix\Base\Application
     // 打印选项列表
     protected function printOptions()
     {
-        $output = \Mix::app()->output;
+        $output = \Mix::$app->output;
         $output->writeln('');
         $output->writeln('Options:');
         $output->writeln("  -h/--help\tPrint usage.");
@@ -71,7 +71,7 @@ class Application extends \Mix\Base\Application
     // 打印命令列表
     protected function printCommands()
     {
-        $output = \Mix::app()->output;
+        $output = \Mix::$app->output;
         $output->writeln('');
         $output->writeln('Commands:');
         $prevPrefix = '';
@@ -113,20 +113,8 @@ class Application extends \Mix\Base\Application
     // 获取组件
     public function __get($name)
     {
-        // 获取全名
-        if (!is_null($this->_componentPrefix)) {
-            $name = "{$this->_componentPrefix}.{$name}";
-        }
-        $this->setComponentPrefix(null);
-        // 返回单例
-        if (isset($this->_components[$name])) {
-            // 返回对象
-            return $this->_components[$name];
-        }
-        // 装载组件
-        $this->loadComponent($name);
-        // 返回对象
-        return $this->_components[$name];
+        // 从容器返回组件
+        return $this->container->get($name);
     }
 
     // 打印变量的相关信息

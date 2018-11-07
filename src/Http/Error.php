@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 use Mix\Http\View;
 
 /**
@@ -36,8 +36,8 @@ class Error extends Component
     {
         // debug处理 & exit处理
         if ($e instanceof \Mix\Exceptions\DebugException || $e instanceof \Mix\Exceptions\EndException) {
-            \Mix::app()->response->content = $e->getMessage();
-            \Mix::app()->response->send();
+            \Mix::$app->response->content = $e->getMessage();
+            \Mix::$app->response->send();
             return;
         }
         // 错误参数定义
@@ -57,15 +57,15 @@ class Error extends Component
             $message .= "[type] {$errors['type']} [code] {$errors['code']}" . PHP_EOL;
             $message .= "[file] {$errors['file']} [line] {$errors['line']}" . PHP_EOL;
             $message .= "[trace] {$errors['trace']}" . PHP_EOL;
-            $message .= '$_SERVER' . substr(print_r(\Mix::app()->request->server() + \Mix::app()->request->header(), true), 5);
-            $message .= '$_GET' . substr(print_r(\Mix::app()->request->get(), true), 5);
-            $message .= '$_POST' . substr(print_r(\Mix::app()->request->post(), true), 5, -1);
-            \Mix::app()->log->error($message);
+            $message .= '$_SERVER' . substr(print_r(\Mix::$app->request->server() + \Mix::$app->request->header(), true), 5);
+            $message .= '$_GET' . substr(print_r(\Mix::$app->request->get(), true), 5);
+            $message .= '$_POST' . substr(print_r(\Mix::$app->request->post(), true), 5, -1);
+            \Mix::$app->log->error($message);
         }
         // 清空系统错误
         ob_get_contents() and ob_clean();
         // 错误响应
-        if (!\Mix\Base\Env::get('APP_DEBUG')) {
+        if (!\Mix\Core\Env::get('APP_DEBUG')) {
             if ($statusCode == 404) {
                 $errors = [
                     'status'  => 404,
@@ -79,26 +79,26 @@ class Error extends Component
                 ];
             }
         }
-        $format                           = \Mix::app()->error->format;
+        $format                           = \Mix::$app->error->format;
         $tpl                              = [
             404 => "errors.{$format}.not_found",
             500 => "errors.{$format}.internal_server_error",
         ];
         $content                          = (new View())->render($tpl[$statusCode], $errors);
-        \Mix::app()->response->statusCode = $statusCode;
-        \Mix::app()->response->content    = $content;
+        \Mix::$app->response->statusCode = $statusCode;
+        \Mix::$app->response->content    = $content;
         switch ($format) {
             case self::FORMAT_HTML:
-                \Mix::app()->response->format = \Mix\Http\Response::FORMAT_HTML;
+                \Mix::$app->response->format = \Mix\Http\Response::FORMAT_HTML;
                 break;
             case self::FORMAT_JSON:
-                \Mix::app()->response->format = \Mix\Http\Response::FORMAT_JSON;
+                \Mix::$app->response->format = \Mix\Http\Response::FORMAT_JSON;
                 break;
             case self::FORMAT_XML:
-                \Mix::app()->response->format = \Mix\Http\Response::FORMAT_XML;
+                \Mix::$app->response->format = \Mix\Http\Response::FORMAT_XML;
                 break;
         }
-        \Mix::app()->response->send();
+        \Mix::$app->response->send();
     }
 
 }

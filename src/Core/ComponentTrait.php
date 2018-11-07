@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Base;
+namespace Mix\Core;
 
 /**
  * 组件基类Trait
@@ -10,7 +10,7 @@ trait ComponentTrait
 {
 
     // 协程模式
-    private $_coroutineMode = ComponentInterface::COROUTINE_MODE_NEW;
+    public static $coroutineMode = ComponentInterface::COROUTINE_MODE_NEW;
 
     // 状态
     private $_status = ComponentInterface::STATUS_READY;
@@ -25,18 +25,6 @@ trait ComponentTrait
     public function setStatus($status)
     {
         $this->_status = $status;
-    }
-
-    // 获取协程模式
-    public function getCoroutineMode()
-    {
-        return $this->_coroutineMode;
-    }
-
-    // 设置协程模式
-    public function setCoroutineMode($coroutineMode)
-    {
-        $this->_coroutineMode = $coroutineMode;
     }
 
     // 请求前置事件

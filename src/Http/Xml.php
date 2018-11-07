@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 use Mix\Helpers\XmlHelper;
 
 /**

@@ -2,8 +2,8 @@
 
 namespace Mix\Console;
 
-use Mix\Base\Component;
-use Mix\Helpers\CoroutineHelper;
+use Mix\Core\Component;
+use Mix\Core\Coroutine;
 use Mix\Helpers\PhpInfoHelper;
 use Mix\Helpers\ProcessHelper;
 
@@ -48,12 +48,12 @@ class Error extends Component
             $message .= "[file] {$errors['file']} [line] {$errors['line']}" . PHP_EOL;
             $message .= "[trace] {$errors['trace']}" . PHP_EOL;
             $message .= '$_SERVER' . substr(print_r($_SERVER, true), 5, -1);
-            \Mix::app()->log->error($message);
+            \Mix::$app->log->error($message);
         }
         // 清空系统错误
         ob_get_contents() and ob_clean();
         // 格式化输出
-        $output  = \Mix::app()->output;
+        $output  = \Mix::$app->output;
         $message = $output->ansiFormat($errors['message'], Output::BG_RED) . PHP_EOL;
         $message .= "{$errors['type']} code {$errors['code']}" . PHP_EOL;
         $message .= $output->ansiFormat($errors['file'], Output::BG_RED) . ' line ' . $output->ansiFormat($errors['line'], Output::BG_RED) . PHP_EOL;
@@ -71,7 +71,7 @@ class Error extends Component
     // 退出
     protected function exit($exitCode)
     {
-        if (!CoroutineHelper::isCoroutine()) {
+        if (Coroutine::id() == -1) {
             exit($exitCode);
         } else {
             ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);

@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * RDB 门面类
@@ -49,7 +49,7 @@ class PDO extends Facade
     public static function getInstances()
     {
         return [
-            'default' => \Mix::app()->pdo,
+            'default' => \Mix::$app->pdo,
         ];
     }
 

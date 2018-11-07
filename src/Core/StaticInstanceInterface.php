@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Base;
+namespace Mix\Core;
 
 /**
  * Interface InstanceInterface

@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Input 门面类
@@ -20,7 +20,7 @@ class Input extends Facade
     // 获取实例
     public static function getInstance()
     {
-        return \Mix::app()->input;
+        return \Mix::$app->input;
     }
 
 }

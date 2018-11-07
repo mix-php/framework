@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 
 /**
  * Cookie组件
@@ -37,13 +37,13 @@ class Cookie extends Component
     // 取值
     public function get($name = null)
     {
-        return \Mix::app()->request->cookie($name);
+        return \Mix::$app->request->cookie($name);
     }
 
     // 赋值
     public function set($name, $value, $expires = null)
     {
-        return \Mix::app()->response->setCookie($name, $value, time() + (is_null($expires) ? $this->expires : $expires), $this->path, $this->domain, $this->secure, $this->httpOnly);
+        return \Mix::$app->response->setCookie($name, $value, time() + (is_null($expires) ? $this->expires : $expires), $this->path, $this->domain, $this->secure, $this->httpOnly);
     }
 
     // 判断是否存在
@@ -61,7 +61,7 @@ class Cookie extends Component
     // 清空当前域所有cookie
     public function clear()
     {
-        foreach (\Mix::app()->request->cookie() as $name => $value) {
+        foreach (\Mix::$app->request->cookie() as $name => $value) {
             $this->set($name, null, 0);
         }
         return true;

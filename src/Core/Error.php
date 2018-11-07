@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Base;
+namespace Mix\Core;
 
 /**
  * Error类
@@ -21,7 +21,7 @@ class Error
         }
         self::$registered = true;
         // 注册错误处理
-        $level = \Mix::app()->error->level;
+        $level = \Mix::$app->error->level;
         error_reporting($level);
         set_error_handler([__CLASS__, 'appError']);
         set_exception_handler([__CLASS__, 'appException']); // swoole 不支持该函数
@@ -45,7 +45,7 @@ class Error
     // 异常处理
     public static function appException($e)
     {
-        \Mix::app()->error->handleException($e, true);
+        \Mix::$app->error->handleException($e, true);
     }
 
 }

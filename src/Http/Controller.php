@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 use Mix\Http\View;
 
 /**
@@ -39,7 +39,7 @@ class Controller extends BaseObject
     // 视图前缀
     protected function viewPrefix()
     {
-        $prefix = str_replace([\Mix::app()->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($this));
+        $prefix = str_replace([\Mix::$app->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($this));
         $items  = [];
         foreach (explode('.', $prefix) as $item) {
             $items[] = \Mix\Helpers\NameHelper::camelToSnake($item);

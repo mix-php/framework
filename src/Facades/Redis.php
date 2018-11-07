@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Redis 门面类
@@ -55,7 +55,7 @@ class Redis extends Facade
     public static function getInstances()
     {
         return [
-            'default' => \Mix::app()->redis,
+            'default' => \Mix::$app->redis,
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Base;
+namespace Mix\Core;
 
 /**
  * 通道钩子类

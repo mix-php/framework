@@ -2,7 +2,7 @@
 
 namespace Mix\WebSocket;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 
 /**
  * SessionReader组件

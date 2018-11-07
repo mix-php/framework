@@ -33,7 +33,7 @@ class UploadFile
      */
     public static function newInstanceByName($name)
     {
-        $file = \Mix::app()->request->files($name);
+        $file = \Mix::$app->request->files($name);
         return is_null($file) ? $file : new self($file);
     }
 

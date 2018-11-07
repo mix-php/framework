@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 use Mix\Helpers\StringHelper;
 
 /**
@@ -52,9 +52,9 @@ class Token extends Component
     // 载入TokenID
     public function loadTokenId()
     {
-        $this->_tokenId = \Mix::app()->request->get($this->name) or
-        $this->_tokenId = \Mix::app()->request->header($this->name) or
-        $this->_tokenId = \Mix::app()->request->post($this->name);
+        $this->_tokenId = \Mix::$app->request->get($this->name) or
+        $this->_tokenId = \Mix::$app->request->header($this->name) or
+        $this->_tokenId = \Mix::$app->request->post($this->name);
         $this->_tokenKey = $this->saveKeyPrefix . $this->_tokenId;
     }
 

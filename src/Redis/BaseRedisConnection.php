@@ -2,7 +2,7 @@
 
 namespace Mix\Redis;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 
 /**
  * BaseRedis组件

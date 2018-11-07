@@ -2,7 +2,7 @@
 
 namespace Mix\Task;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 
 /**
  * 工作者基类

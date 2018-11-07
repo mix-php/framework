@@ -2,8 +2,8 @@
 
 namespace Mix\Task;
 
-use Mix\Base\BaseObject;
-use Mix\Helpers\CoroutineHelper;
+use Mix\Core\BaseObject;
+use Mix\Core\Coroutine;
 use Mix\Helpers\ProcessHelper;
 
 /**
@@ -120,7 +120,7 @@ class ProcessPoolTaskExecutor extends BaseObject
     public function start()
     {
         // 关闭内置协程，使 exit; 可以正常在回调中使用
-        CoroutineHelper::disableCoroutine();
+        Coroutine::disable();
         // 修改进程标题
         ProcessHelper::setTitle("{$this->name} master");
         // 创建队列
@@ -245,7 +245,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     throw $e;
                 }
             } catch (\Throwable $e) {
-                \Mix::app()->error->handleException($e);
+                \Mix::$app->error->handleException($e);
             }
         }, false, false);
         return $process;
@@ -290,7 +290,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     }
                 }
             } catch (\Throwable $e) {
-                \Mix::app()->error->handleException($e);
+                \Mix::$app->error->handleException($e);
             }
         }, false, false);
         return $process;
@@ -336,7 +336,7 @@ class ProcessPoolTaskExecutor extends BaseObject
                     }
                 }
             } catch (\Throwable $e) {
-                \Mix::app()->error->handleException($e);
+                \Mix::$app->error->handleException($e);
             }
         }, false, false);
         return $process;

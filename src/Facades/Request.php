@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Request 门面类
@@ -35,7 +35,7 @@ class Request extends Facade
     // 获取实例
     public static function getInstance()
     {
-        return \Mix::app()->request;
+        return \Mix::$app->request;
     }
 
 }

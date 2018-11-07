@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 use Mix\Helpers\JsonHelper;
 
 /**
@@ -20,7 +20,7 @@ class Jsonp extends BaseObject
     {
         // 不转义中文、斜杠
         $jsonString = JsonHelper::encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $callback   = \Mix::app()->request->get($this->name);
+        $callback   = \Mix::$app->request->get($this->name);
         if (is_null($callback)) {
             return $jsonString;
         }

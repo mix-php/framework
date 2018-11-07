@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 
 /**
  * Response组件基类

@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Session 门面类
@@ -22,7 +22,7 @@ class Session extends Facade
     // 获取实例
     public static function getInstance()
     {
-        return \Mix::app()->session;
+        return \Mix::$app->session;
     }
 
 }

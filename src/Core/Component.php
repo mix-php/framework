@@ -1,16 +1,16 @@
 <?php
 
-namespace Mix\Base;
+namespace Mix\Core;
 
 /**
  * 组件基类
  * @author 刘健 <coder.liu@qq.com>
  */
-abstract class Component extends BaseObject implements  ComponentInterface
+abstract class Component extends BaseObject implements ComponentInterface
 {
 
     // 协程模式
-    private $_coroutineMode = ComponentInterface::COROUTINE_MODE_NEW;
+    public static $coroutineMode = ComponentInterface::COROUTINE_MODE_NEW;
 
     // 状态
     private $_status = ComponentInterface::STATUS_READY;
@@ -25,18 +25,6 @@ abstract class Component extends BaseObject implements  ComponentInterface
     public function setStatus($status)
     {
         $this->_status = $status;
-    }
-
-    // 获取协程模式
-    public function getCoroutineMode()
-    {
-        return $this->_coroutineMode;
-    }
-
-    // 设置协程模式
-    public function setCoroutineMode($coroutineMode)
-    {
-        $this->_coroutineMode = $coroutineMode;
     }
 
     // 请求前置事件

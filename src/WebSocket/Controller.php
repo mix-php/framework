@@ -2,7 +2,7 @@
 
 namespace Mix\WebSocket;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 
 /**
  * Controller类

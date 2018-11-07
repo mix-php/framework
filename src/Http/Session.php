@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 use Mix\Helpers\StringHelper;
 
 /**
@@ -67,7 +67,7 @@ class Session extends Component
     // 载入session_id
     public function loadSessionId()
     {
-        $this->_sessionId = \Mix::app()->request->cookie($this->name);
+        $this->_sessionId = \Mix::$app->request->cookie($this->name);
         if (is_null($this->_sessionId)) {
             // 创建session_id
             $this->_sessionId = StringHelper::getRandomString($this->_sessionIdLength);
@@ -91,7 +91,7 @@ class Session extends Component
     {
         $success = $this->saveHandler->hmset($this->_sessionKey, [$name => serialize($value)]);
         $this->saveHandler->expire($this->_sessionKey, $this->maxLifetime);
-        $success and \Mix::app()->response->setCookie($this->name, $this->_sessionId, $this->cookieExpires, $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
+        $success and \Mix::$app->response->setCookie($this->name, $this->_sessionId, $this->cookieExpires, $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
         return $success ? true : false;
     }
 

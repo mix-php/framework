@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Response 门面类
@@ -18,7 +18,7 @@ class Response extends Facade
     // 获取实例
     public static function getInstance()
     {
-        return \Mix::app()->response;
+        return \Mix::$app->response;
     }
 
 }

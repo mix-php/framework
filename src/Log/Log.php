@@ -107,7 +107,7 @@ class Log extends Component
         // 生成文件名
         $logDir = $this->dir;
         if (pathinfo($this->dir)['dirname'] == '.') {
-            $logDir = \Mix::app()->getRuntimePath() . DIRECTORY_SEPARATOR . $this->dir;
+            $logDir = \Mix::$app->getRuntimePath() . DIRECTORY_SEPARATOR . $this->dir;
         }
         switch ($this->rotate) {
             case self::ROTATE_HOUR:

@@ -2,7 +2,7 @@
 
 namespace Mix\Console;
 
-use Mix\Base\Component;
+use Mix\Core\Component;
 
 /**
  * Input组件

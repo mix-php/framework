@@ -2,7 +2,7 @@
 
 namespace Mix\Task;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 
 /**
  * 消息队列基类

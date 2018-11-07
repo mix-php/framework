@@ -2,7 +2,7 @@
 
 namespace Mix\Facades;
 
-use Mix\Base\Facade;
+use Mix\Core\Facade;
 
 /**
  * Cookie 门面类
@@ -20,7 +20,7 @@ class Cookie extends Facade
     // 获取实例
     public static function getInstance()
     {
-        return \Mix::app()->cookie;
+        return \Mix::$app->cookie;
     }
 
 }

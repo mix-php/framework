@@ -2,7 +2,7 @@
 
 namespace Mix\Console;
 
-use Mix\Base\BaseObject;
+use Mix\Core\BaseObject;
 
 /**
  * Command类

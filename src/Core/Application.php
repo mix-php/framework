@@ -62,6 +62,12 @@ class Application extends BaseObject
         $libraries       = $this->libraries;
         $this->libraries = [];
         foreach ($libraries as $item) {
+            if (!isset($item['class'])) {
+                throw new \Mix\Exceptions\ConfigException("类库配置错误");
+            }
+            if (!isset($item['name'])) {
+                throw new \Mix\Exceptions\ConfigException("没有配置名称：{$item['class']}");
+            }
             $name                   = "{$item['class']}:{$item['name']}";
             $this->libraries[$name] = $item;
         }

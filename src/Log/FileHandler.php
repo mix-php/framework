@@ -10,7 +10,7 @@ use Mix\Core\ComponentInterface;
  * Log组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class Log extends Component
+class FileHandler extends Component
 {
 
     // 协程模式

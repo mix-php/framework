@@ -6,10 +6,10 @@ use Mix\Core\BaseObject;
 use Mix\Helpers\ProcessHelper;
 
 /**
- * Http服务器类
+ * 服务器类
  * @author 刘健 <coder.liu@qq.com>
  */
-class WebSocketServer extends BaseObject
+class Server extends BaseObject
 {
 
     // 主机
@@ -32,18 +32,6 @@ class WebSocketServer extends BaseObject
 
     // 关闭连接事件回调函数
     protected $_onCloseCallback;
-
-    // 设置服务的属性
-    public function __set($name, $value)
-    {
-        $this->_server->$name = $value;
-    }
-
-    // 获取服务的属性
-    public function __get($name)
-    {
-        return $this->_server->$name;
-    }
 
     // 初始化事件
     public function onInitialize()

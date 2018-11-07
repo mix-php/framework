@@ -3,6 +3,7 @@
 namespace Mix\Container;
 
 use Mix\Core\ComponentInterface;
+use Mix\Core\BaseObject;
 
 /**
  * 基础容器类
@@ -15,13 +16,13 @@ class BaseContainer extends BaseObject
      * 组件配置
      * @var array
      */
-    protected $config = [];
+    public $config = [];
 
     /**
      * 容器中的对象实例
      * @var array
      */
-    protected $instances = [];
+    protected $_instances = [];
 
     /**
      * 获取容器
@@ -31,8 +32,8 @@ class BaseContainer extends BaseObject
     public function get($name)
     {
         // 已加载
-        if (isset($this->instances[$name])) {
-            return $this->instances[$name];
+        if (isset($this->_instances[$name])) {
+            return $this->_instances[$name];
         }
         // 未注册
         if (!isset($this->config[$name])) {
@@ -45,9 +46,9 @@ class BaseContainer extends BaseObject
             throw new \Mix\Exceptions\ComponentException("不是组件类型：{$this->config[$name]['class']}");
         }
         // 装入容器
-        $this->instances[$name] = $object;
+        $this->_instances[$name] = $object;
         // 返回
-        return $this->instances[$name];
+        return $this->_instances[$name];
     }
 
     /**
@@ -57,7 +58,7 @@ class BaseContainer extends BaseObject
      */
     public function has($name)
     {
-        return isset($this->instances[$name]);
+        return isset($this->_instances[$name]);
     }
 
 }

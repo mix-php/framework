@@ -4,6 +4,7 @@ namespace Mix\Container;
 
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
+use Mix\Core\BaseObject;
 
 /**
  * 容器类
@@ -16,13 +17,13 @@ class Container extends BaseObject
      * 组件配置
      * @var array
      */
-    protected $config = [];
+    public $config = [];
 
     /**
      * 容器集合
      * @var array
      */
-    protected $containers = [];
+    protected $_containers = [];
 
     /**
      * 获取容器
@@ -31,13 +32,13 @@ class Container extends BaseObject
      */
     public function get($name)
     {
-        $tid = $this->getTid();
-        if (!isset($this->containers[$tid])) {
-            $this->containers[$tid] = new \Mix\Container\Container([
+        $tid = $this->getTid($name);
+        if (!isset($this->_containers[$tid])) {
+            $this->_containers[$tid] = new BaseContainer([
                 'config' => $this->config,
             ]);
         }
-        return $this->containers[$tid]->get($name);
+        return $this->_containers[$tid]->get($name);
     }
 
     /**
@@ -47,11 +48,11 @@ class Container extends BaseObject
      */
     public function has($name)
     {
-        $tid = $this->getTid();
-        if (!isset($this->containers[$tid])) {
+        $tid = $this->getTid($name);
+        if (!isset($this->_containers[$tid])) {
             return false;
         }
-        return $this->containers[$tid]->has($name);
+        return $this->_containers[$tid]->has($name);
     }
 
     /**
@@ -60,18 +61,19 @@ class Container extends BaseObject
      */
     public function delete($tid)
     {
-        $this->containers[$tid] = null;
-        unset($this->containers[$tid]);
+        $this->_containers[$tid] = null;
+        unset($this->_containers[$tid]);
     }
 
     /**
      * 获取顶部协程id
+     * @param $name
      * @return int
      */
-    protected function getTid()
+    protected function getTid($name)
     {
-        $mode = $this->getCoroutineMode($name);
         $tid  = Coroutine::tid();
+        $mode = $this->getCoroutineMode($name);
         if ($mode == Component::COROUTINE_MODE_REFERENCE) {
             $tid = -1;
         }

@@ -62,9 +62,7 @@ class Application extends BaseObject
         $libraries       = $this->libraries;
         $this->libraries = [];
         foreach ($libraries as $item) {
-            $name = "{$item['class']}:{$item['name']}";
-            unset($item['class']);
-            unset($item['name']);
+            $name                   = "{$item['class']}:{$item['name']}";
             $this->libraries[$name] = $item;
         }
         // 执行初始化回调

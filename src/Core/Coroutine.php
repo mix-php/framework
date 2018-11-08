@@ -92,7 +92,8 @@ class Coroutine
             }
             // 清理协程资源
             unset(self::$idMap[$id]);
-            if ($top) {
+            // 只在命令行的顶级协程结束时才移除容器
+            if ($top && \Mix::$app instanceof \Mix\Console\Application) {
                 \Mix::$app->container->delete($tid);
             }
         });

@@ -3,6 +3,7 @@
 namespace Mix\Http;
 
 use Mix\Core\BaseObject;
+use Mix\Core\Coroutine;
 use Mix\Facades\Output;
 use Mix\Helpers\ProcessHelper;
 
@@ -115,6 +116,10 @@ class Server extends BaseObject
                 \Mix::$app->run();
             } catch (\Throwable $e) {
                 \Mix::$app->error->handleException($e);
+            }
+            // 开启协程时，移除容器
+            if (($tid = Coroutine::id()) !== -1) {
+                \Mix::$app->container->delete($tid);
             }
         });
     }

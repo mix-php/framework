@@ -110,7 +110,7 @@ class Application extends \Mix\Core\Application
     public function cleanComponents()
     {
         // 触发请求后置事件
-        foreach ($this->components as $name) {
+        foreach (array_keys($this->components) as $name) {
             $component = $this->container->get($name);
             self::triggerRequestAfter($component);
         }

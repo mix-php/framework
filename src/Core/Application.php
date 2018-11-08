@@ -18,8 +18,8 @@ use Mix\Container\Container;
  * @property \Mix\Http\Token $token
  * @property \Mix\Http\Session $session
  * @property \Mix\Http\Cookie $cookie
- * @property \Mix\Database\PDO $pdo
- * @property \Mix\Redis\Redis $redis
+ * @property \Mix\Database\PDOConnection $pdo
+ * @property \Mix\Redis\RedisConnection $redis
  * @property \Mix\WebSocket\TokenReader $tokenReader
  * @property \Mix\WebSocket\SessionReader $sessionReader
  * @property \Mix\WebSocket\MessageHandler $messageHandler

@@ -34,8 +34,8 @@ class Container extends BaseObject
     {
         $tid = $this->getTid($name);
         if (!isset($this->_containers[$tid])) {
-            $this->_containers[$tid] = new BaseContainer([
-                'config' => $this->config,
+            $this->_containers[$tid] = new Bucket([
+                'container' => $this,
             ]);
         }
         return $this->_containers[$tid]->get($name);

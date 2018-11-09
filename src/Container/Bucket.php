@@ -6,17 +6,17 @@ use Mix\Core\ComponentInterface;
 use Mix\Core\BaseObject;
 
 /**
- * 基础容器类
+ * 存储空间类
  * @author 刘健 <coder.liu@qq.com>
  */
-class BaseContainer extends BaseObject
+class Bucket extends BaseObject
 {
 
     /**
      * 组件配置
-     * @var array
+     * @var Container
      */
-    public $config = [];
+    public $container;
 
     /**
      * 容器中的对象实例
@@ -31,19 +31,20 @@ class BaseContainer extends BaseObject
      */
     public function get($name)
     {
+        $config = $this->container->config;
         // 已加载
         if (isset($this->_instances[$name])) {
             return $this->_instances[$name];
         }
         // 未注册
-        if (!isset($this->config[$name])) {
+        if (!isset($config[$name])) {
             throw new \Mix\Exceptions\ComponentException("组件不存在：{$name}");
         }
         // 使用配置创建新对象
-        $object = \Mix::createObject($this->config[$name]);
+        $object = \Mix::createObject($config[$name]);
         // 组件效验
         if (!($object instanceof ComponentInterface)) {
-            throw new \Mix\Exceptions\ComponentException("不是组件类型：{$this->config[$name]['class']}");
+            throw new \Mix\Exceptions\ComponentException("不是组件类型：{$config[$name]['class']}");
         }
         // 装入容器
         $this->_instances[$name] = $object;

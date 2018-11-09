@@ -42,8 +42,7 @@ class Error
      */
     public static function appError($errno, $errstr, $errfile = '', $errline = 0)
     {
-        // 不处理 "@" 符号
-        if (error_reporting()) {
+        if (error_reporting() & $errno) {
             // 委托给异常处理
             throw new \Mix\Exceptions\ErrorException($errno, $errstr, $errfile, $errline);
         }
@@ -54,7 +53,7 @@ class Error
      */
     public static function appShutdown()
     {
-        if ($error = error_get_last()) {
+        if (!is_null($error = error_get_last()) && self::isFatal($error['type'])) {
             // 委托给异常处理
             self::appException(new \Mix\Exceptions\ErrorException($error['type'], $error['message'], $error['file'], $error['line']));
         }
@@ -96,11 +95,7 @@ class Error
      */
     public static function isError($errno)
     {
-        $types = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR];
-        if (in_array($errno, $types, true)) {
-            return true;
-        }
-        return false;
+        return in_array($errno, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR]);
     }
 
     /**
@@ -111,11 +106,7 @@ class Error
      */
     public static function isWarning($errno)
     {
-        $types = [E_WARNING, E_CORE_WARNING, E_COMPILE_WARNING, E_USER_WARNING];
-        if (in_array($errno, $types, true)) {
-            return true;
-        }
-        return false;
+        return in_array($errno, [E_WARNING, E_CORE_WARNING, E_COMPILE_WARNING, E_USER_WARNING]);
     }
 
     /**
@@ -126,11 +117,17 @@ class Error
      */
     public static function isNotice($errno)
     {
-        $types = [E_NOTICE, E_USER_NOTICE, E_DEPRECATED, E_USER_DEPRECATED, E_STRICT];
-        if (in_array($errno, $types, true)) {
-            return true;
-        }
-        return false;
+        return in_array($errno, [E_NOTICE, E_USER_NOTICE, E_DEPRECATED, E_USER_DEPRECATED, E_STRICT]);
+    }
+
+    /**
+     * 是否为致命错误
+     * @param $errno
+     * @return bool
+     */
+    public static function isFatal($errno)
+    {
+        return in_array($errno, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE]);
     }
 
 }

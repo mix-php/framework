@@ -73,7 +73,7 @@ class Error extends Component
         $message .= "[trace] {$errors['trace']}" . PHP_EOL;
         $message .= '$_SERVER' . substr(print_r($_SERVER, true), 5, -1);
         // 写入
-        $errorType = \Mix\Core\Error::getType($e->getCode());
+        $errorType = \Mix\Core\Error::getType($errors['code']);
         switch ($errorType) {
             case 'error':
                 \Mix::$app->log->error($message);

@@ -85,7 +85,7 @@ class Error extends Component
         $message .= '$_GET' . substr(print_r(\Mix::$app->request->get(), true), 5);
         $message .= '$_POST' . substr(print_r(\Mix::$app->request->post(), true), 5, -1);
         // 写入
-        $errorType = \Mix\Core\Error::getType($e->getCode());
+        $errorType = \Mix\Core\Error::getType($errors['code']);
         switch ($errorType) {
             case 'error':
                 \Mix::$app->log->error($message);

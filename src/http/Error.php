@@ -65,7 +65,7 @@ class Error extends Component
         // 清空系统错误
         ob_get_contents() and ob_clean();
         // 错误响应
-        if (!\mix\base\Env::get('APP_DEBUG')) {
+        if (!env('APP_DEBUG')) {
             if ($statusCode == 404) {
                 $errors = [
                     'status'  => 404,

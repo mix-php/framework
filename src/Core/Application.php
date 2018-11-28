@@ -8,7 +8,7 @@ use Mix\Container\Container;
  * App类
  * @author 刘健 <coder.liu@qq.com>
  *
- * @property \Mix\Log\Log $log
+ * @property \Mix\Log\Logger $log
  * @property \Mix\Console\Input $input
  * @property \Mix\Console\Output $output
  * @property \Mix\Http\Route $route

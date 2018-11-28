@@ -2,19 +2,14 @@
 
 namespace Mix\Log;
 
-use Mix\Helpers\JsonHelper;
-use Mix\Core\Component;
-use Mix\Core\ComponentInterface;
+use Mix\Core\BaseObject;
 
 /**
- * Log组件
+ * FileHandler类
  * @author 刘健 <coder.liu@qq.com>
  */
-class FileHandler extends Component
+class FileHandler extends BaseObject
 {
-
-    // 协程模式
-    public static $coroutineMode = ComponentInterface::COROUTINE_MODE_REFERENCE;
 
     // 轮转规则
     const ROTATE_HOUR = 0;
@@ -24,82 +19,22 @@ class FileHandler extends Component
     // 日志目录
     public $dir = 'logs';
 
-    // 日志记录级别
-    public $level = ['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug'];
-
     // 日志轮转类型
     public $rotate = self::ROTATE_DAY;
 
     // 最大文件尺寸
     public $maxFileSize = 0;
 
-    // emergency日志
-    public function emergency($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // alert日志
-    public function alert($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // critical日志
-    public function critical($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // error日志
-    public function error($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // warning日志
-    public function warning($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // notice日志
-    public function notice($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // info日志
-    public function info($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // debug日志
-    public function debug($message, array $context = [])
-    {
-        return $this->log(__FUNCTION__, $message, $context);
-    }
-
-    // 记录日志
-    public function log($level, $message, array $context = [])
-    {
-        if (in_array($level, $this->level)) {
-            return $this->write($level, $message, $context);
-        }
-        return false;
-    }
-
     // 写入日志
-    public function write($filePrefix, $message, array $context = [])
+    public function write($level, $message, array $context = [])
     {
-        $file    = $this->getFile($filePrefix);
-        $message = $this->getMessage($message, $context);
+        $file    = $this->getFile($level);
+        $message = self::getMessage($message, $context);
         return error_log($message . PHP_EOL, 3, $file);
     }
 
     // 获取要写入的文件
-    protected function getFile($filePrefix)
+    protected function getFile($level)
     {
         // 生成文件名
         $logDir = $this->dir;
@@ -120,7 +55,7 @@ class FileHandler extends Component
                 $timeFormat = date('YW');
                 break;
         }
-        $filename = "{$logDir}/{$subDir}/{$filePrefix}_{$timeFormat}";
+        $filename = "{$logDir}/{$subDir}/{$level}_{$timeFormat}";
         $file     = "{$filename}.log";
         // 创建目录
         $dir = dirname($file);
@@ -135,7 +70,7 @@ class FileHandler extends Component
     }
 
     // 获取要写入的消息
-    protected function getMessage($message, array $context = [])
+    protected static function getMessage($message, array $context = [])
     {
         // 替换占位符
         $replace = [];

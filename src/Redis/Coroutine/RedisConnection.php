@@ -29,45 +29,8 @@ class RedisConnection extends \Mix\Redis\Persistent\BaseRedisConnection
     public function onDestruct()
     {
         parent::onDestruct();
-        // 关闭连接
-        $this->disconnect();
-    }
-
-    // 连接
-    protected function connect()
-    {
-        if (isset($this->connectionPool)) {
-            $this->_redis = $this->connectionPool->getConnection(function () {
-                return parent::createConnection();
-            });
-        } else {
-            $this->_redis = parent::createConnection();
-        }
-    }
-
-    // 关闭连接
-    public function disconnect()
-    {
-        if (isset($this->connectionPool) && isset($this->_redis)) {
-            $this->connectionPool->releaseConnection($this->_redis, function () {
-                parent::disconnect();
-            });
-        } else {
-            parent::disconnect();
-        }
-    }
-
-    // 重新连接
-    protected function reconnect()
-    {
-        if (isset($this->connectionPool)) {
-            $this->connectionPool->destroyConnection(function () {
-                parent::disconnect();
-            });
-        } else {
-            parent::disconnect();
-        }
-        $this->connect();
+        // 释放连接
+        $this->connectionPool->release($this);
     }
 
 }

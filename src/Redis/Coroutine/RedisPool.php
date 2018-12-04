@@ -3,12 +3,13 @@
 namespace Mix\Redis\Coroutine;
 
 use Mix\Pool\ConnectionPool;
+use Mix\Pool\ConnectionPoolInterface;
 
 /**
  * Class RedisPool
  * @author 刘健 <coder.liu@qq.com>
  */
-class RedisPool extends ConnectionPool
+class RedisPool extends ConnectionPool implements ConnectionPoolInterface
 {
 
     // 主机
@@ -26,7 +27,6 @@ class RedisPool extends ConnectionPool
     // 创建连接
     public function createConnection()
     {
-        // TODO: Implement createConnection() method.
         $connection = new RedisConnection([
             'connectionPool' => $this,
             'host'           => $this->host,

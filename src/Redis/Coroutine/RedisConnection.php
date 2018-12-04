@@ -25,10 +25,9 @@ class RedisConnection extends \Mix\Redis\Persistent\BaseRedisConnection
         Coroutine::enable();
     }
 
-    // 析构事件
-    public function onDestruct()
+    // 关闭连接
+    public function close()
     {
-        parent::onDestruct();
         // 释放连接
         $this->connectionPool->release($this);
     }

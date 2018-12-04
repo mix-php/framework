@@ -1,6 +1,6 @@
 <?php
 
-namespace Apps\Common\Core;
+namespace Mix\Pool;
 
 /**
  * ConnectionPool接口

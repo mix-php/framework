@@ -2,7 +2,6 @@
 
 namespace Mix\Pool;
 
-use Apps\Common\Core\ConnectionPoolInterface;
 use Mix\Core\Component;
 use Mix\Core\ComponentInterface;
 
@@ -10,7 +9,7 @@ use Mix\Core\ComponentInterface;
  * ConnectionPool组件
  * @author 刘健 <coder.liu@qq.com>
  */
-class ConnectionPool extends Component implements ConnectionPoolInterface
+class ConnectionPool extends Component
 {
 
     // 协程模式
@@ -26,7 +25,7 @@ class ConnectionPool extends Component implements ConnectionPoolInterface
     protected $_queue;
 
     // 活跃连接集合
-    protected $_actives;
+    protected $_actives = [];
 
     // 初始化事件
     public function onInitialize()

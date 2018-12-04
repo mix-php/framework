@@ -43,7 +43,7 @@ class ConnectionPool extends Component
             return $this->pop();
         }
         // 达到最大连接数，从队列取
-        if ($this->getCurrentCount() >= $this->maxActive) {
+        if ($this->getTotalCount() >= $this->maxActive) {
             return $this->pop();
         }
         // 创建连接
@@ -65,9 +65,9 @@ class ConnectionPool extends Component
     public function getStats()
     {
         return [
-            'current_count' => $this->getCurrentCount(),
-            'queue_count'   => $this->getQueueCount(),
-            'active_count'  => $this->getActiveCount(),
+            'total'  => $this->getTotalCount(),
+            'queue'  => $this->getQueueCount(),
+            'active' => $this->getActiveCount(),
         ];
     }
 
@@ -100,7 +100,7 @@ class ConnectionPool extends Component
     }
 
     // 获取当前总连接数
-    protected function getCurrentCount()
+    protected function getTotalCount()
     {
         return $this->getQueueCount() + $this->getActiveCount();
     }

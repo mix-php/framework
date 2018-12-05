@@ -12,11 +12,20 @@ use Mix\Helpers\RandomStringHelper;
 class Session extends Component
 {
 
-    // 保存处理者
-    public $saveHandler;
+    /**
+     * 连接池
+     * @var \Mix\Pool\ConnectionPoolInterface
+     */
+    public $pool;
 
-    // 保存的Key前缀
-    public $saveKeyPrefix = 'SESSION:';
+    /**
+     * 处理者
+     * @var \Mix\Redis\RedisConnection
+     */
+    public $handler;
+
+    // Key前缀
+    public $keyPrefix = 'SESSION:';
 
     // 生存时间
     public $maxLifetime = 7200;
@@ -52,6 +61,10 @@ class Session extends Component
     public function onRequestBefore()
     {
         parent::onRequestBefore();
+        // 从连接池获取连接
+        if (!isset($this->pool)) {
+            $this->handler = $this->pool->getConnection();
+        }
         // 载入session_id
         $this->loadSessionId();
     }
@@ -64,9 +77,9 @@ class Session extends Component
             // 创建session_id
             $this->_sessionId = RandomStringHelper::randomAlphanumeric($this->_sessionIdLength);
         }
-        $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
+        $this->_sessionKey = $this->keyPrefix . $this->_sessionId;
         // 延长session有效期
-        $this->saveHandler->expire($this->_sessionKey, $this->maxLifetime);
+        $this->handler->expire($this->_sessionKey, $this->maxLifetime);
     }
 
     // 创建SessionId
@@ -74,15 +87,15 @@ class Session extends Component
     {
         do {
             $this->_sessionId  = RandomStringHelper::randomAlphanumeric($this->_sessionIdLength);
-            $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
-        } while ($this->saveHandler->exists($this->_sessionKey));
+            $this->_sessionKey = $this->keyPrefix . $this->_sessionId;
+        } while ($this->handler->exists($this->_sessionKey));
     }
 
     // 赋值
     public function set($name, $value)
     {
-        $success = $this->saveHandler->hmset($this->_sessionKey, [$name => serialize($value)]);
-        $this->saveHandler->expire($this->_sessionKey, $this->maxLifetime);
+        $success = $this->handler->hmset($this->_sessionKey, [$name => serialize($value)]);
+        $this->handler->expire($this->_sessionKey, $this->maxLifetime);
         $success and \Mix::$app->response->setCookie($this->name, $this->_sessionId, $this->cookieExpires, $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
         return $success ? true : false;
     }
@@ -91,34 +104,34 @@ class Session extends Component
     public function get($name = null)
     {
         if (is_null($name)) {
-            $result = $this->saveHandler->hgetall($this->_sessionKey);
+            $result = $this->handler->hgetall($this->_sessionKey);
             foreach ($result as $key => $item) {
                 $result[$key] = unserialize($item);
             }
             return $result ?: [];
         }
-        $value = $this->saveHandler->hget($this->_sessionKey, $name);
+        $value = $this->handler->hget($this->_sessionKey, $name);
         return $value === false ? null : unserialize($value);
     }
 
     // 判断是否存在
     public function has($name)
     {
-        $exist = $this->saveHandler->hexists($this->_sessionKey, $name);
+        $exist = $this->handler->hexists($this->_sessionKey, $name);
         return $exist ? true : false;
     }
 
     // 删除
     public function delete($name)
     {
-        $success = $this->saveHandler->hdel($this->_sessionKey, $name);
+        $success = $this->handler->hdel($this->_sessionKey, $name);
         return $success ? true : false;
     }
 
     // 清除session
     public function clear()
     {
-        $success = $this->saveHandler->del($this->_sessionKey);
+        $success = $this->handler->del($this->_sessionKey);
         return $success ? true : false;
     }
 

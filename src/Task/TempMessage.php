@@ -2,7 +2,7 @@
 
 namespace Mix\Task;
 
-use Mix\Helpers\StringHelper;
+use Mix\Helpers\RandomStringHelper;
 
 /**
  * 临时消息类
@@ -38,7 +38,7 @@ class TempMessage
     // 生成文件名称
     protected static function generateFileName()
     {
-        return StringHelper::getRandomString(32);
+        return RandomStringHelper::randomAlphanumeric(32);
     }
 
     // 保存

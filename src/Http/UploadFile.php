@@ -2,7 +2,7 @@
 
 namespace Mix\Http;
 
-use Mix\Helpers\StringHelper;
+use Mix\Helpers\RandomStringHelper;
 
 /**
  * UploadFile类
@@ -73,7 +73,7 @@ class UploadFile
     // 获取随机文件名
     public function getRandomFileName()
     {
-        return md5(StringHelper::getRandomString(32)) . '.' . $this->getExtension();
+        return md5(RandomStringHelper::randomAlphanumeric(32)) . '.' . $this->getExtension();
     }
 
 }

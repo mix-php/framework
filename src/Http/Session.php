@@ -3,7 +3,7 @@
 namespace Mix\Http;
 
 use Mix\Core\Component;
-use Mix\Helpers\StringHelper;
+use Mix\Helpers\RandomStringHelper;
 
 /**
  * Session组件
@@ -56,21 +56,13 @@ class Session extends Component
         $this->loadSessionId();
     }
 
-    // 请求后置事件
-    public function onRequestAfter()
-    {
-        parent::onRequestAfter();
-        // 关闭连接
-        $this->saveHandler->disconnect();
-    }
-
     // 载入session_id
     public function loadSessionId()
     {
         $this->_sessionId = \Mix::$app->request->cookie($this->name);
         if (is_null($this->_sessionId)) {
             // 创建session_id
-            $this->_sessionId = StringHelper::getRandomString($this->_sessionIdLength);
+            $this->_sessionId = RandomStringHelper::randomAlphanumeric($this->_sessionIdLength);
         }
         $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
         // 延长session有效期
@@ -81,7 +73,7 @@ class Session extends Component
     public function createSessionId()
     {
         do {
-            $this->_sessionId  = StringHelper::getRandomString($this->_sessionIdLength);
+            $this->_sessionId  = RandomStringHelper::randomAlphanumeric($this->_sessionIdLength);
             $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
         } while ($this->saveHandler->exists($this->_sessionKey));
     }

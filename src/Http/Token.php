@@ -47,7 +47,7 @@ class Token extends Component
     {
         parent::onRequestBefore();
         // 从连接池获取连接
-        if (!isset($this->pool)) {
+        if (isset($this->pool)) {
             $this->handler = $this->pool->getConnection();
         }
         // 载入TokenID

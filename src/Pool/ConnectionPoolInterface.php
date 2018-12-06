@@ -3,7 +3,7 @@
 namespace Mix\Pool;
 
 /**
- * ConnectionPool接口
+ * Interface ConnectionPoolInterface
  * @author 刘健 <coder.liu@qq.com>
  */
 interface ConnectionPoolInterface

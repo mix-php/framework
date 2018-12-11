@@ -50,7 +50,7 @@ class Application extends \Mix\Core\Application
         $this->printOptions();
         $this->printCommands();
         $output->writeln('');
-        $output->writeln("Developed with MixPHP framework version.");
+        $output->writeln("Developed with MixPHP framework.");
     }
 
     // 版本
@@ -114,7 +114,7 @@ class Application extends \Mix\Core\Application
                 }
             }
         }
-        throw new \Mix\Exceptions\NotFoundException("ERRER unknown command '{$command}'");
+        throw new \Mix\Exceptions\NotFoundException("'{$command}' is not command, see '-h/--help'.");
     }
 
     // 获取组件

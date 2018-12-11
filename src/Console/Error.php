@@ -96,7 +96,7 @@ class Error extends Component
         // 清空系统错误
         ob_get_contents() and ob_clean();
         // 直接输出
-        if (!\Mix::$app->appDebug) {
+        if ($errors['type'] == 'Mix\Exceptions\NotFoundException' || !\Mix::$app->appDebug) {
             $output = \Mix::$app->output;
             $output->writeln($errors['message']);
             return;

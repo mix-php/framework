@@ -76,7 +76,7 @@ class Server extends BaseObject
     {
         $this->_server->on('Start', function ($server) {
             // 进程命名
-            ProcessHelper::setTitle("mix-httpd: master {$this->_host}:{$this->_port}");
+            ProcessHelper::setProcessTitle("mix-httpd: master {$this->_host}:{$this->_port}");
         });
     }
 
@@ -85,7 +85,7 @@ class Server extends BaseObject
     {
         $this->_server->on('ManagerStart', function ($server) {
             // 进程命名
-            ProcessHelper::setTitle("mix-httpd: manager");
+            ProcessHelper::setProcessTitle("mix-httpd: manager");
         });
     }
 
@@ -95,9 +95,9 @@ class Server extends BaseObject
         $this->_server->on('WorkerStart', function ($server, $workerId) {
             // 进程命名
             if ($workerId < $server->setting['worker_num']) {
-                ProcessHelper::setTitle("mix-httpd: worker #{$workerId}");
+                ProcessHelper::setProcessTitle("mix-httpd: worker #{$workerId}");
             } else {
-                ProcessHelper::setTitle("mix-httpd: task #{$workerId}");
+                ProcessHelper::setProcessTitle("mix-httpd: task #{$workerId}");
             }
             // 实例化App
             $config = require $this->virtualHost['configFile'];

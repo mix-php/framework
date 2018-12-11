@@ -122,7 +122,7 @@ class ProcessPoolTaskExecutor extends BaseObject
         // 关闭内置协程，使 exit; 可以正常在回调中使用
         Coroutine::disable();
         // 修改进程标题
-        ProcessHelper::setTitle("{$this->name} master");
+        ProcessHelper::setProcessTitle("{$this->name} master");
         // 创建队列
         $this->createQueues();
         // 创建进程
@@ -221,7 +221,7 @@ class ProcessPoolTaskExecutor extends BaseObject
         $process   = new \Swoole\Process(function ($worker) use ($masterPid, $processType, $workerId) {
             try {
                 // 修改进程名称
-                ProcessHelper::setTitle("{$this->name} {$processType} #{$workerId}");
+                ProcessHelper::setProcessTitle("{$this->name} {$processType} #{$workerId}");
                 // 创建工作者
                 $leftWorker = new LeftWorker([
                     'worker'      => $worker,
@@ -258,7 +258,7 @@ class ProcessPoolTaskExecutor extends BaseObject
         $process   = new \Swoole\Process(function ($worker) use ($masterPid, $processType, $workerId) {
             try {
                 // 修改进程名称
-                ProcessHelper::setTitle("{$this->name} {$processType} #{$workerId}");
+                ProcessHelper::setProcessTitle("{$this->name} {$processType} #{$workerId}");
                 // 创建工作者
                 $centerWorker = new CenterWorker([
                     'worker'      => $worker,
@@ -303,7 +303,7 @@ class ProcessPoolTaskExecutor extends BaseObject
         $process   = new \Swoole\Process(function ($worker) use ($masterPid, $processType, $workerId) {
             try {
                 // 修改进程名称
-                ProcessHelper::setTitle("{$this->name} {$processType} #{$workerId}");
+                ProcessHelper::setProcessTitle("{$this->name} {$processType} #{$workerId}");
                 // 创建工作者
                 $rightWorker = new RightWorker([
                     'worker'      => $worker,

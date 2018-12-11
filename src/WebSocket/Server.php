@@ -75,7 +75,7 @@ class Server extends BaseObject
     {
         $this->_server->on('Start', function ($server) {
             // 进程命名
-            ProcessHelper::setTitle("mix-websocketd: master {$this->host}:{$this->port}");
+            ProcessHelper::setProcessTitle("mix-websocketd: master {$this->host}:{$this->port}");
         });
     }
 
@@ -84,7 +84,7 @@ class Server extends BaseObject
     {
         $this->_server->on('ManagerStart', function ($server) {
             // 进程命名
-            ProcessHelper::setTitle("mix-websocketd: manager");
+            ProcessHelper::setProcessTitle("mix-websocketd: manager");
         });
     }
 
@@ -94,9 +94,9 @@ class Server extends BaseObject
         $this->_server->on('WorkerStart', function ($server, $workerId) {
             // 进程命名
             if ($workerId < $server->setting['worker_num']) {
-                ProcessHelper::setTitle("mix-websocketd: worker #{$workerId}");
+                ProcessHelper::setProcessTitle("mix-websocketd: worker #{$workerId}");
             } else {
-                ProcessHelper::setTitle("mix-websocketd: task #{$workerId}");
+                ProcessHelper::setProcessTitle("mix-websocketd: task #{$workerId}");
             }
         });
     }

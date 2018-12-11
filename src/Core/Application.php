@@ -12,6 +12,9 @@ use Apps\Common\Core\ApplicationInterface;
 class Application extends BaseObject implements ApplicationInterface
 {
 
+    // 应用调试
+    public $appDebug = true;
+
     // 初始化回调
     public $initialize = [];
 

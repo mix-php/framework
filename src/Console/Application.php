@@ -30,10 +30,7 @@ class Application extends \Mix\Core\Application
         $input   = \Mix::$app->input;
         $command = $input->getCommand();
         $options = $input->getOptions();
-        if (empty($command)) {
-            throw new \Mix\Exceptions\NotFoundException("Please input command, '-h/--help' view help.");
-        }
-        if (in_array($command, ['-h', '--help'])) {
+        if (empty($command) || in_array($command, ['-h', '--help'])) {
             $this->help();
             return ExitCode::OK;
         }
@@ -49,10 +46,11 @@ class Application extends \Mix\Core\Application
     {
         $input  = \Mix::$app->input;
         $output = \Mix::$app->output;
-        $output->writeln("Usage: {$input->getScriptFileName()} [OPTIONS] [COMMAND [OPTIONS]]");
+        $output->writeln("Usage: {$input->getScriptFileName()} [OPTIONS] COMMAND [SUBCOMMAND] [arg...]");
         $this->printOptions();
         $this->printCommands();
         $output->writeln('');
+        $output->writeln("Developed with MixPHP framework version.");
     }
 
     // 版本
@@ -64,7 +62,7 @@ class Application extends \Mix\Core\Application
         $appVersion       = \Mix::$app->appVersion;
         $frameworkVersion = \Mix::VERSION;
         $output->writeln("{$appName} version {$appVersion}");
-        $output->writeln("Developed with MixPHP framework version {$frameworkVersion}");
+        $output->writeln("MixPHP framework version {$frameworkVersion}");
     }
 
     // 打印选项列表

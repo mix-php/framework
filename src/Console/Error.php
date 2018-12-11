@@ -95,7 +95,23 @@ class Error extends Component
     {
         // 清空系统错误
         ob_get_contents() and ob_clean();
-        // 格式化输出
+        // 直接输出
+        if (!\Mix::$app->appDebug) {
+            $output = \Mix::$app->output;
+            $output->writeln($errors['message']);
+            return;
+        }
+        // 打印到屏幕，带颜色
+        self::printColor($errors);
+    }
+
+    /**
+     * 打印到屏幕，带颜色
+     * @param $errors
+     */
+    protected static function printColor($errors)
+    {
+        // 带格式输出
         $output  = \Mix::$app->output;
         $message = $output->ansiFormat($errors['message'], Output::BG_RED) . PHP_EOL;
         $message .= "{$errors['type']} code {$errors['code']}" . PHP_EOL;

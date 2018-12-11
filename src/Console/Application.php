@@ -9,6 +9,12 @@ namespace Mix\Console;
 class Application extends \Mix\Core\Application
 {
 
+    // 应用名称
+    public $appName = 'app-console';
+
+    // 应用版本
+    public $appVersion = '0.0.0';
+
     // 命令命名空间
     public $commandNamespace = '';
 
@@ -52,10 +58,13 @@ class Application extends \Mix\Core\Application
     // 版本
     protected function version()
     {
-        $input   = \Mix::$app->input;
-        $output  = \Mix::$app->output;
-        $version = \Mix::VERSION;
-        $output->writeln("MixPHP Framework Version {$version}");
+        $input            = \Mix::$app->input;
+        $output           = \Mix::$app->output;
+        $appName          = \Mix::$app->appName;
+        $appVersion       = \Mix::$app->appVersion;
+        $frameworkVersion = \Mix::VERSION;
+        $output->writeln("{$appName} version {$appVersion}");
+        $output->writeln("Developed with MixPHP framework version {$frameworkVersion}");
     }
 
     // 打印选项列表

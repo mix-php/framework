@@ -19,7 +19,7 @@ class Controller extends BaseObject
     public function render($name, $data = [])
     {
         if (strpos($name, '.') === false) {
-            $name = $this->viewPrefix() . '.' . $name;
+            $name = $this->getViewPrefix() . '.' . $name;
         }
         $view            = new View();
         $data['content'] = $view->render($name, $data);
@@ -30,14 +30,14 @@ class Controller extends BaseObject
     public function renderPartial($name, $data = [])
     {
         if (strpos($name, '.') === false) {
-            $name = $this->viewPrefix() . '.' . $name;
+            $name = $this->getViewPrefix() . '.' . $name;
         }
         $view = new View();
         return $view->render($name, $data);
     }
 
-    // 视图前缀
-    protected function viewPrefix()
+    // 获取视图前缀
+    protected function getViewPrefix()
     {
         $prefix = str_replace([\Mix::$app->controllerNamespace . '\\', '\\', 'Controller'], ['', '.', ''], get_class($this));
         $items  = [];

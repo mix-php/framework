@@ -28,3 +28,11 @@ if (!function_exists('tgo')) {
         \Mix\Core\Coroutine::create($closure);
     }
 }
+
+if (!function_exists('println')) {
+    // 输出字符串并换行
+    function println($expression)
+    {
+        echo $expression . PHP_EOL;
+    }
+}

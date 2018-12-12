@@ -15,9 +15,9 @@ if (!function_exists('app')) {
 
 if (!function_exists('env')) {
     // 获取一个环境变量的值
-    function env($name = null)
+    function env($name, $default = '')
     {
-        return \Mix\Core\Env::get($name);
+        return \Mix\Config\Environment::section($name, $default);
     }
 }
 

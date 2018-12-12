@@ -4,8 +4,6 @@ namespace Mix\Console;
 
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
-use Mix\Core\Env;
-use Mix\Helpers\PhpInfoHelper;
 use Mix\Helpers\ProcessHelper;
 
 /**

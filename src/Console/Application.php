@@ -70,8 +70,7 @@ class Application extends \Mix\Core\Application
         $appName          = \Mix::$app->appName;
         $appVersion       = \Mix::$app->appVersion;
         $frameworkVersion = \Mix::VERSION;
-        $output->writeln("{$appName} version {$appVersion}");
-        $output->writeln("MixPHP framework version {$frameworkVersion}");
+        $output->writeln("{$appName} version {$appVersion}, framework version {$frameworkVersion}");
     }
 
     // 打印选项列表
@@ -147,9 +146,9 @@ class Application extends \Mix\Core\Application
     }
 
     // 终止程序
-    public function end($exitCode = ExitCode::OK)
+    public function end($code = 0)
     {
-        throw new \Mix\Exceptions\EndException($exitCode);
+        throw new \Mix\Exceptions\EndException('', $code);
     }
 
 }

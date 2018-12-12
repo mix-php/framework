@@ -32,12 +32,11 @@ class Error extends Component
         if ($e instanceof \Mix\Exceptions\DebugException) {
             $content = $e->getMessage();
             echo $content;
-            $this->exit(ExitCode::OK);
+            $this->exit(0);
         }
         // exit处理
         if ($e instanceof \Mix\Exceptions\EndException) {
-            $exitCode = (int)$e->getMessage();
-            $this->exit($exitCode);
+            $this->exit($e->getCode());
         }
         // 错误参数定义
         $errors = [
@@ -56,7 +55,7 @@ class Error extends Component
         self::print($errors);
         // 退出
         if ($exit) {
-            self::exit(ExitCode::EXCEPTION);
+            self::exit(1);
         }
     }
 
@@ -129,10 +128,10 @@ class Error extends Component
      * 退出
      * @param $exitCode
      */
-    protected static function exit($exitCode)
+    protected static function exit($code)
     {
         if (Coroutine::id() == -1) {
-            exit($exitCode);
+            exit($code);
         } else {
             ProcessHelper::kill(ProcessHelper::getPid(), SIGKILL);
         }

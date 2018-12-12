@@ -27,17 +27,17 @@ class Application extends \Mix\Core\Application
         if (PHP_SAPI != 'cli') {
             throw new \RuntimeException('Please run in CLI mode.');
         }
-        Flag::initialize();
-        if (Argument::subCommand() == '' && Argument::command() == '') {
-            if (Flag::bool(['h', 'help'], false)) {
+        Flags::initialize();
+        if (Arguments::subCommand() == '' && Arguments::command() == '') {
+            if (Flags::bool(['h', 'help'], false)) {
                 $this->help();
                 return;
             }
-            if (Flag::bool(['v', 'version'], false)) {
+            if (Flags::bool(['v', 'version'], false)) {
                 $this->version();
                 return;
             }
-            $options = Flag::options();
+            $options = Flags::options();
             if (empty($options)) {
                 $this->help();
                 return;
@@ -46,58 +46,52 @@ class Application extends \Mix\Core\Application
             $flag = array_shift($keys);
             throw new \Mix\Exceptions\NotFoundException("flag provided but not defined: '{$flag}', see '-h/--help'.");
         }
-        $command = trim(implode(' ', [Argument::command(), Argument::subCommand()]));
+        $command = trim(implode(' ', [Arguments::command(), Arguments::subCommand()]));
         $this->runAction($command);
     }
 
     // 帮助
     protected function help()
     {
-        $input  = \Mix::$app->input;
-        $output = \Mix::$app->output;
-        $output->writeln("Usage: {$input->getScriptFileName()} [OPTIONS] COMMAND [SUBCOMMAND] [arg...]");
+        $script = Arguments::script();
+        println("Usage: {$script} [OPTIONS] COMMAND [SUBCOMMAND] [arg...]");
         $this->printOptions();
         $this->printCommands();
-        $output->writeln('');
-        $output->writeln("Developed with MixPHP framework.");
+        println('');
+        println("Developed with MixPHP framework.");
     }
 
     // 版本
     protected function version()
     {
-        $input            = \Mix::$app->input;
-        $output           = \Mix::$app->output;
         $appName          = \Mix::$app->appName;
         $appVersion       = \Mix::$app->appVersion;
         $frameworkVersion = \Mix::VERSION;
-        $output->writeln("{$appName} version {$appVersion}, framework version {$frameworkVersion}");
+        println("{$appName} version {$appVersion}, framework version {$frameworkVersion}");
     }
 
     // 打印选项列表
     protected function printOptions()
     {
-        $output = \Mix::$app->output;
-        $output->writeln('');
-        $output->writeln('Options:');
-        $output->writeln("  -h/--help\tPrint usage.");
-        $output->writeln("  -v/--version\tPrint version information.");
+        println('');
+        println('Options:');
+        println("  -h/--help\tPrint usage.");
+        println("  -v/--version\tPrint version information.");
     }
 
     // 打印命令列表
     protected function printCommands()
     {
-        $output = \Mix::$app->output;
-        $output->writeln('');
-        $output->writeln('Commands:');
+        println('');
+        println('Commands:');
         $prevPrefix = '';
         foreach ($this->commands as $command => $item) {
             $prefix = explode(' ', $command)[0];
             if ($prefix != $prevPrefix) {
                 $prevPrefix = $prefix;
-                $output->writeln('  ' . $prefix);
+                println('  ' . $prefix);
             }
-            $output->write(str_repeat(' ', 4) . $command, Output::FG_GREEN);
-            $output->writeln((isset($item['description']) ? "\t{$item['description']}" : ''), Output::NONE);
+            println(str_repeat(' ', 4) . $command . (isset($item['description']) ? "\t{$item['description']}" : ''));
         }
     }
 
@@ -115,7 +109,7 @@ class Application extends \Mix\Core\Application
             $commandAction = "action{$shortAction}";
             // 判断类是否存在
             if (class_exists($commandClass)) {
-                $commandInstance = new $commandClass($options);
+                $commandInstance = new $commandClass();
                 // 判断方法是否存在
                 if (method_exists($commandInstance, $commandAction)) {
                     return $commandInstance->$commandAction();

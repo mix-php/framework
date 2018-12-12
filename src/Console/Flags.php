@@ -3,11 +3,11 @@
 namespace Mix\Console;
 
 /**
- * Class Flag
+ * Class Flags
  * @package Mix\Console
  * @author 刘健 <coder.liu@qq.com>
  */
-class Flag
+class Flags
 {
 
     /**
@@ -21,10 +21,10 @@ class Flag
     {
         // 解析全部选项
         $start = 2;
-        if (Argument::subCommand() == '') {
+        if (Arguments::subCommand() == '') {
             $start = 1;
         }
-        if (Argument::command() == '') {
+        if (Arguments::command() == '') {
             $start = 0;
         }
         $argv = $GLOBALS['argv'];

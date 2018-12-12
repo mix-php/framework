@@ -3,11 +3,11 @@
 namespace Mix\Console;
 
 /**
- * Class Argument
+ * Class Arguments
  * @package Mix\Console
  * @author 刘健 <coder.liu@qq.com>
  */
-class Argument
+class Arguments
 {
 
     /**

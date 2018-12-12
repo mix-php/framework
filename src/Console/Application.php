@@ -27,18 +27,27 @@ class Application extends \Mix\Core\Application
         if (PHP_SAPI != 'cli') {
             throw new \RuntimeException('Please run in CLI mode.');
         }
-        $input   = \Mix::$app->input;
-        $command = $input->getCommand();
-        $options = $input->getOptions();
-        if (empty($command) || in_array($command, ['-h', '--help'])) {
-            $this->help();
-            return ExitCode::OK;
+        Flag::initialize();
+        if (Argument::subCommand() == '' && Argument::command() == '') {
+            if (Flag::bool(['h', 'help'], false)) {
+                $this->help();
+                return;
+            }
+            if (Flag::bool(['v', 'version'], false)) {
+                $this->version();
+                return;
+            }
+            $options = Flag::options();
+            if (empty($options)) {
+                $this->help();
+                return;
+            }
+            $keys = array_keys($options);
+            $flag = array_shift($keys);
+            throw new \Mix\Exceptions\NotFoundException("flag provided but not defined: '{$flag}', see '-h/--help'.");
         }
-        if (in_array($command, ['-v', '--version'])) {
-            $this->version();
-            return ExitCode::OK;
-        }
-        return $this->runAction($command, $options);
+        $command = trim(implode(' ', [Argument::command(), Argument::subCommand()]));
+        $this->runAction($command);
     }
 
     // 帮助
@@ -94,7 +103,7 @@ class Application extends \Mix\Core\Application
     }
 
     // 执行功能并返回
-    public function runAction($command, $options)
+    public function runAction($command)
     {
         if (isset($this->commands[$command])) {
             // 实例化控制器

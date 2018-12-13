@@ -7,7 +7,7 @@ namespace Mix\Console;
  * @package Mix\Console
  * @author 刘健 <coder.liu@qq.com>
  */
-class Flags
+class Flag
 {
 
     /**

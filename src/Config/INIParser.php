@@ -2,27 +2,47 @@
 
 namespace Mix\Config;
 
+use Mix\Core\BaseObject;
+
 /**
  * Class INIParser
  * @package Mix\Config
  * @author 刘健 <coder.liu@qq.com>
  */
-class INIParser
+class INIParser extends BaseObject
 {
 
-    // 数据
+    /**
+     * 文件名
+     * @var string
+     */
+    public $filename;
+
+    /**
+     * 数据
+     * @var array
+     */
     protected $_data = [];
 
-    // 加载文件
-    public function load($file)
+    /**
+     * 加载文件
+     * @return bool
+     */
+    public function load()
     {
-        if (!is_file($file)) {
-            throw new \Mix\Exceptions\NotFoundException("INI file does not exist: {$file}.");
+        if (!is_file($this->filename)) {
+            return false;
         }
-        $this->_data = parse_ini_file($file, true);
+        $this->_data = parse_ini_file($this->filename, true);
+        return true;
     }
 
-    // 获取配置
+    /**
+     * 获取配置
+     * @param $name
+     * @param string $default
+     * @return array|mixed|string
+     */
     public function section($name, $default = '')
     {
         $current   = $this->_data;
@@ -36,7 +56,10 @@ class INIParser
         return $current;
     }
 
-    // 返回全部数据
+    /**
+     * 返回全部数据
+     * @return array
+     */
     public function sections()
     {
         return $this->_data;

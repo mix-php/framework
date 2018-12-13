@@ -27,17 +27,17 @@ class Application extends \Mix\Core\Application
         if (PHP_SAPI != 'cli') {
             throw new \RuntimeException('Please run in CLI mode.');
         }
-        Flags::initialize();
+        Flag::initialize();
         if (Arguments::subCommand() == '' && Arguments::command() == '') {
-            if (Flags::bool(['h', 'help'], false)) {
+            if (Flag::bool(['h', 'help'], false)) {
                 $this->help();
                 return;
             }
-            if (Flags::bool(['v', 'version'], false)) {
+            if (Flag::bool(['v', 'version'], false)) {
                 $this->version();
                 return;
             }
-            $options = Flags::options();
+            $options = Flag::options();
             if (empty($options)) {
                 $this->help();
                 return;
@@ -106,7 +106,7 @@ class Application extends \Mix\Core\Application
             $commandDir    = $commandDir == '.' ? '' : "$commandDir\\";
             $commandName   = \Mix\Helpers\FileSystemHelper::basename($shortClass);
             $commandClass  = "{$this->commandNamespace}\\{$commandDir}{$commandName}Command";
-            $commandAction = "action{$shortAction}";
+            $commandAction = "main";
             // 判断类是否存在
             if (class_exists($commandClass)) {
                 $commandInstance = new $commandClass();

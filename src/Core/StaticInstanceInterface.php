@@ -10,6 +10,13 @@ interface StaticInstanceInterface
 {
 
     /**
+     * 使用静态方法创建实例
+     * @param mixed ...$args
+     * @return StaticInstanceTrait
+     */
+    public static function new(...$args);
+
+    /**
      * 创建实例，通过默认配置名
      * @return $this
      */

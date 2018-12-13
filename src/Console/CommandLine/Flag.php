@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Console;
+namespace Mix\Console\CommandLine;
 
 /**
  * Class Flags

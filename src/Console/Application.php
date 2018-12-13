@@ -2,6 +2,9 @@
 
 namespace Mix\Console;
 
+use Mix\Console\CommandLine\Arguments;
+use Mix\Console\CommandLine\Flag;
+
 /**
  * App类
  * @author 刘健 <coder.liu@qq.com>

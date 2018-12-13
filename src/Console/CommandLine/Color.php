@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Console;
+namespace Mix\Console\CommandLine;
 
 use Mix\Core\StaticInstanceInterface;
 use Mix\Core\StaticInstanceTrait;

@@ -2,6 +2,7 @@
 
 namespace Mix\Console;
 
+use Mix\Console\CommandLine\Color;
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
 use Mix\Helpers\ProcessHelper;

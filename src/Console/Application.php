@@ -98,25 +98,27 @@ class Application extends \Mix\Core\Application
     // 执行功能并返回
     public function runAction($command)
     {
-        if (isset($this->commands[$command])) {
-            // 实例化控制器
-            list($shortClass, $shortAction) = $this->commands[$command];
-            $shortClass    = str_replace('/', "\\", $shortClass);
-            $commandDir    = \Mix\Helpers\FileSystemHelper::dirname($shortClass);
-            $commandDir    = $commandDir == '.' ? '' : "$commandDir\\";
-            $commandName   = \Mix\Helpers\FileSystemHelper::basename($shortClass);
-            $commandClass  = "{$this->commandNamespace}\\{$commandDir}{$commandName}Command";
-            $commandAction = "main";
-            // 判断类是否存在
-            if (class_exists($commandClass)) {
-                $commandInstance = new $commandClass();
-                // 判断方法是否存在
-                if (method_exists($commandInstance, $commandAction)) {
-                    return $commandInstance->$commandAction();
-                }
-            }
+        if (!isset($this->commands[$command])) {
+            throw new \Mix\Exceptions\NotFoundException("'{$command}' is not command, see '-h/--help'.");
         }
-        throw new \Mix\Exceptions\NotFoundException("'{$command}' is not command, see '-h/--help'.");
+        // 实例化控制器
+        $shortClass    = $this->commands[$command];
+        $shortClass    = str_replace('/', "\\", $shortClass);
+        $commandDir    = \Mix\Helpers\FileSystemHelper::dirname($shortClass);
+        $commandDir    = $commandDir == '.' ? '' : "$commandDir\\";
+        $commandName   = \Mix\Helpers\FileSystemHelper::basename($shortClass);
+        $commandClass  = "{$this->commandNamespace}\\{$commandDir}{$commandName}Command";
+        $commandAction = 'main';
+        // 判断类是否存在
+        if (!class_exists($commandClass)) {
+            throw new \Mix\Exceptions\CommandException("'{$commandClass}' class not found.");
+        }
+        $commandInstance = new $commandClass();
+        // 判断方法是否存在
+        if (!method_exists($commandInstance, $commandAction)) {
+            throw new \Mix\Exceptions\CommandException("'{$commandClass}::main' method not found.");
+        }
+        return $commandInstance->$commandAction();
     }
 
     // 获取组件

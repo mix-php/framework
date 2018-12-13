@@ -94,8 +94,7 @@ class Error extends Component
         ob_get_contents() and ob_clean();
         // 直接输出
         if ($errors['type'] == 'Mix\Exceptions\NotFoundException' || !\Mix::$app->appDebug) {
-            $output = \Mix::$app->output;
-            $output->writeln($errors['message']);
+            println($errors['message']);
             return;
         }
         // 打印到屏幕，带颜色
@@ -108,18 +107,12 @@ class Error extends Component
      */
     protected static function printColor($errors)
     {
-        // 带格式输出
-        $output  = \Mix::$app->output;
-        $message = $output->ansiFormat($errors['message'], Output::BG_RED) . PHP_EOL;
-        $message .= "{$errors['type']} code {$errors['code']}" . PHP_EOL;
-        $message .= $output->ansiFormat($errors['file'], Output::BG_RED) . ' line ' . $output->ansiFormat($errors['line'], Output::BG_RED) . PHP_EOL;
-        $message .= str_replace("\n", PHP_EOL, $errors['trace']);
-        // 增加边距
-        $message = str_repeat(' ', 4) . str_replace(PHP_EOL, PHP_EOL . str_repeat(' ', 4), $message);
-        $message = (PHP_EOL . PHP_EOL) . $message . (PHP_EOL);
-        // 写入
-        $output->writeln($message, Output::NONE);
-        $output->writeln('');
+        Color::new(Color::BG_RED)->println($errors['message']);
+        Color::new()->println("{$errors['type']} code {$errors['code']}");
+        Color::new(Color::BG_RED)->print($errors['file']);
+        Color::new()->print(' line ');
+        Color::new(Color::BG_RED)->println($errors['line']);
+        Color::new()->println(str_replace("\n", PHP_EOL, $errors['trace']));
     }
 
     /**

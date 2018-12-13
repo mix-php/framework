@@ -31,8 +31,8 @@ if (!function_exists('tgo')) {
 
 if (!function_exists('println')) {
     // 输出字符串并换行
-    function println($expression)
+    function println($strings)
     {
-        echo $expression . PHP_EOL;
+        echo $strings . PHP_EOL;
     }
 }

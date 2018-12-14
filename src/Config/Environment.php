@@ -22,7 +22,7 @@ class Environment
      */
     public static function load($file)
     {
-        $iniParser = new INIParser(['filename' => $file]);
+        $iniParser = new IniParser(['filename' => $file]);
         if (!$iniParser->load()) {
             throw new \Mix\Exceptions\NotFoundException("Environment file does not exist: {$file}.");
         }

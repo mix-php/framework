@@ -4,7 +4,6 @@ namespace Mix\Http;
 
 use Mix\Core\BaseObject;
 use Mix\Core\Coroutine;
-use Mix\Facades\Output;
 use Mix\Helpers\ProcessHelper;
 
 /**
@@ -139,15 +138,15 @@ _/ / / / / / / /\ \/ / /_/ / / / / /_/ /
 
 
 EOL;
-        Output::writeln('Server      Name:      mix-httpd');
-        Output::writeln('Framework   Version:   ' . \Mix::VERSION);
-        Output::writeln("PHP         Version:   {$phpVersion}");
-        Output::writeln("Swoole      Version:   {$swooleVersion}");
-        Output::writeln("Listen      Addr:      {$this->_host}");
-        Output::writeln("Listen      Port:      {$this->_port}");
-        Output::writeln('Hot         Update:    ' . ($this->settings['max_request'] == 1 ? 'enabled' : 'disabled'));
-        Output::writeln('Coroutine   Mode:      ' . ($this->settings['enable_coroutine'] ? 'enabled' : 'disabled'));
-        Output::writeln("Config      File:      {$this->virtualHost['configFile']}");
+        println('Server      Name:      mix-httpd');
+        println('Framework   Version:   ' . \Mix::VERSION);
+        println("PHP         Version:   {$phpVersion}");
+        println("Swoole      Version:   {$swooleVersion}");
+        println("Listen      Addr:      {$this->_host}");
+        println("Listen      Port:      {$this->_port}");
+        println('Hot         Update:    ' . ($this->settings['max_request'] == 1 ? 'enabled' : 'disabled'));
+        println('Coroutine   Mode:      ' . ($this->settings['enable_coroutine'] ? 'enabled' : 'disabled'));
+        println("Config      File:      {$this->virtualHost['configFile']}");
     }
 
 }

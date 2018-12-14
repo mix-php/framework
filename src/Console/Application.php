@@ -87,14 +87,26 @@ class Application extends \Mix\Core\Application
     {
         println('');
         println('Commands:');
-        $prevPrefix = '';
-        foreach ($this->commands as $command => $item) {
-            $prefix = explode(' ', $command)[0];
-            if ($prefix != $prevPrefix) {
-                $prevPrefix = $prefix;
-                println('  ' . $prefix);
+        $lastCommand = '';
+        foreach ($this->commands as $key => $item) {
+            $command    = $key;
+            $subCommand = '';
+            if (strpos($key, ' ') !== false) {
+                list($command, $subCommand) = explode(' ', $key);
             }
-            println(str_repeat(' ', 4) . $command . (isset($item['description']) ? "\t{$item['description']}" : ''));
+            $description = '';
+            if (is_array($item) && isset($item['description'])) {
+                $description = $item['description'];
+            }
+            if ($command != $lastCommand && $subCommand != '') {
+                println("  {$command}");
+            }
+            if ($subCommand == '') {
+                println("  {$command}\t{$item['description']}");
+            } else {
+                println("    {$command} {$subCommand}\t{$item['description']}");
+            }
+            $lastCommand = $command;
         }
     }
 
@@ -105,7 +117,10 @@ class Application extends \Mix\Core\Application
             throw new \Mix\Exceptions\NotFoundException("'{$command}' is not command, see '-h/--help'.");
         }
         // 实例化控制器
-        $shortClass    = $this->commands[$command];
+        $shortClass = $this->commands[$command];
+        if (is_array($shortClass)) {
+            $shortClass = array_shift($shortClass);
+        }
         $shortClass    = str_replace('/', "\\", $shortClass);
         $commandDir    = \Mix\Helpers\FileSystemHelper::dirname($shortClass);
         $commandDir    = $commandDir == '.' ? '' : "$commandDir\\";

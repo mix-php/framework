@@ -5,11 +5,11 @@ namespace Mix\Config;
 use Mix\Core\BaseObject;
 
 /**
- * Class INIParser
+ * Class IniParser
  * @package Mix\Config
  * @author 刘健 <coder.liu@qq.com>
  */
-class INIParser extends BaseObject
+class IniParser extends BaseObject
 {
 
     /**

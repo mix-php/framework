@@ -27,12 +27,6 @@ class ProcessHelper
         return @cli_set_process_title($title);
     }
 
-    // 检查 PID 是否运行
-    public static function isRunning($pid)
-    {
-        return self::kill($pid, 0);
-    }
-
     // kill 进程
     public static function kill($pid, $signal = null)
     {
@@ -46,27 +40,6 @@ class ProcessHelper
     public static function getPid()
     {
         return getmypid();
-    }
-
-    // 写入 PID 文件
-    public static function writePidFile($pidFile)
-    {
-        $pid = ProcessHelper::getPid();
-        $ret = file_put_contents($pidFile, $pid, LOCK_EX);
-        return $ret ? true : false;
-    }
-
-    // 读取 PID 文件
-    public static function readPidFile($pidFile)
-    {
-        if (!file_exists($pidFile)) {
-            return false;
-        }
-        $pid = file_get_contents($pidFile);
-        if (self::isRunning($pid)) {
-            return $pid;
-        }
-        return false;
     }
 
 }

@@ -24,7 +24,7 @@
     },
     "files": [
       "src/Mix.php",
-      "src/Helpers/functions.php"
+      "src/functions.php"
     ]
   }
 }

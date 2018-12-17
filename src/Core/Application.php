@@ -3,13 +3,12 @@
 namespace Mix\Core;
 
 use Mix\Container\Container;
-use Apps\Common\Core\ApplicationInterface;
 
 /**
  * App类
  * @author 刘健 <coder.liu@qq.com>
  */
-class Application extends BaseObject implements ApplicationInterface
+class Application extends BaseObject implements \ApplicationInterface
 {
 
     // 应用调试

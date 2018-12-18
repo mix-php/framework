@@ -11,7 +11,11 @@ abstract class BaseObject implements StaticInstanceInterface
 
     use StaticInstanceTrait;
 
-    // 构造
+    /**
+     * 构造
+     * BaseObject constructor.
+     * @param array $config
+     */
     public function __construct($config = [])
     {
         // 执行构造事件
@@ -19,28 +23,36 @@ abstract class BaseObject implements StaticInstanceInterface
         // 构建配置
         $config = \Mix::configure($config);
         // 导入属性
-        \Mix::importAttributes($this, $config);
+        \Mix::importProperties($this, $config);
         // 执行初始化事件
         $this->onInitialize();
     }
 
-    // 析构
+    /**
+     * 析构
+     */
     public function __destruct()
     {
         $this->onDestruct();
     }
 
-    // 构造事件
+    /**
+     * 构造事件
+     */
     public function onConstruct()
     {
     }
 
-    // 初始化事件
+    /**
+     * 初始化事件
+     */
     public function onInitialize()
     {
     }
 
-    // 析构事件
+    /**
+     * 析构事件
+     */
     public function onDestruct()
     {
     }

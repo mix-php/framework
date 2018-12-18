@@ -61,20 +61,20 @@ class Mix
             $class      = get_class($object);
             $docComment = (new \ReflectionClass($class))->getProperty($name)->getDocComment();
             if ($docComment) {
-                $key       = '@var';
-                $length    = strlen($key);
-                $start     = strpos($docComment, $key);
-                $end       = strpos($docComment, '*', $start + $length);
-                $tmp       = substr($docComment, $start + $length, $end - $start - $length);
-                $tmp       = explode(' ', trim($tmp));
-                $className = array_shift($tmp);
-                $className = substr($className, 0, 1) === '\\' ? $className : '';
-                if ($className) {
-                    if (!interface_exists($className) && !class_exists($className)) {
-                        throw new \Exception("Interface or class not found, class: {$class}, property: {$name}, @var: {$className}");
+                $key   = '@var';
+                $len   = strlen($key);
+                $start = strpos($docComment, $key);
+                $end   = strpos($docComment, '*', $start + $len);
+                $tmp   = substr($docComment, $start + $len, $end - $start - $len);
+                $tmp   = explode(' ', trim($tmp));
+                $var   = array_shift($tmp);
+                $var   = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
+                if ($var) {
+                    if (!interface_exists($var) && !class_exists($var)) {
+                        throw new \Exception("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
                     }
-                    if (substr($className, 1) !== get_class($value)) {
-                        throw new \Exception("The type of the imported property does not match, class: {$class}, property: {$name}");
+                    if (!($value instanceof $var)) {
+                        throw new \Exception("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
                     }
                 }
             }

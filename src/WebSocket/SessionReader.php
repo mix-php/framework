@@ -11,11 +11,14 @@ use Mix\Core\Component;
 class SessionReader extends Component
 {
 
-    // 保存处理者
-    public $saveHandler;
+    /**
+     * 处理者
+     * @var \Mix\Redis\RedisConnection
+     */
+    public $handler;
 
-    // 保存的Key前缀
-    public $saveKeyPrefix = 'SESSION:';
+    // Key前缀
+    public $keyPrefix = 'SESSION:';
 
     // session名
     public $name = 'session_id';
@@ -34,7 +37,7 @@ class SessionReader extends Component
         // 载入session_id
         $this->_sessionId = $request->get($this->name) or
         $this->_sessionId = $request->cookie($this->name);
-        $this->_sessionKey = $this->saveKeyPrefix . $this->_sessionId;
+        $this->_sessionKey = $this->keyPrefix . $this->_sessionId;
         // 返回
         return $this;
     }
@@ -43,20 +46,20 @@ class SessionReader extends Component
     public function close()
     {
         // 关闭连接
-        $this->saveHandler->disconnect();
+        $this->handler->disconnect();
     }
 
     // 取值
     public function get($name = null)
     {
         if (is_null($name)) {
-            $array = $this->saveHandler->hGetAll($this->_sessionKey);
+            $array = $this->handler->hGetAll($this->_sessionKey);
             foreach ($array as $key => $item) {
                 $array[$key] = unserialize($item);
             }
             return $array ?: [];
         }
-        $reslut = $this->saveHandler->hmGet($this->_sessionKey, [$name]);
+        $reslut = $this->handler->hmGet($this->_sessionKey, [$name]);
         $value  = array_shift($reslut);
         return $value === false ? null : unserialize($value);
     }
@@ -64,7 +67,7 @@ class SessionReader extends Component
     // 判断是否存在
     public function has($name)
     {
-        $exist = $this->saveHandler->hExists($this->_sessionKey, $name);
+        $exist = $this->handler->hExists($this->_sessionKey, $name);
         return $exist ? true : false;
     }
 

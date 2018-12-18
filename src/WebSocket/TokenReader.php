@@ -11,11 +11,14 @@ use Mix\Core\Component;
 class TokenReader extends Component
 {
 
-    // 保存处理者
-    public $saveHandler;
+    /**
+     * 处理者
+     * @var \Mix\Redis\RedisConnection
+     */
+    public $handler;
 
-    // 保存的Key前缀
-    public $saveKeyPrefix = 'TOKEN:';
+    // Key前缀
+    public $keyPrefix = 'TOKEN:';
 
     // session名
     public $name = 'access_token';
@@ -34,7 +37,7 @@ class TokenReader extends Component
     {
         parent::onInitialize();
         // 前缀处理
-        $this->_tokenPrefix = $this->saveKeyPrefix;
+        $this->_tokenPrefix = $this->keyPrefix;
     }
 
     // 载入TokenID
@@ -54,20 +57,20 @@ class TokenReader extends Component
     public function close()
     {
         // 关闭连接
-        $this->saveHandler->disconnect();
+        $this->handler->disconnect();
     }
 
     // 取值
     public function get($name = null)
     {
         if (is_null($name)) {
-            $array = $this->saveHandler->hGetAll($this->_tokenKey);
+            $array = $this->handler->hGetAll($this->_tokenKey);
             foreach ($array as $key => $item) {
                 $array[$key] = unserialize($item);
             }
             return $array ?: [];
         }
-        $reslut = $this->saveHandler->hmGet($this->_tokenKey, [$name]);
+        $reslut = $this->handler->hmGet($this->_tokenKey, [$name]);
         $value  = array_shift($reslut);
         return $value === false ? null : unserialize($value);
     }
@@ -75,7 +78,7 @@ class TokenReader extends Component
     // 判断是否存在
     public function has($name)
     {
-        $exist = $this->saveHandler->hExists($this->_tokenKey, $name);
+        $exist = $this->handler->hExists($this->_tokenKey, $name);
         return $exist ? true : false;
     }
 

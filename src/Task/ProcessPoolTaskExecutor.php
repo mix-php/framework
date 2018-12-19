@@ -347,7 +347,7 @@ class ProcessPoolTaskExecutor extends BaseObject
     {
         // 取出进程信息
         if (!isset($this->_processPool[$workerPid])) {
-            throw new \Mix\Exceptions\TaskException('RebootProcess Error: no pid.');
+            throw new \Mix\Task\Exceptions\TaskException('RebootProcess Error: no pid.');
         }
         list($processType, $workerId) = $this->_processPool[$workerPid];
         // 删除旧引用

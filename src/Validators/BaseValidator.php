@@ -55,7 +55,7 @@ class BaseValidator extends BaseObject
             // 预处理
             foreach ($this->options as $name => $option) {
                 if (!in_array($name, $this->_enabledOptions)) {
-                    throw new \Mix\Exceptions\ValidatorException("属性 {$this->attribute} 的验证选项 {$name} 不存在");
+                    throw new \Mix\Validators\Exceptions\ValidatorException("属性 {$this->attribute} 的验证选项 {$name} 不存在");
                 }
                 // 不存在的选项转为设置
                 if (!method_exists($this, $name)) {

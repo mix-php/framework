@@ -62,10 +62,10 @@ class Validator extends BaseObject
     {
         $scenarios = $this->scenarios();
         if (!isset($scenarios[$scenario])) {
-            throw new \Mix\Exceptions\ValidatorException("场景不存在：{$scenario}");
+            throw new \Mix\Validators\Exceptions\ValidatorException("场景不存在：{$scenario}");
         }
         if (!isset($scenarios[$scenario]['required'])) {
-            throw new \Mix\Exceptions\ValidatorException("场景 {$scenario} 未定义 required 选项");
+            throw new \Mix\Validators\Exceptions\ValidatorException("场景 {$scenario} 未定义 required 选项");
         }
         if (!isset($scenarios[$scenario]['optional'])) {
             $scenarios[$scenario]['optional'] = [];
@@ -77,7 +77,7 @@ class Validator extends BaseObject
     public function validate()
     {
         if (!isset($this->_scenario)) {
-            throw new \Mix\Exceptions\ValidatorException("场景未设置");
+            throw new \Mix\Validators\Exceptions\ValidatorException("场景未设置");
         }
         $this->_errors      = [];
         $scenario           = $this->_scenario;
@@ -87,7 +87,7 @@ class Validator extends BaseObject
         // 判断是否定义了规则
         foreach ($scenarioAttributes as $attribute) {
             if (!isset($rules[$attribute])) {
-                throw new \Mix\Exceptions\ValidatorException("属性 {$attribute} 未定义规则");
+                throw new \Mix\Validators\Exceptions\ValidatorException("属性 {$attribute} 未定义规则");
             }
         }
         // 验证器验证
@@ -97,7 +97,7 @@ class Validator extends BaseObject
             }
             $validatorType = array_shift($rule);
             if (!isset($this->_validators[$validatorType])) {
-                throw new \Mix\Exceptions\ValidatorException("属性 {$attribute} 的验证类型 {$validatorType} 不存在");
+                throw new \Mix\Validators\Exceptions\ValidatorException("属性 {$attribute} 的验证类型 {$validatorType} 不存在");
             }
             $attributeValue = isset($this->attributes[$attribute]) ? $this->attributes[$attribute] : null;
             // 实例化

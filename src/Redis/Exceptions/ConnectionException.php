@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Exceptions;
+namespace Mix\Redis\Exceptions;
 
 /**
  * ConnectionException类

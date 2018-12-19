@@ -24,7 +24,7 @@ class Environment
     {
         $iniParser = new IniParser(['filename' => $file]);
         if (!$iniParser->load()) {
-            throw new \Mix\Exceptions\NotFoundException("Environment file does not exist: {$file}.");
+            throw new \Mix\Exceptions\ConfigException("Environment file does not exist: {$file}.");
         }
         $data        = $iniParser->sections();
         self::$_data = array_merge($data, $_SERVER, $_ENV);

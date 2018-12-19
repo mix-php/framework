@@ -8,5 +8,4 @@ namespace Mix\Exceptions;
  */
 class ConfigException extends \RuntimeException
 {
-
 }

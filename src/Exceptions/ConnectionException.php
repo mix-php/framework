@@ -8,5 +8,4 @@ namespace Mix\Exceptions;
  */
 class ConnectionException extends \RuntimeException
 {
-
 }

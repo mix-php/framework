@@ -8,5 +8,4 @@ namespace Mix\Exceptions;
  */
 class DebugException extends \RuntimeException
 {
-
 }

@@ -8,5 +8,4 @@ namespace Mix\Exceptions;
  */
 class RouteException extends \RuntimeException
 {
-
 }

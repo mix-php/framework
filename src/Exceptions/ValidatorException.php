@@ -8,5 +8,4 @@ namespace Mix\Exceptions;
  */
 class ValidatorException extends \RuntimeException
 {
-
 }

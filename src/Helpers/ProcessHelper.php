@@ -9,13 +9,20 @@ namespace Mix\Helpers;
 class ProcessHelper
 {
 
-    // 使当前进程蜕变为一个守护进程
-    public static function daemon($closeStandardInputOutput = true)
+    /**
+     * 使当前进程蜕变为一个守护进程
+     * @param bool $close
+     */
+    public static function daemon($close = true)
     {
-        return \Swoole\Process::daemon(true, !$closeStandardInputOutput);
+        return \Swoole\Process::daemon(true, !$close);
     }
 
-    // 设置进程标题
+    /**
+     * 设置进程标题
+     * @param $title
+     * @return bool
+     */
     public static function setProcessTitle($title)
     {
         if (PhpInfoHelper::isMac()) {
@@ -27,7 +34,12 @@ class ProcessHelper
         return @cli_set_process_title($title);
     }
 
-    // kill 进程
+    /**
+     * kill 进程
+     * @param $pid
+     * @param null $signal
+     * @return bool
+     */
     public static function kill($pid, $signal = null)
     {
         if (is_null($signal)) {
@@ -36,10 +48,31 @@ class ProcessHelper
         return \Swoole\Process::kill($pid, $signal);
     }
 
-    // 返回当前进程ID
+    /**
+     * 返回当前进程ID
+     * @return int
+     */
     public static function getPid()
     {
         return getmypid();
+    }
+
+    /**
+     * 批量设置异步信号监听
+     * @param $signals array
+     * @param $callback callable
+     */
+    public static function signal($signals, $callback)
+    {
+        foreach ($signals as $signal) {
+            \Swoole\Process::signal($signal, function ($signal) use ($callback) {
+                try {
+                    call_user_func($callback, $signal);
+                } catch (\Throwable $e) {
+                    \Mix::$app->error->handleException($e);
+                }
+            });
+        }
     }
 
 }

@@ -71,10 +71,10 @@ class Mix
                 $var   = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
                 if ($var) {
                     if (!interface_exists($var) && !class_exists($var)) {
-                        throw new \Exception("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
+                        throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
                     }
                     if (!($value instanceof $var)) {
-                        throw new \Exception("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+                        throw new \Mix\Exceptions\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
                     }
                 }
             }

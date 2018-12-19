@@ -3,10 +3,10 @@
 namespace Mix\Exceptions;
 
 /**
- * Class DependencyInjectionException
+ * Class InvalidArgumentException
  * @package Mix\Exceptions
  * @author 刘健 <coder.liu@qq.com>
  */
-class DependencyInjectionException extends \RuntimeException
+class InvalidArgumentException extends \InvalidArgumentException
 {
 }

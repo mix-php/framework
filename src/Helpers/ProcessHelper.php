@@ -60,16 +60,18 @@ class ProcessHelper
     /**
      * 批量设置异步信号监听
      * @param $signals array
-     * @param $callback callable
+     * @param $callback callable|null
      */
     public static function signal($signals, $callback)
     {
         foreach ($signals as $signal) {
+            if (is_null($callback)) {
+                \Swoole\Process::signal($signal, null);
+                continue;
+            }
             \Swoole\Process::signal($signal, function ($signal) use ($callback) {
                 try {
-                    if (is_callable($callback)) {
-                        call_user_func($callback, $signal);
-                    }
+                    call_user_func($callback, $signal);
                 } catch (\Throwable $e) {
                     \Mix::$app->error->handleException($e);
                 }

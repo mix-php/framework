@@ -67,7 +67,9 @@ class ProcessHelper
         foreach ($signals as $signal) {
             \Swoole\Process::signal($signal, function ($signal) use ($callback) {
                 try {
-                    call_user_func($callback, $signal);
+                    if (is_callable($callback)) {
+                        call_user_func($callback, $signal);
+                    }
                 } catch (\Throwable $e) {
                     \Mix::$app->error->handleException($e);
                 }

@@ -77,35 +77,21 @@ class Dispatcher extends BaseObject
     public function dispatch()
     {
         tgo(function () {
-            $chan = new Channel();
-            tgo(function () use ($chan) {
-                while (true) {
-                    $job = $this->jobQueue->pop();
-                    if (!$job) {
-                        return;
-                    }
-                    $chan->push(['job', $job]);
-                }
-            });
-            tgo(function () use ($chan) {
-                $data = $this->_quit->pop();
-                $chan->push(['quit', $data]);
-            });
             while (true) {
-                list($flag, $job) = $chan->pop();
-                switch ($flag) {
-                    case 'job':
-                        $jobChannel = $this->workerPool->pop();
-                        $jobChannel->push($job);
-                        break;
-                    case 'quit':
-                        foreach ($this->workers as $worker) {
-                            $worker->stop();
-                        }
-                        $this->jobQueue->close();
-                        return;
+                $job = $this->jobQueue->pop();
+                if (!$job) {
+                    return;
                 }
+                $jobChannel = $this->workerPool->pop();
+                $jobChannel->push($job);
             }
+        });
+        tgo(function () {
+            $this->_quit->pop();
+            foreach ($this->workers as $worker) {
+                $worker->stop();
+            }
+            $this->jobQueue->close();
         });
     }
 

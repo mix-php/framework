@@ -48,33 +48,19 @@ class Worker extends BaseObject
     public function start()
     {
         tgo(function () {
-            $chan = new Channel();
-            tgo(function () use ($chan) {
-                while (true) {
-                    $this->workerPool->push($this->jobChannel);
-                    $job = $this->jobChannel->pop();
-                    if (!$job) {
-                        return;
-                    }
-                    $chan->push(['job', $job]);
-                }
-            });
-            tgo(function () use ($chan) {
-                $data = $this->_quit->pop();
-                $chan->push(['quit', $data]);
-            });
             while (true) {
-                list($flag, $job) = $chan->pop();
-                switch ($flag) {
-                    case 'job':
-                        list($callback, $params) = $job;
-                        call_user_func_array($callback, $params);
-                        break;
-                    case 'quit':
-                        $this->jobChannel->close();
-                        return;
+                $this->workerPool->push($this->jobChannel);
+                $job = $this->jobChannel->pop();
+                if (!$job) {
+                    return;
                 }
+                list($callback, $params) = $job;
+                call_user_func_array($callback, $params);
             }
+        });
+        tgo(function () {
+            $this->_quit->pop();
+            $this->jobChannel->close();
         });
     }
 

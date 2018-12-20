@@ -7,7 +7,7 @@ use Mix\Http\View;
 
 /**
  * Controller类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Controller extends BaseObject
 {

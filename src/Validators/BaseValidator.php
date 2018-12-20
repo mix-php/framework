@@ -6,7 +6,7 @@ use Mix\Core\BaseObject;
 
 /**
  * 基础验证器类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class BaseValidator extends BaseObject
 {

@@ -5,7 +5,7 @@ namespace Mix\Config;
 /**
  * Class Environment
  * @package Mix\Config
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Environment
 {

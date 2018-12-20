@@ -8,7 +8,7 @@ use Mix\Core\Channel;
 /**
  * Class Dispatcher
  * @package Mix\Concurrent
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Dispatcher extends BaseObject
 {

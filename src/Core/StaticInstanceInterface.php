@@ -4,7 +4,7 @@ namespace Mix\Core;
 
 /**
  * Interface StaticInstanceInterface
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 interface StaticInstanceInterface
 {

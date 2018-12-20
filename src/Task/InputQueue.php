@@ -4,7 +4,7 @@ namespace Mix\Task;
 
 /**
  * 输入消息队列
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class InputQueue extends BaseQueue
 {

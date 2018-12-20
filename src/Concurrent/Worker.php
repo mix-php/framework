@@ -8,7 +8,7 @@ use Mix\Core\Channel;
 /**
  * Class Worker
  * @package Mix\Concurrent
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Worker extends BaseObject
 {

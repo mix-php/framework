@@ -7,7 +7,7 @@ use Mix\Pool\ConnectionPoolInterface;
 
 /**
  * Class RedisPool
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class RedisPool extends ConnectionPool implements ConnectionPoolInterface
 {

@@ -8,7 +8,7 @@ use Mix\Core\BaseObject;
 
 /**
  * 容器类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Container extends BaseObject
 {

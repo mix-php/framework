@@ -6,7 +6,7 @@ use Mix\Core\Coroutine;
 
 /**
  * PDOCoroutine组件
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class PDOConnection extends \Mix\Database\Persistent\PDOConnection
 {

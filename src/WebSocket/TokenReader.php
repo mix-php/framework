@@ -6,7 +6,7 @@ use Mix\Core\Component;
 
 /**
  * TokenReader组件
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class TokenReader extends Component
 {

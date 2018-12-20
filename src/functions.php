@@ -2,7 +2,7 @@
 
 /**
  * 助手函数
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 
 if (!function_exists('app')) {

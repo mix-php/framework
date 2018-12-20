@@ -8,7 +8,7 @@ use Mix\Helpers\ProcessHelper;
 
 /**
  * 进程池任务执行器类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class ProcessPoolTaskExecutor extends BaseObject
 {

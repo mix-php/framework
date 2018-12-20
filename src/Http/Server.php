@@ -8,7 +8,7 @@ use Mix\Helpers\ProcessHelper;
 
 /**
  * Http服务器类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Server extends BaseObject
 {

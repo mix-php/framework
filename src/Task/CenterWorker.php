@@ -4,7 +4,7 @@ namespace Mix\Task;
 
 /**
  * 工作者基类(中)
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class CenterWorker extends BaseWorker
 {

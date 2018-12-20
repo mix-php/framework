@@ -7,7 +7,7 @@ use Mix\Core\BaseObject;
 
 /**
  * 存储空间类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Bucket extends BaseObject
 {

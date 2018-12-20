@@ -4,7 +4,7 @@ namespace Mix\Core;
 
 /**
  * 组件基类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 abstract class Component extends BaseObject implements ComponentInterface
 {

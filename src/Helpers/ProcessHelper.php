@@ -25,7 +25,7 @@ class ProcessHelper
      */
     public static function setProcessTitle($title)
     {
-        if (PhpInfoHelper::isMac()) {
+        if (PhpHelper::isMac() || PhpHelper::isWin()) {
             return false;
         }
         if (!function_exists('cli_set_process_title')) {

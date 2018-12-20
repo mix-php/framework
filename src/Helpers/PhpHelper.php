@@ -3,10 +3,10 @@
 namespace Mix\Helpers;
 
 /**
- * PhpInfoHelper类
+ * PhpHelper类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class PhpInfoHelper
+class PhpHelper
 {
 
     // 是否为 CLI 模式
@@ -18,7 +18,7 @@ class PhpInfoHelper
     // 是否为 Win 系统
     public static function isWin()
     {
-        return stripos(PHP_OS, 'WINNT') !== false;
+        return stripos(PHP_OS, 'WIN') !== false;
     }
 
     // 是否为 Mac 系统

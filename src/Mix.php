@@ -64,17 +64,19 @@ class Mix
                 $key   = '@var';
                 $len   = strlen($key);
                 $start = strpos($docComment, $key);
-                $end   = strpos($docComment, '*', $start + $len);
-                $tmp   = substr($docComment, $start + $len, $end - $start - $len);
-                $tmp   = explode(' ', trim($tmp));
-                $var   = array_shift($tmp);
-                $var   = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
-                if ($var) {
-                    if (!interface_exists($var) && !class_exists($var)) {
-                        throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
-                    }
-                    if (!($value instanceof $var)) {
-                        throw new \Mix\Exceptions\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+                if ($start !== false) {
+                    $end = strpos($docComment, '*', $start + $len);
+                    $tmp = substr($docComment, $start + $len, $end - $start - $len);
+                    $tmp = explode(' ', trim($tmp));
+                    $var = array_shift($tmp);
+                    $var = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
+                    if ($var) {
+                        if (!interface_exists($var) && !class_exists($var)) {
+                            throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
+                        }
+                        if (!($value instanceof $var)) {
+                            throw new \Mix\Exceptions\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+                        }
                     }
                 }
             }

@@ -21,7 +21,7 @@ class Logger extends Component
 
     /**
      * 处理者
-     * @var \Mix\Log\FileHandler
+     * @var \Mix\Log\HandlerInterface
      */
     public $handler;
 

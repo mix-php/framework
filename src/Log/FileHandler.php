@@ -8,7 +8,7 @@ use Mix\Core\BaseObject;
  * FileHandler类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class FileHandler extends BaseObject
+class FileHandler extends BaseObject implements HandlerInterface
 {
 
     // 轮转规则

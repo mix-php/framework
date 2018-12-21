@@ -57,15 +57,15 @@ class Mix
     public static function importProperties($object, $config)
     {
         foreach ($config as $name => $value) {
-            // 类型检测
+            // 注释类型检测
             $class      = get_class($object);
             $docComment = (new \ReflectionClass($class))->getProperty($name)->getDocComment();
             if ($docComment) {
                 $key   = '@var';
-                $len   = strlen($key);
+                $len   = 4;
                 $start = strpos($docComment, $key);
-                if ($start !== false) {
-                    $end = strpos($docComment, '*', $start + $len);
+                $end   = strpos($docComment, '*', $start + $len);
+                if ($start !== false && $end !== false) {
                     $tmp = substr($docComment, $start + $len, $end - $start - $len);
                     $tmp = explode(' ', trim($tmp));
                     $var = array_shift($tmp);

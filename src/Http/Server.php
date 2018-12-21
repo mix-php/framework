@@ -23,16 +23,22 @@ class Server extends BaseObject
     protected $_settings = [
         // 开启协程
         'enable_coroutine' => false,
+        // 主进程事件处理线程数
+        'reactor_num'      => 8,
+        // 工作进程数
+        'worker_num'       => 8,
+        // 任务进程数
+        'task_worker_num'  => 0,
         // 进程的最大任务数
         'max_request'      => 10000,
-        // 异步安全重启
-        'reload_async'     => true,
-        // 退出等待时间
-        'max_wait_time'    => 60,
         // PID 文件
         'pid_file'         => '/var/run/mix-httpd.pid',
         // 日志文件路径
         'log_file'         => '/tmp/mix-httpd.log',
+        // 异步安全重启
+        'reload_async'     => true,
+        // 退出等待时间
+        'max_wait_time'    => 60,
         // 开启后，PDO 协程多次 prepare 才不会有 40ms 延迟
         'open_tcp_nodelay' => true,
     ];
@@ -139,11 +145,14 @@ _/ / / / / / / /\ \/ / /_/ / / / / /_/ /
 
 EOL;
         println('Server      Name:      mix-httpd');
+        println('System      Name:      ' . strtolower(PHP_OS));
         println('Framework   Version:   ' . \Mix::VERSION);
         println("PHP         Version:   {$phpVersion}");
         println("Swoole      Version:   {$swooleVersion}");
         println("Listen      Addr:      {$this->_host}");
         println("Listen      Port:      {$this->_port}");
+        println('Reactor     Num:       ' . $this->settings['reactor_num']);
+        println('Worker      Num:       ' . $this->settings['worker_num']);
         println('Hot         Update:    ' . ($this->settings['max_request'] == 1 ? 'enabled' : 'disabled'));
         println('Coroutine   Mode:      ' . ($this->settings['enable_coroutine'] ? 'enabled' : 'disabled'));
         println("Config      File:      {$this->virtualHost['configFile']}");

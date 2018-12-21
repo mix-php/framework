@@ -80,15 +80,11 @@ class Coroutine
             }
             self::$idMap[$id] = $tid;
             // 执行闭包
-            $hook = new \Mix\Core\ChannelHook();
             try {
-                $closure($hook);
+                $closure();
             } catch (\Throwable $e) {
-                // 钩子处理
-                if (!$hook->handle($e)) {
-                    // 输出错误
-                    \Mix::$app->error->handleException($e);
-                }
+                // 输出错误
+                \Mix::$app->error->handleException($e);
             }
             // 清理协程资源
             unset(self::$idMap[$id]);

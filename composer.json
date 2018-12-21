@@ -1,5 +1,5 @@
 {
-  "name": "mixstart/mixphp-framework",
+  "name": "mixstart/mix-framework",
   "description": "MixPHP 框架核心 http://www.mixphp.cn",
   "type": "framework",
   "keywords": [
@@ -20,11 +20,11 @@
   },
   "autoload": {
     "psr-4": {
-      "mix\\": "src/"
+      "Mix\\": "src/"
     },
     "files": [
       "src/Mix.php",
-      "src/helpers/functions.php"
+      "src/functions.php"
     ]
   }
 }

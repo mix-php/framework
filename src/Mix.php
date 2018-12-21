@@ -2,50 +2,29 @@
 
 /**
  * Mix类
- * @author 刘健 <coder.liu@qq.com>
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Mix
 {
 
-    // 版本号
+    /**
+     * 版本号
+     */
     const VERSION = '1.1.1';
 
-    // App实例
-    protected static $_app;
+    /**
+     * App实例
+     * @var \Mix\Http\Application|\Mix\Console\Application
+     */
+    public static $app;
 
     /**
-     * 返回App，并设置组件命名空间
-     *
-     * @return \mix\http\Application|\mix\console\Application
+     * 构建配置
+     * @param $config
+     * @param bool $newInstance
+     * @return mixed
      */
-    public static function app($prefix = null)
-    {
-        // 获取App
-        $app = self::getApp();
-        // 设置组件命名空间
-        $app->setComponentPrefix($prefix);
-        // 返回App
-        return $app;
-    }
-
-    /**
-     * 获取App
-     *
-     * @return \mix\http\Application|\mix\console\Application
-     */
-    protected static function getApp()
-    {
-        return self::$_app;
-    }
-
-    // 设置App
-    public static function setApp($app)
-    {
-        self::$_app = $app;
-    }
-
-    // 构建配置
-    public static function configure($config, $instantiation = false)
+    public static function configure($config, $newInstance = false)
     {
         foreach ($config as $key => $value) {
             // 子类实例化
@@ -56,18 +35,12 @@ class Mix
                 }
                 // 引用其他组件
                 if (isset($value['component'])) {
-                    $componentPrefix = null;
-                    $componentName   = $value['component'];
-                    if (strpos($value['component'], '.') !== false) {
-                        $fragments       = explode('.', $value['component']);
-                        $componentName   = array_pop($fragments);
-                        $componentPrefix = implode('.', $fragments);
-                    }
-                    $config[$key] = self::app($componentPrefix)->$componentName;
+                    $name         = $value['component'];
+                    $config[$key] = self::$app->$name;
                 }
             }
         }
-        if ($instantiation) {
+        if ($newInstance) {
             $class = $config['class'];
             unset($config['class']);
             return new $class($config);
@@ -75,15 +48,49 @@ class Mix
         return $config;
     }
 
-    // 导入属性
-    public static function importAttributes($object, $config)
+    /**
+     * 导入属性
+     * @param $object
+     * @param $config
+     * @return mixed
+     */
+    public static function importProperties($object, $config)
     {
         foreach ($config as $name => $value) {
+            // 注释类型检测
+            $class      = get_class($object);
+            $docComment = (new \ReflectionClass($class))->getProperty($name)->getDocComment();
+            if ($docComment) {
+                $key   = '@var';
+                $len   = 4;
+                $start = strpos($docComment, $key);
+                $end   = strpos($docComment, '*', $start + $len);
+                if ($start !== false && $end !== false) {
+                    $tmp = substr($docComment, $start + $len, $end - $start - $len);
+                    $tmp = explode(' ', trim($tmp));
+                    $var = array_shift($tmp);
+                    $var = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
+                    if ($var) {
+                        if (!interface_exists($var) && !class_exists($var)) {
+                            throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
+                        }
+                        if (!($value instanceof $var)) {
+                            throw new \Mix\Exceptions\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+                        }
+                    }
+                }
+            }
+            // 导入
             $object->$name = $value;
         }
+        return $object;
     }
 
-    // 使用配置创建对象
+    /**
+     * 使用配置创建对象
+     * @param $config
+     * @return mixed
+     */
     public static function createObject($config)
     {
         $class = $config['class'];

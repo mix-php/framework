@@ -47,6 +47,12 @@ class BasePDOConnection extends \Mix\Database\BasePDOConnection
     protected $_pdoSlave;
 
     /**
+     * 使用主库
+     * @var bool|null
+     */
+    protected $_useMaster;
+
+    /**
      * 关闭连接
      */
     public function disconnect()
@@ -54,39 +60,19 @@ class BasePDOConnection extends \Mix\Database\BasePDOConnection
         parent::disconnect();
         $this->_pdoMaster = null;
         $this->_pdoSlave  = null;
+        $this->_useMaster = null;
     }
 
     /**
      * 使用主库
+     * @return $this
      */
     public function useMaster()
     {
-        if (!isset($this->_pdoMaster)) {
-            $this->dsn      = $this->masters[array_rand($this->masters)];
-            $this->username = $this->masterConfig['username'];
-            $this->password = $this->masterConfig['password'];
-            parent::connect();
-            $this->_pdoMaster = $this->_pdo;
-        } else {
-            $this->_pdo = $this->_pdoMaster;
-        }
+        $this->_useMaster = true;
+        return $this;
     }
 
-    /**
-     * 使用从库
-     */
-    public function useSlave()
-    {
-        if (!isset($this->_pdoSlave)) {
-            $this->dsn      = $this->slaves[array_rand($this->slaves)];
-            $this->username = $this->slaveConfig['username'];
-            $this->password = $this->slaveConfig['password'];
-            parent::connect();
-            $this->_pdoSlave = $this->_pdo;
-        } else {
-            $this->_pdo = $this->_pdoSlave;
-        }
-    }
 
     /**
      * 返回结果集
@@ -167,19 +153,65 @@ class BasePDOConnection extends \Mix\Database\BasePDOConnection
             case 'queryColumn':
             case 'queryScalar':
                 if ($this->inTransaction()) {
-                    $this->useMaster();
+                    $this->switchToMasters();
                 } else {
-                    $this->useSlave();
+                    if ($this->_useMaster) {
+                        $this->switchToMasters();
+                    } else {
+                        $this->switchToSlaves();
+                    }
                 }
+                $this->reset();
                 break;
             case 'execute':
-                $this->useMaster();
+                $this->switchToMasters();
+                $this->reset();
                 break;
             case 'beginTransaction':
-                $this->useMaster();
+                $this->switchToMasters();
                 break;
         }
         return call_user_func_array("parent::{$name}", $arguments);
+    }
+
+    /**
+     * 重置
+     */
+    protected function reset()
+    {
+        $this->_useMaster = null;
+    }
+
+    /**
+     * 切换到主库群
+     */
+    protected function switchToMasters()
+    {
+        if (!isset($this->_pdoMaster)) {
+            $this->dsn      = $this->masters[array_rand($this->masters)];
+            $this->username = $this->masterConfig['username'];
+            $this->password = $this->masterConfig['password'];
+            parent::connect();
+            $this->_pdoMaster = $this->_pdo;
+        } else {
+            $this->_pdo = $this->_pdoMaster;
+        }
+    }
+
+    /**
+     * 切换到从库群
+     */
+    protected function switchToSlaves()
+    {
+        if (!isset($this->_pdoSlave)) {
+            $this->dsn      = $this->slaves[array_rand($this->slaves)];
+            $this->username = $this->slaveConfig['username'];
+            $this->password = $this->slaveConfig['password'];
+            parent::connect();
+            $this->_pdoSlave = $this->_pdo;
+        } else {
+            $this->_pdo = $this->_pdoSlave;
+        }
     }
 
     /**

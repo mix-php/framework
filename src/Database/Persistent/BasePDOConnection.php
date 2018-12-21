@@ -9,32 +9,25 @@ namespace Mix\Database\Persistent;
 class BasePDOConnection extends \Mix\Database\BasePDOConnection
 {
 
-    // 重新连接
-    protected function reconnect()
-    {
-        $this->disconnect();
-        $this->connect();
-    }
-
     /**
      * 返回结果集
      * @return \PDOStatement
      */
     public function query()
     {
-        return $this->call(__FUNCTION__, func_get_args());
+        return $this->call(__FUNCTION__);
     }
 
     // 返回一行
     public function queryOne()
     {
-        return $this->call(__FUNCTION__, func_get_args());
+        return $this->call(__FUNCTION__);
     }
 
     // 返回多行
     public function queryAll()
     {
-        return $this->call(__FUNCTION__, func_get_args());
+        return $this->call(__FUNCTION__);
     }
 
     // 返回一列 (第一列)
@@ -46,23 +39,23 @@ class BasePDOConnection extends \Mix\Database\BasePDOConnection
     // 返回一个标量值
     public function queryScalar()
     {
-        return $this->call(__FUNCTION__, func_get_args());
+        return $this->call(__FUNCTION__);
     }
 
     // 执行SQL语句
     public function execute()
     {
-        return $this->call(__FUNCTION__, func_get_args());
+        return $this->call(__FUNCTION__);
     }
 
     // 开始事务
     public function beginTransaction()
     {
-        return $this->call(__FUNCTION__, func_get_args());
+        return $this->call(__FUNCTION__);
     }
 
     // 执行方法
-    public function call($name, $arguments)
+    protected function call($name, $arguments = [])
     {
         try {
             // 执行父类方法
@@ -103,6 +96,13 @@ class BasePDOConnection extends \Mix\Database\BasePDOConnection
             }
         }
         return false;
+    }
+
+    // 重新连接
+    protected function reconnect()
+    {
+        $this->disconnect();
+        $this->connect();
     }
 
 }

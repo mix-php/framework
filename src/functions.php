@@ -21,9 +21,9 @@ if (!function_exists('env')) {
     }
 }
 
-if (!function_exists('tgo')) {
+if (!function_exists('xgo')) {
     // 创建一个带异常捕获的协程
-    function tgo($closure)
+    function xgo($closure)
     {
         \Mix\Core\Coroutine::create($closure);
     }

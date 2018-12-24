@@ -66,13 +66,13 @@ class Coroutine
 
     /**
      * 创建协程
-     * @param $closure
+     * @param callable $function
      */
-    public static function create($closure)
+    public static function create(callable $function)
     {
         $tid = self::tid();
         $top = $tid == self::id();
-        go(function () use ($closure, $tid, $top) {
+        go(function () use ($function, $tid, $top) {
             // 记录协程id关系
             $id = self::id();
             if ($top && $tid == -1) {
@@ -81,7 +81,7 @@ class Coroutine
             self::$idMap[$id] = $tid;
             // 执行闭包
             try {
-                $closure();
+                call_user_func($function);
             } catch (\Throwable $e) {
                 // 输出错误
                 \Mix::$app->error->handleException($e);

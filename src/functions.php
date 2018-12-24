@@ -22,10 +22,10 @@ if (!function_exists('env')) {
 }
 
 if (!function_exists('xgo')) {
-    // 创建一个带异常捕获的协程
-    function xgo($closure)
+    // 创建协程
+    function xgo($function)
     {
-        \Mix\Core\Coroutine::create($closure);
+        \Mix\Core\Coroutine::create($function);
     }
 }
 

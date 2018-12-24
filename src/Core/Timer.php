@@ -6,8 +6,10 @@ namespace Mix\Core;
  * Class Timer
  * @package Mix\Core
  */
-class Timer
+class Timer implements StaticInstanceInterface
 {
+
+    use StaticInstanceTrait;
 
     /**
      * 定时器ID
@@ -20,10 +22,14 @@ class Timer
      * 一次性执行
      * @param int $msec
      * @param callable $callback
+     * @return int
      */
-    public static function after(int $msec, callable $callback)
+    public function after(int $msec, callable $callback)
     {
-        return swoole_timer_after($msec, function () use ($callback) {
+        // 清除旧定时器
+        $this->clear();
+        // 设置定时器
+        $timerId = swoole_timer_after($msec, function () use ($callback) {
             // 执行闭包
             try {
                 call_user_func($callback);
@@ -32,6 +38,10 @@ class Timer
                 \Mix::$app->error->handleException($e);
             }
         });
+        // 保存id
+        $this->_timerId = $timerId;
+        // 返回
+        return $timerId;
     }
 
     /**
@@ -39,6 +49,7 @@ class Timer
      * 持续触发
      * @param int $msec
      * @param callable $callback
+     * @return int
      */
     public function tick(int $msec, callable $callback)
     {

@@ -57,6 +57,12 @@ class Application extends BaseObject implements \ApplicationInterface
         }
     }
 
+    // 判断组件是否存在
+    public function has($name)
+    {
+        return isset($this->components[$name]);
+    }
+
     // 获取配置
     public function config($name)
     {

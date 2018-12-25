@@ -3,6 +3,7 @@
 namespace Mix\Core;
 
 use Mix\Container\Container;
+use Mix\Helpers\FileSystemHelper;
 
 /**
  * App类
@@ -19,6 +20,12 @@ class Application extends BaseObject implements \ApplicationInterface
 
     // 基础路径
     public $basePath = '';
+
+    // 配置路径
+    public $configPath = 'config';
+
+    // 运行目录路径
+    public $runtimePath = 'runtime';
 
     // 组件配置
     public $components = [];
@@ -74,13 +81,25 @@ class Application extends BaseObject implements \ApplicationInterface
     // 获取配置目录路径
     public function getConfigPath()
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'config';
+        if (!FileSystemHelper::isAbsolute($this->configPath)) {
+            if ($this->configPath == '') {
+                return $this->basePath;
+            }
+            return $this->basePath . DIRECTORY_SEPARATOR . $this->configPath;
+        }
+        return $this->configPath;
     }
 
     // 获取运行目录路径
     public function getRuntimePath()
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'runtime';
+        if (!FileSystemHelper::isAbsolute($this->runtimePath)) {
+            if ($this->runtimePath == '') {
+                return $this->basePath;
+            }
+            return $this->basePath . DIRECTORY_SEPARATOR . $this->runtimePath;
+        }
+        return $this->runtimePath;
     }
 
 }

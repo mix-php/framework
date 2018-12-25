@@ -27,4 +27,19 @@ class FileSystemHelper
         return str_replace('/', '\\', basename(str_replace('\\', '/', $path)));
     }
 
+    // 判断是否为绝对路径
+    public static function isAbsolute($path)
+    {
+        if (($position = strpos($path, './')) !== false && $position <= 2) {
+            return false;
+        }
+        if (strpos($path, ':') !== false) {
+            return true;
+        }
+        if (substr($path, 0, 1) === '/') {
+            return true;
+        }
+        return false;
+    }
+
 }

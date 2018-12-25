@@ -10,7 +10,7 @@ class Mix
     /**
      * 版本号
      */
-    const VERSION = '1.1.1';
+    const VERSION = '2.0.1-Beta1';
 
     /**
      * App实例

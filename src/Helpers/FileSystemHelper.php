@@ -3,13 +3,18 @@
 namespace Mix\Helpers;
 
 /**
- * FileSystemHelper类
+ * Class FileSystemHelper
+ * @package Mix\Helpers
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class FileSystemHelper
 {
 
-    // 返回路径中的目录部分，正反斜杠linux兼容处理
+    /**
+     * 返回路径中的目录部分，正反斜杠linux兼容处理
+     * @param $path
+     * @return string
+     */
     public static function dirname($path)
     {
         if (strpos($path, '\\') === false) {
@@ -18,7 +23,11 @@ class FileSystemHelper
         return str_replace('/', '\\', dirname(str_replace('\\', '/', $path)));
     }
 
-    // 返回路径中的文件名部分，正反斜杠linux兼容处理
+    /**
+     * 返回路径中的文件名部分，正反斜杠linux兼容处理
+     * @param $path
+     * @return string
+     */
     public static function basename($path)
     {
         if (strpos($path, '\\') === false) {
@@ -27,7 +36,11 @@ class FileSystemHelper
         return str_replace('/', '\\', basename(str_replace('\\', '/', $path)));
     }
 
-    // 判断是否为绝对路径
+    /**
+     * 判断是否为绝对路径
+     * @param $path
+     * @return bool
+     */
     public static function isAbsolute($path)
     {
         if (($position = strpos($path, './')) !== false && $position <= 2) {
@@ -40,6 +53,32 @@ class FileSystemHelper
             return true;
         }
         return false;
+    }
+
+    /**
+     * 删除指定的文件夹及其内容
+     * @param $dir
+     * @return bool
+     */
+    public static function deleteFolder($dir)
+    {
+        $dh = @opendir($dir);
+        if (!$dh) {
+            return false;
+        }
+        while (false !== ($file = readdir($dh))) {
+            if (($file != '.') && ($file != '..')) {
+                $full = $dir . '/' . $file;
+                if (is_dir($full)) {
+                    self::removeDirectory($full);
+                } else {
+                    unlink($full);
+                }
+            }
+        }
+        closedir($dh);
+        rmdir($dir);
+        return true;
     }
 
 }

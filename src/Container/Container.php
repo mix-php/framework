@@ -5,12 +5,13 @@ namespace Mix\Container;
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
 use Mix\Core\BaseObject;
+use Psr\Container\ContainerInterface;
 
 /**
  * 容器类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Container extends BaseObject
+class Container extends BaseObject implements ContainerInterface
 {
 
     /**

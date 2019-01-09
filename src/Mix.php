@@ -60,30 +60,43 @@ class Mix
             // 注释类型检测
             $class      = get_class($object);
             $docComment = (new \ReflectionClass($class))->getProperty($name)->getDocComment();
-            if ($docComment) {
-                $key   = '@var';
-                $len   = 4;
-                $start = strpos($docComment, $key);
-                $end   = strpos($docComment, '*', $start + $len);
-                if ($start !== false && $end !== false) {
-                    $tmp = substr($docComment, $start + $len, $end - $start - $len);
-                    $tmp = explode(' ', trim($tmp));
-                    $var = array_shift($tmp);
-                    $var = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
-                    if ($var) {
-                        if (!interface_exists($var) && !class_exists($var)) {
-                            throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
-                        }
-                        if (!($value instanceof $var)) {
-                            throw new \Mix\Exceptions\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
-                        }
-                    }
+            $var        = self::getVar($docComment);
+            if ($var) {
+                if (!interface_exists($var) && !class_exists($var)) {
+                    throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
+                }
+                if (!($value instanceof $var)) {
+                    throw new \Mix\Exceptions\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
                 }
             }
             // 导入
             $object->$name = $value;
         }
         return $object;
+    }
+
+    /**
+     * 获取注释中@var的值
+     * @param $docComment
+     * @return string
+     */
+    protected static function getVar($docComment)
+    {
+        $var = '';
+        if (!$docComment) {
+            return $var;
+        }
+        $key   = '@var';
+        $len   = 4;
+        $start = strpos($docComment, $key);
+        $end   = strpos($docComment, '*', $start + $len);
+        if ($start !== false && $end !== false) {
+            $tmp = substr($docComment, $start + $len, $end - $start - $len);
+            $tmp = explode(' ', trim($tmp));
+            $var = array_shift($tmp);
+            $var = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
+        }
+        return $var;
     }
 
     /**

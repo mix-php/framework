@@ -68,11 +68,13 @@ class ConnectionPool extends Component implements ConnectionPoolInterface
         $class = $this->connectionClass;
         $name  = 'default';
         if (is_array($class)) {
+            if (isset($class['name'])) {
+                $name = $class['name'];
+            }
             $class = array_shift($class);
-            $name  = $class['name'];
         }
-        if (!($class instanceof \Mix\Core\StaticInstanceInterface)) {
-            throw new \Mix\Exceptions\InvalidArgumentException('Property connectionClass is not implemented \Mix\Core\StaticInstanceInterface interface.');
+        if (!is_subclass_of($class, '\Mix\Core\StaticInstanceInterface')) {
+            throw new \Mix\Exceptions\InvalidArgumentException('Property \'connectionClass\' is not implemented \Mix\Core\StaticInstanceInterface interface.');
         }
         return $class::newInstanceByName($name);
     }

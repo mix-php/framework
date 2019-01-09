@@ -63,10 +63,10 @@ trait StaticInstanceTrait
                 $class = $item['class'];
                 $name  = 'default';
                 if (is_array($class)) {
-                    $class = array_shift($class);
                     if (isset($class['name'])) {
                         $name = $class['name'];
                     }
+                    $class = array_shift($class);
                 }
                 $item['class'] = $class;
                 $key           = "{$class}#{$name}";

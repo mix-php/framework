@@ -2,14 +2,14 @@
 
 namespace Mix\Config;
 
-use Mix\Core\BaseObject;
+use Mix\Core\DIObject;
 
 /**
  * Class IniParser
  * @package Mix\Config
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class IniParser extends BaseObject
+class IniParser extends DIObject
 {
 
     /**

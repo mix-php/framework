@@ -9,7 +9,7 @@ use Mix\Helpers\FileSystemHelper;
  * App类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Application extends BaseObject implements \ApplicationInterface
+class Application extends DIObject implements \ApplicationInterface
 {
 
     // 应用调试

@@ -6,7 +6,7 @@ namespace Mix\Core;
  * 组件基类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-abstract class Component extends BaseObject implements ComponentInterface
+abstract class Component extends DIObject implements ComponentInterface
 {
 
     // 协程模式

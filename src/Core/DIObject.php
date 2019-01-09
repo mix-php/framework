@@ -3,17 +3,17 @@
 namespace Mix\Core;
 
 /**
- * 对象基类
+ * 依赖注入对象基类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-abstract class BaseObject implements StaticInstanceInterface
+abstract class DIObject implements StaticInstanceInterface
 {
 
     use StaticInstanceTrait;
 
     /**
      * 构造
-     * BaseObject constructor.
+     * DIObject constructor.
      * @param array $config
      */
     public function __construct($config = [])

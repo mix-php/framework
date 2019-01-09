@@ -4,14 +4,14 @@ namespace Mix\Container;
 
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
-use Mix\Core\BaseObject;
+use Mix\Core\DIObject;
 use Psr\Container\ContainerInterface;
 
 /**
  * 容器类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Container extends BaseObject implements ContainerInterface
+class Container extends DIObject implements ContainerInterface
 {
 
     /**

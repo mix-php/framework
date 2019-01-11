@@ -16,13 +16,19 @@ class Bean
      * 解析后的配置
      * @var array
      */
-    public static $config;
+    protected static $_config;
 
     /**
      * 载入配置
      */
-    public static function loadConfig()
+    protected static function load()
     {
+        static $cache;
+        $app = get_class(\Mix::$app);
+        if (isset($cache[$app])) {
+            self::$_config = $cache[$app];
+            return;
+        }
         $config = \Mix::$app->beans;
         $data   = [];
         foreach ($config as $item) {
@@ -36,7 +42,7 @@ class Bean
             }
             $data[$name] = $item;
         }
-        self::$config = $data;
+        self::$_config = $cache[$app] = $data;
     }
 
     /**
@@ -46,13 +52,14 @@ class Bean
      */
     public static function config($name)
     {
-        if (!isset(self::$config)) {
-            self::loadConfig();
-        }
-        if (!isset(self::$config[$name])) {
+        self::load();
+        if (!isset(self::$_config[$name])) {
+            if (self::isBase64($name)) {
+                $name = base64_decode($name);
+            }
             throw new \Mix\Exceptions\ConfigException("Bean configuration not found: {$name}");
         }
-        return self::$config[$name];
+        return self::$_config[$name];
     }
 
     /**
@@ -62,7 +69,17 @@ class Bean
      */
     public static function name($class)
     {
-        return md5($class);
+        return base64_encode($class);
+    }
+
+    /**
+     * 判断是否为Base64
+     * @param $str
+     * @return bool
+     */
+    protected static function isBase64($str)
+    {
+        return $str == base64_encode(base64_decode($str)) ? true : false;
     }
 
 }

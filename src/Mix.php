@@ -24,26 +24,31 @@ class Mix
      * @param bool $newInstance
      * @return mixed
      */
-    public static function configure($config, $newInstance = false)
+    public static function configure($config, $ref = false)
     {
         foreach ($config as $key => $value) {
-            // 子类实例化
+            // 子类处理
             if (is_array($value)) {
-                // 实例化
-                if (isset($value['class'])) {
+                // 引用依赖
+                if (isset($value['ref'])) {
                     $config[$key] = self::configure($value, true);
                 }
-                // 引用其他组件
+                // 引用组件
                 if (isset($value['component'])) {
                     $name         = $value['component'];
                     $config[$key] = self::$app->$name;
                 }
             }
         }
-        if ($newInstance) {
-            $class = $config['class'];
-            unset($config['class']);
-            return new $class($config);
+        if ($ref) {
+            // 实例化
+            if (isset($config['ref'])) {
+                $name       = $config['ref'];
+                $bean       = \Mix\Core\Bean::config($name);
+                $class      = $bean['class'];
+                $properties = $bean['properties'] ?? [];
+                return new $class($properties);
+            }
         }
         return $config;
     }
@@ -100,15 +105,17 @@ class Mix
     }
 
     /**
-     * 使用配置创建对象
+     * 创建组件
      * @param $config
      * @return mixed
      */
-    public static function createObject($config)
+    public static function createComponent($config)
     {
-        $class = $config['class'];
-        unset($config['class']);
-        return new $class($config);
+        $name       = $config['ref'];
+        $bean       = \Mix\Core\Bean::config($name);
+        $class      = $bean['class'];
+        $properties = $bean['properties'] ?? [];
+        return new $class($properties);
     }
 
 }

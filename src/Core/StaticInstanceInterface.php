@@ -17,16 +17,10 @@ interface StaticInstanceInterface
     public static function new(...$args);
 
     /**
-     * 创建实例，通过默认配置名
-     * @return $this
-     */
-    public static function newInstance();
-
-    /**
-     * 创建实例，通过配置名
+     * 使用依赖创建实例
      * @param $name
      * @return $this
      */
-    public static function newInstanceByName($name);
+    public static function newInstance($name = null);
 
 }

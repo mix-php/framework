@@ -38,13 +38,13 @@ class Bucket extends DIObject
         }
         // 未注册
         if (!isset($config[$name])) {
-            throw new \Mix\Exceptions\ComponentException("组件不存在：{$name}");
+            throw new \Mix\Exceptions\ComponentException("Did not register this component: {$name}");
         }
-        // 使用配置创建新对象
-        $object = \Mix::createObject($config[$name]);
+        // 创建组件
+        $object = \Mix::createComponent($config[$name]);
         // 组件效验
         if (!($object instanceof ComponentInterface)) {
-            throw new \Mix\Exceptions\ComponentException("不是组件类型：{$config[$name]['class']}");
+            throw new \Mix\Exceptions\ComponentException("This class is not a component: {$config[$name]['class']}");
         }
         // 装入容器
         $this->_instances[$name] = $object;

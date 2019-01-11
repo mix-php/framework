@@ -2,6 +2,7 @@
 
 namespace Mix\Container;
 
+use Mix\Core\Bean;
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
 use Mix\Core\DIObject;
@@ -90,13 +91,14 @@ class Container extends DIObject implements ContainerInterface
     {
         // 未注册
         if (!isset($this->config[$name])) {
-            throw new \Mix\Exceptions\ComponentException("组件不存在：{$name}");
+            throw new \Mix\Exceptions\ComponentException("Did not register this component: {$name}");
         }
         // 提取协程模式
-        $class = $this->config[$name]['class'];
+        $bean  = Bean::config($this->config[$name]['ref']);
+        $class = $bean['class'];
         // 组件效验
         if (!isset($class::$coroutineMode)) {
-            throw new \Mix\Exceptions\ComponentException("不是组件类型：{$class}");
+            throw new \Mix\Exceptions\ComponentException("This class is not a component: {$class}");
         }
         // 返回
         return $class::$coroutineMode;

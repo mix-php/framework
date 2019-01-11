@@ -2,6 +2,7 @@
 
 namespace Mix\Pool;
 
+use Mix\Core\Bean;
 use Mix\Core\Component;
 use Mix\Core\ComponentInterface;
 
@@ -32,10 +33,10 @@ class ConnectionPool extends Component implements ConnectionPoolInterface
     public $maxActive = 5;
 
     /**
-     * 连接类名
-     * @var array|string
+     * 拨号依赖引用
+     * @var string
      */
-    public $connectionClass;
+    public $dialRef;
 
     /**
      * 连接队列
@@ -65,18 +66,11 @@ class ConnectionPool extends Component implements ConnectionPoolInterface
      */
     public function createConnection()
     {
-        $class = $this->connectionClass;
-        $name  = 'default';
-        if (is_array($class)) {
-            if (isset($class['name'])) {
-                $name = $class['name'];
-            }
-            $class = array_shift($class);
-        }
-        if (!is_subclass_of($class, '\Mix\Core\StaticInstanceInterface')) {
-            throw new \Mix\Exceptions\InvalidArgumentException('Property \'connectionClass\' is not implemented \Mix\Core\StaticInstanceInterface interface.');
-        }
-        return $class::newInstanceByName($name);
+        $name       = $this->dialRef;
+        $bean       = Bean::config($name);
+        $class      = $bean['class'];
+        $properties = $bean['properties'] ?? [];
+        return new $class($properties);
     }
 
     /**

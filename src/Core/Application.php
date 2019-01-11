@@ -30,8 +30,8 @@ class Application extends DIObject implements \ApplicationInterface
     // 组件配置
     public $components = [];
 
-    // 类库配置
-    public $libraries = [];
+    // 依赖配置
+    public $beans = [];
 
     /**
      * 容器

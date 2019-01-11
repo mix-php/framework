@@ -4,6 +4,7 @@ namespace Mix\Core;
 
 /**
  * Trait StaticInstanceTrait
+ * @package Mix\Core
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 trait StaticInstanceTrait
@@ -20,61 +21,20 @@ trait StaticInstanceTrait
     }
 
     /**
-     * 创建实例，通过默认配置名
-     * @return $this
-     */
-    public static function newInstance()
-    {
-        return self::newInstanceByName('default');
-    }
-
-    /**
-     * 创建实例，通过配置名
+     * 使用依赖创建实例
      * @param $name
      * @return $this
      */
-    public static function newInstanceByName($name)
+    public static function newInstance($name = null)
     {
-        // 获取类库配置信息
-        $config = self::getLibrariesConfig();
-        // 实例化
-        $class = get_called_class();
-        $key   = "{$class}#{$name}";
-        if (!isset($config[$key])) {
-            throw new \Mix\Exceptions\ConfigException("Class config does not exist: {$class} name {$name}.");
+        $currentClass = get_called_class();
+        $bean         = Bean::config(is_null($name) ? Bean::name($currentClass) : $name);
+        $class        = $bean['class'];
+        $properties   = $bean['properties'] ?? [];
+        if ($class != $currentClass) {
+            throw new \Mix\Exceptions\ConfigException("Bean class is not equal to the current class, Current class: {$currentClass}, Bean class: {$class}");
         }
-        return \Mix::createObject($config[$key]);
-    }
-
-    /**
-     * 获取类库配置信息
-     * @return array
-     */
-    private static function getLibrariesConfig()
-    {
-        static $cache;
-        if (!isset($cache)) {
-            $config = \Mix::$app->libraries;
-            $data   = [];
-            foreach ($config as $item) {
-                if (!isset($item['class'])) {
-                    throw new \Mix\Exceptions\ConfigException("Libraries config error: class field is not configured.");
-                }
-                $class = $item['class'];
-                $name  = 'default';
-                if (is_array($class)) {
-                    if (isset($class['name'])) {
-                        $name = $class['name'];
-                    }
-                    $class = array_shift($class);
-                }
-                $item['class'] = $class;
-                $key           = "{$class}#{$name}";
-                $data[$key]    = $item;
-            }
-            $cache = $data;
-        }
-        return $cache;
+        return $object = new $class($properties);
     }
 
 }

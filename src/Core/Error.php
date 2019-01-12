@@ -65,7 +65,7 @@ class Error
      */
     public static function appException($e)
     {
-        \Mix::$app->error->handleException($e, true);
+        \Mix::$app->error->handleException($e);
     }
 
     /**

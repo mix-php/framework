@@ -34,9 +34,9 @@ class ConnectionPool extends Component implements ConnectionPoolInterface
 
     /**
      * 拨号依赖引用
-     * @var string
+     * @var \Mix\Pool\DialInterface
      */
-    public $dialRef;
+    public $dial;
 
     /**
      * 连接队列
@@ -66,11 +66,7 @@ class ConnectionPool extends Component implements ConnectionPoolInterface
      */
     public function createConnection()
     {
-        $name       = $this->dialRef;
-        $bean       = Bean::config($name);
-        $class      = $bean['class'];
-        $properties = $bean['properties'] ?? [];
-        return new $class($properties);
+        return $this->dial->dial();
     }
 
     /**

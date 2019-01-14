@@ -76,6 +76,9 @@ class Container extends DIObject implements ContainerInterface
     {
         $tid  = Coroutine::tid();
         $mode = $this->getCoroutineMode($name);
+        if ($mode === false) {
+            $tid = -2;
+        }
         if ($mode == Component::COROUTINE_MODE_REFERENCE) {
             $tid = -1;
         }
@@ -85,23 +88,17 @@ class Container extends DIObject implements ContainerInterface
     /**
      * 获取协程模式
      * @param $name
-     * @return mixed
+     * @return bool|int
      */
     protected function getCoroutineMode($name)
     {
-        // 未注册
-        if (!isset($this->config[$name])) {
-            throw new \Mix\Exceptions\ComponentException("Did not register this component: {$name}");
+        try {
+            $bean  = Bean::config($this->config[$name]['ref']);
+            $class = $bean['class'];
+            return $class::$coroutineMode ?? false;
+        } catch (\Throwable $e) {
+            return false;
         }
-        // 提取协程模式
-        $bean  = Bean::config($this->config[$name]['ref']);
-        $class = $bean['class'];
-        // 组件效验
-        if (!isset($class::$coroutineMode)) {
-            throw new \Mix\Exceptions\ComponentException("This class is not a component: {$class}");
-        }
-        // 返回
-        return $class::$coroutineMode;
     }
 
 }

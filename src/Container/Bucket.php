@@ -3,13 +3,13 @@
 namespace Mix\Container;
 
 use Mix\Core\ComponentInterface;
-use Mix\Core\DIObject;
+use Mix\Core\BeanObject;
 
 /**
  * 存储空间类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Bucket extends DIObject
+class Bucket extends BeanObject
 {
 
     /**

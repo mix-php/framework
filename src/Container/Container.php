@@ -5,14 +5,14 @@ namespace Mix\Container;
 use Mix\Core\Bean;
 use Mix\Core\Component;
 use Mix\Core\Coroutine;
-use Mix\Core\DIObject;
+use Mix\Core\BeanObject;
 use Psr\Container\ContainerInterface;
 
 /**
  * 容器类
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Container extends DIObject implements ContainerInterface
+class Container extends BeanObject implements ContainerInterface
 {
 
     /**

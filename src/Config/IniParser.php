@@ -2,14 +2,14 @@
 
 namespace Mix\Config;
 
-use Mix\Core\DIObject;
+use Mix\Core\BeanObject;
 
 /**
  * Class IniParser
  * @package Mix\Config
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class IniParser extends DIObject
+class IniParser extends BeanObject
 {
 
     /**

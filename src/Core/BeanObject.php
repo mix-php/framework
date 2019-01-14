@@ -3,17 +3,18 @@
 namespace Mix\Core;
 
 /**
- * 依赖注入对象基类
+ * Class BeanObject
+ * @package Mix\Core
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-abstract class DIObject implements StaticInstanceInterface
+abstract class BeanObject implements StaticInstanceInterface
 {
 
     use StaticInstanceTrait;
 
     /**
      * 构造
-     * DIObject constructor.
+     * BeanObject constructor.
      * @param array $config
      */
     public function __construct($config = [])

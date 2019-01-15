@@ -11,9 +11,9 @@ interface DialInterface
 {
 
     /**
-     * 拨号
+     * 处理
      * @return mixed
      */
-    public function dial();
+    public function handle();
 
 }

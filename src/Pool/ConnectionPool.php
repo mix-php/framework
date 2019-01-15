@@ -2,7 +2,6 @@
 
 namespace Mix\Pool;
 
-use Mix\Core\Bean;
 use Mix\Core\Component;
 use Mix\Core\ComponentInterface;
 
@@ -11,7 +10,7 @@ use Mix\Core\ComponentInterface;
  * @author LIUJIAN <coder.keda@gmail.com>
  * @package Mix\Pool
  */
-class ConnectionPool extends Component implements ConnectionPoolInterface
+abstract class ConnectionPool extends Component
 {
 
     /**
@@ -64,9 +63,9 @@ class ConnectionPool extends Component implements ConnectionPoolInterface
      * 创建连接
      * @return mixed
      */
-    public function createConnection()
+    protected function createConnection()
     {
-        return $this->dial->dial();
+        return $this->dial->handle();
     }
 
     /**

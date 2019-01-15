@@ -11,12 +11,6 @@ interface ConnectionPoolInterface
 {
 
     /**
-     * 创建连接
-     * @return mixed
-     */
-    public function createConnection();
-
-    /**
      * 获取连接
      * @return mixed
      */

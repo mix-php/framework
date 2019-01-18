@@ -10,7 +10,7 @@ class Mix
     /**
      * 版本号
      */
-    const VERSION = '2.0.1-Beta1';
+    public static $version;
 
     /**
      * App实例

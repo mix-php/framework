@@ -23,9 +23,14 @@
     "psr-4": {
       "Mix\\": "src/"
     },
+    "classmap": [
+      "src/Mix.php"
+    ],
     "files": [
-      "src/Mix.php",
       "src/functions.php"
     ]
-  }
+  },
+  "include-path": [
+    "src/constants.php"
+  ]s
 }

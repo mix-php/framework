@@ -29,11 +29,5 @@
     "files": [
       "src/functions.php"
     ]
-  },
-  "include-path": [
-    "src/constants/"
-  ],
-  "config": {
-    "use-include-path": true
   }
 }

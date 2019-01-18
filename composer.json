@@ -32,5 +32,8 @@
   },
   "include-path": [
     "src/constants.php"
-  ]
+  ],
+  "config": {
+    "use-include-path": true
+  }
 }

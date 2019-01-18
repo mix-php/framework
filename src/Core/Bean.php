@@ -2,8 +2,6 @@
 
 namespace Mix\Core;
 
-use Mix\Helpers\FileSystemHelper;
-
 /**
  * Class Bean
  * @package Mix\Core

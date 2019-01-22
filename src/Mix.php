@@ -19,6 +19,12 @@ class Mix
     public static $app;
 
     /**
+     * 环境配置
+     * @var \Mix\Config\Environment
+     */
+    public static $env;
+
+    /**
      * 构建配置
      * @param $config
      * @param bool $newInstance
@@ -65,7 +71,7 @@ class Mix
             // 注释类型检测
             $class      = get_class($object);
             $docComment = (new \ReflectionClass($class))->getProperty($name)->getDocComment();
-            $var        = self::getVar($docComment);
+            $var        = self::getVarFrom($docComment);
             if ($var) {
                 if (!interface_exists($var) && !class_exists($var)) {
                     throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
@@ -85,7 +91,7 @@ class Mix
      * @param $docComment
      * @return string
      */
-    protected static function getVar($docComment)
+    protected static function getVarFrom($docComment)
     {
         $var = '';
         if (!$docComment) {
@@ -116,6 +122,19 @@ class Mix
         $class      = $bean['class'];
         $properties = $bean['properties'] ?? [];
         return new $class($properties);
+    }
+
+    /**
+     * 从文件载入环境配置
+     * @param $filename
+     * @return bool
+     */
+    public static function loadEnvironmentFrom($filename)
+    {
+        $env = new \Mix\Config\Environment(['filename' => $filename]);
+        $env->load();
+        self::$env = $env;
+        return true;
     }
 
 }

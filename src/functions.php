@@ -17,7 +17,7 @@ if (!function_exists('env')) {
     // 获取一个环境变量的值
     function env($name, $default = '')
     {
-        return \Mix\Config\Environment::section($name, $default);
+        return \Mix::$env->section($name, $default);
     }
 }
 

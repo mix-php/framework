@@ -87,7 +87,7 @@ class Mix
     }
 
     /**
-     * 获取注释中@var的值
+     * 获取注释中var的值
      * @param $docComment
      * @return string
      */

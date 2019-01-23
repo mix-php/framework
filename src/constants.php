@@ -5,4 +5,4 @@
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 
-\Mix::$version = '2.0.1-RC';
+\Mix::$version = '2.0.1-RC2';

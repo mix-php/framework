@@ -24,9 +24,9 @@ interface ComponentInterface
     public function setStatus($status);
 
     // 请求前置事件
-    public function onRequestBefore();
+    public function onBeforeRequest();
 
     // 请求后置事件
-    public function onRequestAfter();
+    public function onAfterRequest();
 
 }

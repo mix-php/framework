@@ -28,13 +28,13 @@ trait ComponentTrait
     }
 
     // 请求前置事件
-    public function onRequestBefore()
+    public function onBeforeRequest()
     {
         $this->setStatus(ComponentInterface::STATUS_RUNNING);
     }
 
     // 请求后置事件
-    public function onRequestAfter()
+    public function onAfterRequest()
     {
         $this->setStatus(ComponentInterface::STATUS_READY);
     }

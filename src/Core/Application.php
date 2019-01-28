@@ -15,8 +15,8 @@ class Application extends BeanObject implements \ApplicationInterface
     // 应用调试
     public $appDebug = true;
 
-    // 初始化回调
-    public $initialize = [];
+    // 初始化类
+    public $initialization = [];
 
     // 基础路径
     public $basePath = '';
@@ -52,8 +52,11 @@ class Application extends BeanObject implements \ApplicationInterface
         // 错误注册
         \Mix\Core\Error::register();
         // 执行初始化回调
-        foreach ($this->initialize as $callback) {
-            call_user_func($callback);
+        foreach ($this->initialization as $initialization) {
+            if (!($initialization instanceof InitializationInterface)) {
+                throw new \RuntimeException("Initialization type is not 'Mix\Core\InitializationInterface'");
+            }
+            $initialization->handle();
         }
     }
 

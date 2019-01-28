@@ -15,7 +15,7 @@ class Application extends BeanObject implements \ApplicationInterface
     // 应用调试
     public $appDebug = true;
 
-    // 初始化类
+    // 初始化
     public $initialization = [];
 
     // 基础路径

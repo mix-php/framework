@@ -54,7 +54,7 @@ class Application extends BeanObject implements \ApplicationInterface
         // 执行初始化回调
         foreach ($this->initialization as $initialization) {
             if (!($initialization instanceof InitializationInterface)) {
-                throw new \RuntimeException("Initialization type is not 'Mix\Core\InitializationInterface'");
+                throw new \RuntimeException("{$initialization} type is not 'Mix\Core\InitializationInterface'");
             }
             $initialization->handle();
         }

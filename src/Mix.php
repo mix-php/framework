@@ -26,18 +26,19 @@ class Mix
 
     /**
      * 构建配置
+     * @param $parent
      * @param $config
-     * @param bool $newInstance
+     * @param bool $ref
      * @return mixed
      */
-    public static function configure($config, $ref = false)
+    public static function configure($parent, $config, $ref = false)
     {
         foreach ($config as $key => $value) {
             // 子类处理
             if (is_array($value)) {
                 // 引用依赖
                 if (isset($value['ref'])) {
-                    $config[$key] = self::configure($value, true);
+                    $config[$key] = self::configure($parent, $value, true);
                 }
                 // 引用组件
                 if (isset($value['component'])) {
@@ -49,10 +50,11 @@ class Mix
         if ($ref) {
             // 实例化
             if (isset($config['ref'])) {
-                $name       = $config['ref'];
-                $bean       = \Mix\Core\Bean::config($name);
-                $class      = $bean['class'];
-                $properties = $bean['properties'] ?? [];
+                $name                 = $config['ref'];
+                $bean                 = \Mix\Core\Bean::config($name);
+                $class                = $bean['class'];
+                $properties           = $bean['properties'] ?? [];
+                $properties['parent'] = $parent;
                 return new $class($properties);
             }
         }

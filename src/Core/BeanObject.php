@@ -13,6 +13,12 @@ abstract class BeanObject implements StaticInstanceInterface
     use StaticInstanceTrait;
 
     /**
+     * 父级对象
+     * @var mixed
+     */
+    public $parent;
+
+    /**
      * 构造
      * BeanObject constructor.
      * @param array $config
@@ -22,7 +28,7 @@ abstract class BeanObject implements StaticInstanceInterface
         // 执行构造事件
         $this->onConstruct();
         // 构建配置
-        $config = \Mix::configure($config);
+        $config = \Mix::configure($this, $config);
         // 导入属性
         \Mix::importProperties($this, $config);
         // 执行初始化事件

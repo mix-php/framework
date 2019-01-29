@@ -50,11 +50,13 @@ class Mix
         if ($ref) {
             // 实例化
             if (isset($config['ref'])) {
-                $name                 = $config['ref'];
-                $bean                 = \Mix\Core\Bean::config($name);
-                $class                = $bean['class'];
-                $properties           = $bean['properties'] ?? [];
-                $properties['parent'] = $parent;
+                $name       = $config['ref'];
+                $bean       = \Mix\Core\Bean::config($name);
+                $class      = $bean['class'];
+                $properties = $bean['properties'] ?? [];
+                if (!isset($properties['parent'])) {
+                    $properties['parent'] = $parent;
+                }
                 return new $class($properties);
             }
         }

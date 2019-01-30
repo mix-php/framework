@@ -27,14 +27,14 @@ trait ComponentTrait
         $this->_status = $status;
     }
 
-    // 请求前置事件
-    public function onBeforeRequest()
+    // 前置处理事件
+    public function onBeforeInitialize()
     {
         $this->setStatus(ComponentInterface::STATUS_RUNNING);
     }
 
-    // 请求后置事件
-    public function onAfterRequest()
+    // 后置处理事件
+    public function onAfterInitialize()
     {
         $this->setStatus(ComponentInterface::STATUS_READY);
     }

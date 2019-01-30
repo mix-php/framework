@@ -23,10 +23,10 @@ interface ComponentInterface
     // 设置状态
     public function setStatus($status);
 
-    // 请求前置事件
-    public function onBeforeRequest();
+    // 前置处理事件
+    public function onBeforeInitialize();
 
-    // 请求后置事件
-    public function onAfterRequest();
+    // 后置处理事件
+    public function onAfterInitialize();
 
 }

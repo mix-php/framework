@@ -16,10 +16,10 @@ class Environment extends IniParser
      */
     public function load()
     {
-        if (!parent::load()) {
+        if (!is_file($this->filename)) {
             throw new \Mix\Exceptions\ConfigException("Environment file does not exist: {$this->filename}");
         }
-        $this->_data = array_merge($this->_data, $_SERVER, $_ENV);
+        $this->_data = array_merge(parse_ini_file($this->filename), $_SERVER, $_ENV);
         return true;
     }
 

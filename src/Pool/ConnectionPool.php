@@ -44,6 +44,12 @@ abstract class ConnectionPool extends Component
     protected $_queue;
 
     /**
+     * 连接的hashid
+     * @var array
+     */
+    protected $_hash;
+
+    /**
      * 活跃连接集合
      * @var int
      */
@@ -65,8 +71,7 @@ abstract class ConnectionPool extends Component
      */
     protected function createConnection()
     {
-        /** @var  $connection \Mix\Database\Coroutine\PDOConnection | \Mix\Redis\Coroutine\RedisConnection */
-        $connection = $this->dial->handle();
+        $connection                 = $this->dial->handle();
         $connection->connectionPool = $this;
         return $connection;
     }
@@ -81,9 +86,13 @@ abstract class ConnectionPool extends Component
             // 队列有连接，从队列取
             // 达到最大连接数，从队列取
             $connection = $this->pop();
+            $id         = spl_object_hash($connection);
+            unset($this->_hash[$id]);
         } else {
             // 创建连接
-            $connection = $this->createConnection();
+            $connection       = $this->createConnection();
+            $id               = spl_object_hash($connection);
+            $this->_hash[$id] = '';
         }
         $this->_actives++;
         return $connection;
@@ -92,11 +101,32 @@ abstract class ConnectionPool extends Component
     /**
      * 释放连接
      * @param $connection
+     * @return bool
      */
     public function release($connection)
     {
+        $id = spl_object_hash($connection);
+        if (isset($this->_hash[$id])) {
+            return false;
+        }
+        $id               = spl_object_hash($connection);
+        $this->_hash[$id] = '';
         $this->push($connection);
         $this->_actives--;
+        return true;
+    }
+
+    /**
+     * 丢弃连接
+     * @param $connection
+     * @return bool
+     */
+    public function discard(&$connection)
+    {
+        $connection->connectionPool = null;
+        $connection                 = null;
+        $this->_actives--;
+        return true;
     }
 
     /**

@@ -65,7 +65,10 @@ abstract class ConnectionPool extends Component
      */
     protected function createConnection()
     {
-        return $this->dial->handle();
+        /** @var  $connection \Mix\Database\Coroutine\PDOConnection | \Mix\Redis\Coroutine\RedisConnection */
+        $connection = $this->dial->handle();
+        $connection->connectionPool = $this;
+        return $connection;
     }
 
     /**

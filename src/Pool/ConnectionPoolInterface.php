@@ -23,6 +23,13 @@ interface ConnectionPoolInterface
     public function release($connection);
 
     /**
+     * 丢弃连接
+     * @param $connection
+     * @return bool
+     */
+    public function discard($connection);
+
+    /**
      * 获取连接池的统计信息
      * @return array
      */

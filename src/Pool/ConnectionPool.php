@@ -71,7 +71,7 @@ abstract class ConnectionPool extends Component
      */
     protected function createConnection()
     {
-        $connection                 = $this->dial->handle();
+        $connection = $this->dial->handle();
         $connection->connectionPool = $this;
         return $connection;
     }
@@ -86,14 +86,14 @@ abstract class ConnectionPool extends Component
             // 队列有连接，从队列取
             // 达到最大连接数，从队列取
             $connection = $this->pop();
-            $id         = spl_object_hash($connection);
-            unset($this->_hash[$id]);
         } else {
             // 创建连接
-            $connection       = $this->createConnection();
-            $id               = spl_object_hash($connection);
-            $this->_hash[$id] = '';
+            $connection = $this->createConnection();
         }
+        // 标记
+        $id = spl_object_hash($connection);
+        $this->_hash[$id] = 1;
+        // 加活动数
         $this->_actives++;
         return $connection;
     }
@@ -105,12 +105,19 @@ abstract class ConnectionPool extends Component
      */
     public function release($connection)
     {
+        // 判断是否已丢弃
         $id = spl_object_hash($connection);
-        if (isset($this->_hash[$id])) {
+        if (!isset($this->_hash[$id])) {
             return false;
         }
-        $id               = spl_object_hash($connection);
-        $this->_hash[$id] = '';
+        // 判断是否已释放
+        if ($this->_hash[$id] === 0) {
+            return false;
+        }
+        // 标记
+        $id = spl_object_hash($connection);
+        $this->_hash[$id] = 0;
+        // 入列并减活动数
         $this->push($connection);
         $this->_actives--;
         return true;
@@ -121,10 +128,16 @@ abstract class ConnectionPool extends Component
      * @param $connection
      * @return bool
      */
-    public function discard(&$connection)
+    public function discard($connection)
     {
-        $connection->connectionPool = null;
-        $connection                 = null;
+        // 判断是否已丢弃
+        $id = spl_object_hash($connection);
+        if (!isset($this->_hash[$id])) {
+            return false;
+        }
+        // 移除标记
+        unset($this->_hash[$id]);
+        // 减活动数
         $this->_actives--;
         return true;
     }

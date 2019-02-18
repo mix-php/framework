@@ -1,22 +1,23 @@
 <?php
 
-namespace Mix\Container;
+namespace Mix\Core\Container;
 
 use Mix\Core\ComponentInterface;
 use Mix\Core\BeanObject;
 
 /**
- * 存储空间类
+ * Class Container
+ * @package Mix\Core\Container
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Bucket extends BeanObject
+class Container extends BeanObject
 {
 
     /**
      * 组件配置
-     * @var Container
+     * @var ContainerManager
      */
-    public $container;
+    public $manager;
 
     /**
      * 容器中的对象实例
@@ -31,7 +32,7 @@ class Bucket extends BeanObject
      */
     public function get($name)
     {
-        $config = $this->container->config;
+        $config = $this->manager->config;
         // 已加载
         if (isset($this->_instances[$name])) {
             return $this->_instances[$name];

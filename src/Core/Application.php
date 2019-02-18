@@ -2,7 +2,7 @@
 
 namespace Mix\Core;
 
-use Mix\Container\Container;
+use Mix\Core\Container\ContainerManager;
 use Mix\Helpers\FileSystemHelper;
 
 /**
@@ -35,7 +35,7 @@ class Application extends BeanObject implements \ApplicationInterface
 
     /**
      * 容器
-     * @var \Mix\Container\Container
+     * @var \Mix\Core\Container\Container
      */
     public $container;
 
@@ -46,7 +46,7 @@ class Application extends BeanObject implements \ApplicationInterface
         // 快捷引用
         \Mix::$app = $this;
         // 实例化容器
-        $this->container = new Container([
+        $this->container = new ContainerManager([
             'config' => $this->components,
         ]);
         // 错误注册

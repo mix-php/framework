@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Container;
+namespace Mix\Core\Container;
 
 use Mix\Core\Bean;
 use Mix\Core\Component;
@@ -9,10 +9,11 @@ use Mix\Core\BeanObject;
 use Psr\Container\ContainerInterface;
 
 /**
- * 容器类
+ * Class ContainerManager
+ * @package Mix\Core\Container
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Container extends BeanObject implements ContainerInterface
+class ContainerManager extends BeanObject implements ContainerInterface
 {
 
     /**
@@ -36,8 +37,8 @@ class Container extends BeanObject implements ContainerInterface
     {
         $tid = $this->getTid($name);
         if (!isset($this->_containers[$tid])) {
-            $this->_containers[$tid] = new Bucket([
-                'container' => $this,
+            $this->_containers[$tid] = new Container([
+                'manager' => $this,
             ]);
         }
         return $this->_containers[$tid]->get($name);

@@ -20,7 +20,7 @@ class Mix
 
     /**
      * 环境配置
-     * @var \Mix\Config\Environment
+     * @var \Mix\Core\Environment
      */
     public static $env;
 
@@ -135,7 +135,7 @@ class Mix
      */
     public static function loadEnvironmentFrom($filename)
     {
-        $env = new \Mix\Config\Environment(['filename' => $filename]);
+        $env = new \Mix\Core\Environment(['filename' => $filename]);
         $env->load();
         self::$env = $env;
         return true;

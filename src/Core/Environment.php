@@ -2,7 +2,7 @@
 
 namespace Mix\Core;
 
-use Mix\Core\BeanObject;
+use Mix\Core\Bean\BeanObject;
 
 /**
  * Class Environment
@@ -11,6 +11,18 @@ use Mix\Core\BeanObject;
  */
 class Environment extends BeanObject
 {
+
+    /**
+     * 文件名
+     * @var string
+     */
+    public $filename;
+
+    /**
+     * 数据
+     * @var array
+     */
+    protected $_data = [];
 
     /**
      * 加载环境配置
@@ -33,10 +45,10 @@ class Environment extends BeanObject
      */
     public function section($name, $default = '')
     {
-        if (!isset($this->_data[$key])) {
+        if (!isset($this->_data[$name])) {
             return $default;
         }
-        return $this->_data[$key];
+        return $this->_data[$name];
     }
 
     /**

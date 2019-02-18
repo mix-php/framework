@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\Coroutine;
 
 /**
  * Coroutine类

@@ -1,9 +1,10 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\StaticInstance;
 
 /**
  * Interface StaticInstanceInterface
+ * @package Mix\Core\StaticInstance
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 interface StaticInstanceInterface

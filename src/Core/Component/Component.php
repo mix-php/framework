@@ -1,6 +1,8 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\Component;
+
+use Mix\Core\Bean\BeanObject;
 
 /**
  * 组件基类

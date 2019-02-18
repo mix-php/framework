@@ -1,10 +1,10 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\Bean;
 
 /**
  * Class Bean
- * @package Mix\Core
+ * @package Mix\Core\Bean
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Bean

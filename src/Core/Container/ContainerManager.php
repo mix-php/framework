@@ -2,10 +2,10 @@
 
 namespace Mix\Core\Container;
 
-use Mix\Core\Bean;
-use Mix\Core\Component;
-use Mix\Core\Coroutine;
-use Mix\Core\BeanObject;
+use Mix\Core\Bean\Bean;
+use Mix\Core\Component\Component;
+use Mix\Core\Coroutine\Coroutine;
+use Mix\Core\Bean\BeanObject;
 use Psr\Container\ContainerInterface;
 
 /**

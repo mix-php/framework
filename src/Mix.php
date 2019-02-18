@@ -51,7 +51,7 @@ class Mix
             // 实例化
             if (isset($config['ref'])) {
                 $name       = $config['ref'];
-                $bean       = \Mix\Core\Bean::config($name);
+                $bean       = \Mix\Core\Bean\Bean::config($name);
                 $class      = $bean['class'];
                 $properties = $bean['properties'] ?? [];
                 if (!isset($properties['parent'])) {
@@ -122,7 +122,7 @@ class Mix
     public static function createComponent($config)
     {
         $name       = $config['ref'];
-        $bean       = \Mix\Core\Bean::config($name);
+        $bean       = \Mix\Core\Bean\Bean::config($name);
         $class      = $bean['class'];
         $properties = $bean['properties'] ?? [];
         return new $class($properties);

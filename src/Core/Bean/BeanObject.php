@@ -1,10 +1,13 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\Bean;
+
+use Mix\Core\StaticInstance\StaticInstanceInterface;
+use Mix\Core\StaticInstance\StaticInstanceTrait;
 
 /**
  * Class BeanObject
- * @package Mix\Core
+ * @package Mix\Core\Bean
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 abstract class BeanObject implements StaticInstanceInterface

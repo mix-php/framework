@@ -1,6 +1,9 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\Coroutine;
+
+use Mix\Core\StaticInstance\StaticInstanceInterface;
+use Mix\Core\StaticInstance\StaticInstanceTrait;
 
 /**
  * Class Timer

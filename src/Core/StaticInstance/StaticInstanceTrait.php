@@ -1,10 +1,12 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\StaticInstance;
+
+use Mix\Core\Bean\Bean;
 
 /**
  * Trait StaticInstanceTrait
- * @package Mix\Core
+ * @package Mix\Core\StaticInstance
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 trait StaticInstanceTrait

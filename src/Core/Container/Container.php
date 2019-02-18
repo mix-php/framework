@@ -2,8 +2,8 @@
 
 namespace Mix\Core\Container;
 
-use Mix\Core\ComponentInterface;
-use Mix\Core\BeanObject;
+use Mix\Core\Component\ComponentInterface;
+use Mix\Core\Bean\BeanObject;
 
 /**
  * Class Container

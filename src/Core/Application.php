@@ -4,6 +4,7 @@ namespace Mix\Core;
 
 use Mix\Core\Container\ContainerManager;
 use Mix\Helpers\FileSystemHelper;
+use Mix\Core\Bean\BeanObject;
 
 /**
  * App类

@@ -25,7 +25,7 @@ if (!function_exists('beanname')) {
     // 获取Bean名称
     function beanname($class)
     {
-        return \Mix\Core\Bean\Bean::name($class);
+        return \Mix\Core\Bean::name($class);
     }
 }
 
@@ -33,7 +33,7 @@ if (!function_exists('xgo')) {
     // 创建协程
     function xgo($function)
     {
-        \Mix\Core\Coroutine\Coroutine::create($function);
+        \Mix\Core\Coroutine::create($function);
     }
 }
 

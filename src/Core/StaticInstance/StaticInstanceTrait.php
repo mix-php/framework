@@ -2,7 +2,7 @@
 
 namespace Mix\Core\StaticInstance;
 
-use Mix\Core\Bean\Bean;
+use Mix\Core\Bean;
 
 /**
  * Trait StaticInstanceTrait

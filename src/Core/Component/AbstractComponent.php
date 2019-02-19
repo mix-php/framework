@@ -2,13 +2,14 @@
 
 namespace Mix\Core\Component;
 
-use Mix\Core\Bean\BeanObject;
+use Mix\Core\Bean\AbstractObject;
 
 /**
- * 组件基类
+ * Class AbstractComponent
+ * @package Mix\Core\Component
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-abstract class Component extends BeanObject implements ComponentInterface
+abstract class AbstractComponent extends AbstractObject implements ComponentInterface
 {
 
     // 协程模式

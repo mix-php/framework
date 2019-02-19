@@ -2,14 +2,14 @@
 
 namespace Mix\Core;
 
-use Mix\Core\Bean\BeanObject;
+use Mix\Core\Bean\AbstractObject;
 
 /**
  * Class Environment
  * @package Mix\Core\Config
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Environment extends BeanObject
+class Environment extends AbstractObject
 {
 
     /**

@@ -1,11 +1,11 @@
 <?php
 
-namespace Mix\Core;
+namespace Mix\Core\Application;
 
 /**
  * Interface InitializationInterface
  * @author LIUJIAN <coder.keda@gmail.com>
- * @package Mix\Core
+ * @package Mix\Core\Application
  */
 interface InitializationInterface
 {

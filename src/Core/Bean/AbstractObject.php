@@ -6,11 +6,11 @@ use Mix\Core\StaticInstance\StaticInstanceInterface;
 use Mix\Core\StaticInstance\StaticInstanceTrait;
 
 /**
- * Class BeanObject
+ * Class AbstractObject
  * @package Mix\Core\Bean
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-abstract class BeanObject implements StaticInstanceInterface
+abstract class AbstractObject implements StaticInstanceInterface
 {
 
     use StaticInstanceTrait;

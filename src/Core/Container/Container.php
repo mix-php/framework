@@ -3,14 +3,14 @@
 namespace Mix\Core\Container;
 
 use Mix\Core\Component\ComponentInterface;
-use Mix\Core\Bean\BeanObject;
+use Mix\Core\Bean\AbstractObject;
 
 /**
  * Class Container
  * @package Mix\Core\Container
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class Container extends BeanObject
+class Container extends AbstractObject
 {
 
     /**

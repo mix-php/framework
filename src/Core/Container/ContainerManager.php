@@ -2,10 +2,10 @@
 
 namespace Mix\Core\Container;
 
-use Mix\Core\Bean\Bean;
+use Mix\Core\Bean;
 use Mix\Core\Component\Component;
-use Mix\Core\Coroutine\Coroutine;
-use Mix\Core\Bean\BeanObject;
+use Mix\Core\Coroutine;
+use Mix\Core\Bean\AbstractObject;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -13,7 +13,7 @@ use Psr\Container\ContainerInterface;
  * @package Mix\Core\Container
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class ContainerManager extends BeanObject implements ContainerInterface
+class ContainerManager extends AbstractObject implements ContainerInterface
 {
 
     /**

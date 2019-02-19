@@ -1,9 +1,10 @@
 <?php
 
-namespace Mix\Core\Coroutine;
+namespace Mix\Core;
 
 /**
- * Coroutine类
+ * Class Coroutine
+ * @package Mix\Core
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Coroutine

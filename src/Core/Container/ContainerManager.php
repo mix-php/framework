@@ -5,6 +5,7 @@ namespace Mix\Core\Container;
 use Mix\Core\Bean;
 use Mix\Core\Coroutine;
 use Mix\Core\Bean\AbstractObject;
+use Mix\Core\Component\ComponentInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -79,7 +80,7 @@ class ContainerManager extends AbstractObject implements ContainerInterface
         if ($mode === false) {
             $tid = -2;
         }
-        if ($mode == Component::COROUTINE_MODE_REFERENCE) {
+        if ($mode == ComponentInterface::COROUTINE_MODE_REFERENCE) {
             $tid = -1;
         }
         return $tid;

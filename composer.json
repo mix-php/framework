@@ -27,7 +27,6 @@
       "src/Mix.php"
     ],
     "files": [
-      "src/constants.php",
       "src/functions.php"
     ]
   }

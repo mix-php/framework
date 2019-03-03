@@ -70,7 +70,7 @@ class FileSystemHelper
             if (($file != '.') && ($file != '..')) {
                 $full = $dir . '/' . $file;
                 if (is_dir($full)) {
-                    self::removeDirectory($full);
+                    self::deleteFolder($full);
                 } else {
                     unlink($full);
                 }

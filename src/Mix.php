@@ -79,10 +79,10 @@ class Mix
             $var        = self::getVarFrom($docComment);
             if ($var) {
                 if (!interface_exists($var) && !class_exists($var)) {
-                    throw new \Mix\Exceptions\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
+                    throw new \Mix\Exception\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
                 }
                 if (!($value instanceof $var)) {
-                    throw new \Mix\Exceptions\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+                    throw new \Mix\Exception\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
                 }
             }
             // 导入

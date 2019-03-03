@@ -1,10 +1,10 @@
 <?php
 
-namespace Mix\Exceptions;
+namespace Mix\Exception;
 
 /**
  * Class InvalidArgumentException
- * @package Mix\Exceptions
+ * @package Mix\Exception
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class InvalidArgumentException extends \InvalidArgumentException

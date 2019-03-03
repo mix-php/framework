@@ -1,10 +1,10 @@
 <?php
 
-namespace Mix\Helpers;
+namespace Mix\Helper;
 
 /**
  * Class FileSystemHelper
- * @package Mix\Helpers
+ * @package Mix\Helper
  * @author LIUJIAN <coder.keda@gmail.com>
  */
 class FileSystemHelper

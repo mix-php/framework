@@ -39,13 +39,13 @@ class Container extends AbstractObject
         }
         // 未注册
         if (!isset($config[$name])) {
-            throw new \Mix\Exceptions\ComponentException("Did not register this component: {$name}");
+            throw new \Mix\Exception\ComponentException("Did not register this component: {$name}");
         }
         // 创建组件
         $object = \Mix::createComponent($config[$name]);
         // 组件效验
         if (!($object instanceof ComponentInterface)) {
-            throw new \Mix\Exceptions\ComponentException("This class is not a component: {$config[$name]['class']}");
+            throw new \Mix\Exception\ComponentException("This class is not a component: {$config[$name]['class']}");
         }
         // 装入容器
         $this->_instances[$name] = $object;

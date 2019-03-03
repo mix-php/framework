@@ -55,7 +55,7 @@ class Bean
             if (self::isBase64($name)) {
                 $name = base64_decode($name);
             }
-            throw new \Mix\Exceptions\ConfigException("Bean configuration not found: {$name}");
+            throw new \Mix\Exception\ConfigException("Bean configuration not found: {$name}");
         }
         return self::$_config[$name];
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mix\Helpers;
+namespace Mix\Helper;
 
 /**
  * ProcessHelper类

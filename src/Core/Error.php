@@ -48,11 +48,11 @@ class Error
         if (error_reporting() & $errno) {
             // 委托给异常处理
             if (self::isFatalWarning($errno, $errstr)) {
-                self::appException(new \Mix\Exceptions\ErrorException($errno, $errstr, $errfile, $errline));
+                self::appException(new \Mix\Exception\ErrorException($errno, $errstr, $errfile, $errline));
                 return;
             }
             // 转换为异常抛出
-            throw new \Mix\Exceptions\ErrorException($errno, $errstr, $errfile, $errline);
+            throw new \Mix\Exception\ErrorException($errno, $errstr, $errfile, $errline);
         }
     }
 
@@ -63,7 +63,7 @@ class Error
     {
         if (!is_null($error = error_get_last()) && self::isFatal($error['type'])) {
             // 委托给异常处理
-            self::appException(new \Mix\Exceptions\ErrorException($error['type'], $error['message'], $error['file'], $error['line']));
+            self::appException(new \Mix\Exception\ErrorException($error['type'], $error['message'], $error['file'], $error['line']));
         }
     }
 

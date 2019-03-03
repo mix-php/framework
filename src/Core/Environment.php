@@ -31,7 +31,7 @@ class Environment extends AbstractObject
     public function load()
     {
         if (!is_file($this->filename)) {
-            throw new \Mix\Exceptions\ConfigException("Environment file does not exist: {$this->filename}");
+            throw new \Mix\Exception\ConfigException("Environment file does not exist: {$this->filename}");
         }
         $this->_data = array_merge(parse_ini_file($this->filename), $_SERVER, $_ENV);
         return true;

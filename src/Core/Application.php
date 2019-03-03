@@ -3,7 +3,7 @@
 namespace Mix\Core;
 
 use Mix\Core\Container\ContainerManager;
-use Mix\Helpers\FileSystemHelper;
+use Mix\Helper\FileSystemHelper;
 use Mix\Core\Bean\AbstractObject;
 use Mix\Core\Application\InitializationInterface;
 
@@ -76,13 +76,13 @@ class Application extends AbstractObject implements \ApplicationInterface
         // 判断一级配置是否存在
         $first = array_shift($fragments);
         if (!isset($this->$first)) {
-            throw new \Mix\Exceptions\ConfigException($message);
+            throw new \Mix\Exception\ConfigException($message);
         }
         // 判断其他配置是否存在
         $current = $this->$first;
         foreach ($fragments as $key) {
             if (!isset($current[$key])) {
-                throw new \Mix\Exceptions\ConfigException($message);
+                throw new \Mix\Exception\ConfigException($message);
             }
             $current = $current[$key];
         }

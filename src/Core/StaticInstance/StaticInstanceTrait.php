@@ -34,7 +34,7 @@ trait StaticInstanceTrait
         $class        = $bean['class'];
         $properties   = $bean['properties'] ?? [];
         if ($class != $currentClass) {
-            throw new \Mix\Exceptions\ConfigException("Bean class is not equal to the current class, Current class: {$currentClass}, Bean class: {$class}");
+            throw new \Mix\Exception\ConfigException("Bean class is not equal to the current class, Current class: {$currentClass}, Bean class: {$class}");
         }
         return $object = new $class($properties);
     }

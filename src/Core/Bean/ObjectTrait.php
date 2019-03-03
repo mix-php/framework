@@ -2,8 +2,6 @@
 
 namespace Mix\Core\Bean;
 
-use Mix\Core\StaticInstance\StaticInstanceTrait;
-
 /**
  * Trait ObjectTrait
  * @package Mix\Core\Bean
@@ -11,8 +9,6 @@ use Mix\Core\StaticInstance\StaticInstanceTrait;
  */
 trait ObjectTrait
 {
-
-    use StaticInstanceTrait;
 
     /**
      * 父级对象
@@ -64,6 +60,23 @@ trait ObjectTrait
      */
     public function onDestruct()
     {
+    }
+
+    /**
+     * 使用依赖创建实例
+     * @param $name
+     * @return $this
+     */
+    public static function newInstance($name = null)
+    {
+        $currentClass = get_called_class();
+        $bean         = Bean::config(is_null($name) ? Bean::name($currentClass) : $name);
+        $class        = $bean['class'];
+        $properties   = $bean['properties'] ?? [];
+        if ($class != $currentClass) {
+            throw new \Mix\Exception\ConfigException("Bean class is not equal to the current class, Current class: {$currentClass}, Bean class: {$class}");
+        }
+        return $object = new $class($properties);
     }
 
 }

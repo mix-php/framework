@@ -2,23 +2,28 @@
 
 namespace Mix\Core\Coroutine;
 
-use Mix\Core\StaticInstance\StaticInstanceInterface;
-use Mix\Core\StaticInstance\StaticInstanceTrait;
-
 /**
  * Class Timer
  * @package Mix\Core
  */
-class Timer implements StaticInstanceInterface
+class Timer
 {
-
-    use StaticInstanceTrait;
 
     /**
      * 定时器ID
      * @var int
      */
     protected $_timerId;
+
+    /**
+     * 使用静态方法创建实例
+     * @param mixed ...$args
+     * @return $this
+     */
+    public static function new(...$args)
+    {
+        return new static(...$args);
+    }
 
     /**
      * 在指定的时间后执行函数

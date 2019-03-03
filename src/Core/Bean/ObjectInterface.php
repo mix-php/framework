@@ -2,14 +2,12 @@
 
 namespace Mix\Core\Bean;
 
-use Mix\Core\StaticInstance\StaticInstanceInterface;
-
 /**
  * Interface ObjectInterface
  * @package Mix\Core\Bean
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-interface ObjectInterface extends StaticInstanceInterface
+interface ObjectInterface
 {
 
     /**
@@ -38,5 +36,12 @@ interface ObjectInterface extends StaticInstanceInterface
      * 析构事件
      */
     public function onDestruct();
+
+    /**
+     * 使用依赖创建实例
+     * @param $name
+     * @return $this
+     */
+    public static function newInstance($name = null);
 
 }

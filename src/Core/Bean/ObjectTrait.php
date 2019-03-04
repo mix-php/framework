@@ -76,7 +76,7 @@ trait ObjectTrait
         if ($class != $currentClass) {
             throw new \Mix\Exception\ConfigException("Bean class is not equal to the current class, Current class: {$currentClass}, Bean class: {$class}");
         }
-        return $object = new $class($properties);
+        return new $class($properties);
     }
 
 }

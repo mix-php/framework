@@ -2,6 +2,7 @@
 
 namespace Mix\Core;
 
+use Mix\Core\Component\ComponentInterface;
 use Mix\Core\Container\ContainerManager;
 use Mix\Helper\FileSystemHelper;
 use Mix\Core\Bean\AbstractObject;
@@ -63,15 +64,25 @@ class Application extends AbstractObject implements \ApplicationInterface
     }
 
     // 判断组件是否存在
-    public function has($name)
+    public function isRegistered($name)
     {
-        return isset($this->components[$name]);
+        return isset($this->components[$name]) ? true : false;
+    }
+
+    // 判断组件是否在执行
+    public function isRunning($name)
+    {
+        if (!$this->container->has($name)) {
+            return false;
+        }
+        $component = $this->container->get($name);
+        return $component->getStatus() == ComponentInterface::STATUS_RUNNING ? true : false;
     }
 
     // 获取配置
     public function config($name)
     {
-        $message   = "Config does not exist: {$name}.";
+        $message = "Config does not exist: {$name}.";
         $fragments = explode('.', $name);
         // 判断一级配置是否存在
         $first = array_shift($fragments);

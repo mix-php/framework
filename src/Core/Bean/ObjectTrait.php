@@ -11,12 +11,6 @@ trait ObjectTrait
 {
 
     /**
-     * 父级对象
-     * @var mixed
-     */
-    public $parent;
-
-    /**
      * 构造
      * BeanObject constructor.
      * @param array $config

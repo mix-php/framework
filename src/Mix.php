@@ -73,20 +73,25 @@ class Mix
     public static function importProperties($object, $config)
     {
         foreach ($config as $name => $value) {
-            // 注释类型检测
-            $class      = get_class($object);
-            $docComment = (new \ReflectionClass($class))->getProperty($name)->getDocComment();
-            $var        = self::getVarFrom($docComment);
-            if ($var) {
-                if (!interface_exists($var) && !class_exists($var)) {
-                    throw new \Mix\Exception\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
-                }
-                if (!($value instanceof $var)) {
-                    throw new \Mix\Exception\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
-                }
-            }
             // 导入
             $object->$name = $value;
+            // 注释类型检测
+            $class      = get_class($object);
+            $reflection = new \ReflectionClass($class);
+            if (!$reflection->hasProperty($name)) {
+                continue;
+            }
+            $docComment = $reflection->getProperty($name)->getDocComment();
+            $var        = self::getVarFrom($docComment);
+            if (!$var) {
+                continue;
+            }
+            if (!interface_exists($var) && !class_exists($var)) {
+                throw new \Mix\Exception\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
+            }
+            if (!($value instanceof $var)) {
+                throw new \Mix\Exception\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+            }
         }
         return $object;
     }

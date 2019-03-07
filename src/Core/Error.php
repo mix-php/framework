@@ -73,11 +73,6 @@ class Error
      */
     public static function appException($e)
     {
-        // 结束处理
-        if ($e instanceof \Mix\Exception\EndException) {
-            return;
-        }
-        // 异常处理
         \Mix::$app->error->handleException($e);
     }
 

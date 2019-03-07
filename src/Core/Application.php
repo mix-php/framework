@@ -166,12 +166,4 @@ class Application extends AbstractObject implements \ApplicationInterface
         return $this->runtimePath;
     }
 
-    /**
-     * 终止程序
-     */
-    public function end()
-    {
-        throw new \Mix\Exception\EndException();
-    }
-
 }

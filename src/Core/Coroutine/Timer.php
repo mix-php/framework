@@ -4,7 +4,8 @@ namespace Mix\Core\Coroutine;
 
 /**
  * Class Timer
- * @package Mix\Core
+ * @package Mix\Core\Coroutine
+ * @author LIUJIAN <coder.keda@gmail.com>
  */
 class Timer
 {

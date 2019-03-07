@@ -2,6 +2,8 @@
 
 namespace Mix\Core\Bean;
 
+use Mix\Core\Bean;
+
 /**
  * Trait ObjectTrait
  * @package Mix\Core\Bean

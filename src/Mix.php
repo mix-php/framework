@@ -15,7 +15,7 @@ class Mix
 
     /**
      * App实例
-     * @var \Mix\Http\Application|\Mix\Console\Application
+     * @var \Mix\Console\Application|\Mix\Http\Application|\Mix\WebSocket\Application
      */
     public static $app;
 

@@ -2,6 +2,8 @@
 
 namespace Mix\Core\Bean;
 
+use Mix\Core\Bean;
+
 /**
  * Class AbstractObject
  * @package Mix\Core\Bean
@@ -9,7 +11,7 @@ namespace Mix\Core\Bean;
  */
 abstract class AbstractObject implements ObjectInterface
 {
-    
+
     /**
      * 构造
      * BeanObject constructor.

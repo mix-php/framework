@@ -15,7 +15,7 @@ class Coroutine
      * @var array
      */
     private static $idMap = [];
-    
+
     /**
      * tid计数
      * @var array
@@ -86,7 +86,7 @@ class Coroutine
                 $tid = $id;
             }
             self::$idMap[$id] = $tid;
-            self::$tidCount[$tid] =  self::$tidCount[$tid] ?? 0;
+            self::$tidCount[$tid] = self::$tidCount[$tid] ?? 0;
             self::$tidCount[$tid]++;
             // 执行闭包
             try {
@@ -99,20 +99,11 @@ class Coroutine
             unset(self::$idMap[$id]);
             self::$tidCount[$tid]--;
             // 清除协程
-            self::clear();
+            if (self::$tidCount[$tid] == 0) {
+                unset(self::$tidCount[$tid]);
+                \Mix::$app->container->delete($tid);
+            }
         });
-    }
-    
-     /**
-     * 清除协程
-     */
-    public static function clear()
-    {
-        if (self::$tidCount[$tid] > 0) {
-            return;
-        }
-        unset(self::$tidCount[$tid]);
-        \Mix::$app->container->delete($tid);
     }
 
 }

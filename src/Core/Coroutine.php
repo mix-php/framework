@@ -15,6 +15,12 @@ class Coroutine
      * @var array
      */
     private static $idMap = [];
+    
+    /**
+     * tid计数
+     * @var array
+     */
+    private static $tidCount = [];
 
     /**
      * 获取协程id
@@ -80,6 +86,8 @@ class Coroutine
                 $tid = $id;
             }
             self::$idMap[$id] = $tid;
+            self::$tidCount[$tid] =  self::$tidCount[$tid] ?? 0;
+            self::$tidCount[$tid]++;
             // 执行闭包
             try {
                 call_user_func($function);
@@ -89,11 +97,22 @@ class Coroutine
             }
             // 清理协程资源
             unset(self::$idMap[$id]);
-            // 只在命令行的顶级协程结束时才移除容器
-            if ($top && \Mix::$app instanceof \Mix\Console\Application) {
-                \Mix::$app->container->delete($tid);
-            }
+            self::$tidCount[$tid]--;
+            // 清除协程
+            self::clear();
         });
+    }
+    
+     /**
+     * 清除协程
+     */
+    public static function clear()
+    {
+        if (self::$tidCount[$tid] > 0) {
+            return;
+        }
+        unset(self::$tidCount[$tid]);
+        \Mix::$app->container->delete($tid);
     }
 
 }

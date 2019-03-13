@@ -27,23 +27,22 @@ class Mix
 
     /**
      * 构建配置
-     * @param $parent
-     * @param $config
+     * @param array $config
      * @param bool $ref
      * @return mixed
      */
-    public static function configure($parent, $config, $ref = false)
+    public static function configure($config, $ref = false)
     {
         foreach ($config as $key => $value) {
             // 子类处理
             if (is_array($value)) {
                 // 引用依赖
                 if (isset($value['ref'])) {
-                    $config[$key] = self::configure($parent, $value, true);
+                    $config[$key] = self::configure($value, true);
                 }
                 // 引用组件
                 if (isset($value['component'])) {
-                    $name = $value['component'];
+                    $name         = $value['component'];
                     $config[$key] = self::$app->$name;
                 }
             }
@@ -51,13 +50,10 @@ class Mix
         if ($ref) {
             // 实例化
             if (isset($config['ref'])) {
-                $name = $config['ref'];
-                $bean = \Mix\Core\Bean::config($name);
-                $class = $bean['class'];
+                $name       = $config['ref'];
+                $bean       = \Mix\Core\Bean::config($name);
+                $class      = $bean['class'];
                 $properties = $bean['properties'] ?? [];
-                if (!isset($properties['parent'])) {
-                    $properties['parent'] = $parent;
-                }
                 return new $class($properties);
             }
         }
@@ -76,13 +72,13 @@ class Mix
             // 导入
             $object->$name = $value;
             // 注释类型检测
-            $class = get_class($object);
+            $class      = get_class($object);
             $reflection = new \ReflectionClass($class);
             if (!$reflection->hasProperty($name)) {
                 continue;
             }
             $docComment = $reflection->getProperty($name)->getDocComment();
-            $var = self::getVarFrom($docComment);
+            $var        = self::getVarFrom($docComment);
             if (!$var) {
                 continue;
             }
@@ -107,10 +103,10 @@ class Mix
         if (!$docComment) {
             return $var;
         }
-        $key = '@var';
-        $len = 4;
+        $key   = '@var';
+        $len   = 4;
         $start = strpos($docComment, $key);
-        $end = strpos($docComment, '*', $start + $len);
+        $end   = strpos($docComment, '*', $start + $len);
         if ($start !== false && $end !== false) {
             $tmp = substr($docComment, $start + $len, $end - $start - $len);
             $tmp = explode(' ', trim($tmp));
@@ -127,9 +123,9 @@ class Mix
      */
     public static function createComponent($config)
     {
-        $name = $config['ref'];
-        $bean = \Mix\Core\Bean::config($name);
-        $class = $bean['class'];
+        $name       = $config['ref'];
+        $bean       = \Mix\Core\Bean::config($name);
+        $class      = $bean['class'];
         $properties = $bean['properties'] ?? [];
         return new $class($properties);
     }

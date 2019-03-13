@@ -22,7 +22,7 @@ abstract class AbstractObject implements ObjectInterface
         // 执行构造事件
         $this->onConstruct();
         // 构建配置
-        $config = \Mix::configure($this, $config);
+        $config = \Mix::configure($config);
         // 导入属性
         \Mix::importProperties($this, $config);
         // 执行初始化事件

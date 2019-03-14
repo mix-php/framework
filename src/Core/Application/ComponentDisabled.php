@@ -3,11 +3,11 @@
 namespace Mix\Core\Application;
 
 /**
- * Class ComponentBeforeInitialize
+ * Class ComponentDisabled
  * @package Mix\Core\Application
  * @author LIUJIAN <coder.keda@gmail.com>
  */
-class ComponentBeforeInitialize
+class ComponentDisabled
 {
 
     /**

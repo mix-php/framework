@@ -22,11 +22,15 @@ trait ComponentInitializeTrait
         $component = $this->container->get($name);
         // 触发前置处理事件
         self::triggerBeforeInitialize($component);
-        // 返回组件
-        if ($component->getStatus() != ComponentInterface::STATUS_RUNNING) {
-            return new ComponentBeforeInitialize($component, $name);
+        // 修改引用组件状态
+        if (self::getCoroutineMode($component) == ComponentInterface::COROUTINE_MODE_REFERENCE && $component->getStatus() == ComponentInterface::STATUS_READY) {
+            $component->setStatus(ComponentInterface::STATUS_RUNNING);
         }
-        // 组件
+        // 停用未初始化的组件
+        if ($component->getStatus() != ComponentInterface::STATUS_RUNNING) {
+            return new ComponentDisabled($component, $name);
+        }
+        // 返回组件
         return $component;
     }
 
@@ -51,6 +55,9 @@ trait ComponentInitializeTrait
      */
     protected static function triggerBeforeInitialize($component)
     {
+        if (self::getCoroutineMode($component) == ComponentInterface::COROUTINE_MODE_REFERENCE) {
+            return;
+        }
         if ($component->getStatus() == ComponentInterface::STATUS_READY) {
             $component->onBeforeInitialize();
         }
@@ -62,9 +69,23 @@ trait ComponentInitializeTrait
      */
     protected static function triggerAfterInitialize($component)
     {
+        if (self::getCoroutineMode($component) == ComponentInterface::COROUTINE_MODE_REFERENCE) {
+            return;
+        }
         if ($component->getStatus() == ComponentInterface::STATUS_RUNNING) {
             $component->onAfterInitialize();
         }
+    }
+
+    /**
+     * 获取协程模式
+     * @param $component
+     * @return bool
+     */
+    protected static function getCoroutineMode($component)
+    {
+        $class = get_class($component);
+        return $class::$coroutineMode ?? false;
     }
 
 }

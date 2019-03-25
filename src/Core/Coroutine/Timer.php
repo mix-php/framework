@@ -21,9 +21,9 @@ class Timer
      * @param mixed ...$args
      * @return $this
      */
-    public static function new(...$args)
+    public static function new()
     {
-        return new static(...$args);
+        return new static();
     }
 
     /**

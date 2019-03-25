@@ -37,6 +37,14 @@ if (!function_exists('xgo')) {
     }
 }
 
+if (!function_exists('xdefer')) {
+    // 创建延迟执行
+    function xdefer($function)
+    {
+        return \Swoole\Coroutine::defer($function);
+    }
+}
+
 if (!function_exists('println')) {
     // 输出字符串并换行
     function println($strings)

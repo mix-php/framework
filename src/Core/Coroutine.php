@@ -74,23 +74,24 @@ class Coroutine
     /**
      * 创建协程
      * @param callable $function
+     * @param array $params
      */
-    public static function create(callable $function)
+    public static function create(callable $function, array $params)
     {
         $tid = self::tid();
         $top = $tid == self::id();
-        go(function () use ($function, $tid, $top) {
+        go(function () use ($function, $params, $tid, $top) {
             // 记录协程id关系
             $id = self::id();
             if ($top && $tid == -1) {
                 $tid = $id;
             }
-            self::$idMap[$id] = $tid;
+            self::$idMap[$id]     = $tid;
             self::$tidCount[$tid] = self::$tidCount[$tid] ?? 0;
             self::$tidCount[$tid]++;
             // 执行闭包
             try {
-                call_user_func($function);
+                call_user_func_array($function, $params);
             } catch (\Throwable $e) {
                 // 输出错误
                 \Mix::$app->error->handleException($e);

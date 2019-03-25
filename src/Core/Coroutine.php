@@ -74,9 +74,9 @@ class Coroutine
     /**
      * 创建协程
      * @param callable $function
-     * @param array $params
+     * @param mixed ...$params
      */
-    public static function create(callable $function, array $params)
+    public static function create(callable $function, ...$params)
     {
         $tid = self::tid();
         $top = $tid == self::id();

@@ -31,9 +31,9 @@ if (!function_exists('beanname')) {
 
 if (!function_exists('xgo')) {
     // 创建协程
-    function xgo($function, $params = [])
+    function xgo($function, ...$params)
     {
-        \Mix\Core\Coroutine::create($function, $params);
+        \Mix\Core\Coroutine::create($function, ...$params);
     }
 }
 

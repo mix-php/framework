@@ -51,7 +51,7 @@ class MiddlewareHandler
             return call_user_func_array($callback, $params);
         }
         return $item->handle($callback, function () use ($callback, $params) {
-            return $this->run($callback, $params);
+            return $this->run($callback, ...$params);
         });
     }
 

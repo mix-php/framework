@@ -11,37 +11,64 @@ class MiddlewareHandler
 {
 
     /**
+     * 实例集合
+     * @var array
+     */
+    protected $instances = [];
+
+    /**
+     * 使用静态方法创建实例
+     * @param string $namespace
+     * @param array $middleware
+     * @return $this
+     */
+    public static function new(string $namespace, array $middleware)
+    {
+        return new static($namespace, $middleware);
+    }
+
+    /**
+     * 构造
+     * MiddlewareHandler constructor.
+     * @param string $namespace
+     * @param array $middleware
+     */
+    public function __construct(string $namespace, array $middleware)
+    {
+        $this->instances = static::newInstances($namespace, $middleware);
+    }
+
+    /**
      * 执行中间件
      * @param callable $callback
-     * @param array $params
-     * @param array $middlewares
+     * @param mixed ...$params
      * @return mixed
      */
-    public static function run(callable $callback, array $params, array $middlewares)
+    public function run(callable $callback, ...$params)
     {
-        $item = array_shift($middlewares);
+        $item = array_shift($this->instances);
         if (empty($item)) {
             return call_user_func_array($callback, $params);
         }
-        return $item->handle($callback, function () use ($callback, $params, $middlewares) {
-            return self::run($callback, $params, $middlewares);
+        return $item->handle($callback, function () use ($callback, $params) {
+            return $this->run($callback, $params);
         });
     }
 
     /**
      * 实例化中间件
      * @param string $namespace
-     * @param array $middlewares
+     * @param array $middleware
      * @return array
      */
-    public static function newInstances(string $namespace, array $middlewares)
+    protected static function newInstances(string $namespace, array $middleware)
     {
         $instances = [];
-        foreach ($middlewares as $key => $name) {
+        foreach ($middleware as $key => $name) {
             $class  = "{$namespace}\\{$name}Middleware";
             $object = new $class();
             if (!($object instanceof MiddlewareInterface)) {
-                throw new \RuntimeException("{$class} type is not 'Mix\Http\Middleware\MiddlewareInterface'");
+                throw new \RuntimeException("{$class} type is not 'Mix\Core\Middleware\MiddlewareInterface'");
             }
             $instances[$key] = $object;
         }

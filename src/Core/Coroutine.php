@@ -46,9 +46,9 @@ class Coroutine
     }
 
     /**
-     * 开启协程
+     * 启用协程钩子
      */
-    public static function enable()
+    public static function enableHook()
     {
         static $trigger = false;
         if (!$trigger) {
@@ -58,9 +58,9 @@ class Coroutine
     }
 
     /**
-     * 关闭协程
+     * 禁用内置协程
      */
-    public static function disable()
+    public static function disableBuilt()
     {
         static $trigger = false;
         if (!$trigger) {

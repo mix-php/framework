@@ -2,6 +2,8 @@
 
 namespace Mix\Core\Coroutine;
 
+use Mix\Core\Coroutine;
+
 /**
  * Class Timer
  * @package Mix\Core\Coroutine
@@ -39,13 +41,8 @@ class Timer
         $this->clear();
         // 设置定时器
         $timerId = swoole_timer_after($msec, function () use ($callback) {
-            // 执行闭包
-            try {
-                call_user_func($callback);
-            } catch (\Throwable $e) {
-                // 输出错误
-                \Mix::$app->error->handleException($e);
-            }
+            // 创建协程
+            Coroutine::create($callback);
         });
         // 保存id
         $this->_timerId = $timerId;
@@ -66,13 +63,8 @@ class Timer
         $this->clear();
         // 设置定时器
         $timerId = swoole_timer_tick($msec, function () use ($callback) {
-            // 执行闭包
-            try {
-                call_user_func($callback);
-            } catch (\Throwable $e) {
-                // 输出错误
-                \Mix::$app->error->handleException($e);
-            }
+            // 创建协程
+            Coroutine::create($callback);
         });
         // 保存id
         $this->_timerId = $timerId;

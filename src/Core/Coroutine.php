@@ -60,7 +60,7 @@ class Coroutine
     /**
      * 禁用内置协程
      */
-    public static function disableBuilt()
+    public static function disableBuiltin()
     {
         static $trigger = false;
         if (!$trigger) {

@@ -8,7 +8,7 @@ use Mix\Core\Bean\AbstractObject;
 /**
  * Class Container
  * @package Mix\Core\Container
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class Container extends AbstractObject
 {

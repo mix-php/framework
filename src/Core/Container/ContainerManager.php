@@ -11,7 +11,7 @@ use Psr\Container\ContainerInterface;
 /**
  * Class ContainerManager
  * @package Mix\Core\Container
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class ContainerManager extends AbstractObject implements ContainerInterface
 {

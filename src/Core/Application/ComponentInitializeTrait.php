@@ -7,7 +7,7 @@ use Mix\Core\Component\ComponentInterface;
 /**
  * Trait ComponentInitializeTrait
  * @package Mix\Http\Application
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 trait ComponentInitializeTrait
 {

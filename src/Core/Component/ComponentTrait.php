@@ -5,7 +5,7 @@ namespace Mix\Core\Component;
 /**
  * Trait ComponentTrait
  * @package Mix\Core\Component
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 trait ComponentTrait
 {

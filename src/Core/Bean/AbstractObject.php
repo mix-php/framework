@@ -7,7 +7,7 @@ use Mix\Core\Bean;
 /**
  * Class AbstractObject
  * @package Mix\Core\Bean
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 abstract class AbstractObject implements ObjectInterface
 {

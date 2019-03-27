@@ -5,7 +5,7 @@ namespace Mix\Core\Bean;
 /**
  * Interface ObjectInterface
  * @package Mix\Core\Bean
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 interface ObjectInterface
 {

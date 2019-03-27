@@ -4,7 +4,7 @@ namespace Mix\Helper;
 
 /**
  * RandomStringHelper类
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class RandomStringHelper
 {

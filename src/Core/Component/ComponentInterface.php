@@ -5,7 +5,7 @@ namespace Mix\Core\Component;
 /**
  * Interface ComponentInterface
  * @package Mix\Core\Component
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 interface ComponentInterface
 {

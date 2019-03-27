@@ -7,7 +7,7 @@ use Mix\Core\Bean\AbstractObject;
 /**
  * Class Environment
  * @package Mix\Core\Config
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class Environment extends AbstractObject
 {

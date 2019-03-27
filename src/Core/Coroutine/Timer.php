@@ -7,7 +7,7 @@ use Mix\Core\Coroutine;
 /**
  * Class Timer
  * @package Mix\Core\Coroutine
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class Timer
 {

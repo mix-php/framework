@@ -5,7 +5,7 @@ namespace Mix\Core\Application;
 /**
  * Class ComponentDisabled
  * @package Mix\Core\Application
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class ComponentDisabled
 {

@@ -11,7 +11,7 @@ use Mix\Core\Application\InitializationInterface;
 /**
  * Class Application
  * @package Mix\Core
- * @author LIUJIAN <coder.keda@gmail.com>
+ * @author liu,jian <coder.keda@gmail.com>
  */
 class Application extends AbstractObject implements \ApplicationInterface
 {

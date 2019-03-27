@@ -11,7 +11,7 @@ class Mix
      * 版本号
      * @var string
      */
-    public static $version = '2.0.1-RC5';
+    public static $version = '2.0.1';
 
     /**
      * App实例

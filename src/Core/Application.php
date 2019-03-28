@@ -80,10 +80,11 @@ class Application extends AbstractObject implements \ApplicationInterface
         \Mix\Core\Error::register();
         // 执行初始化回调
         foreach ($this->initialization as $initialization) {
-            if (!($initialization instanceof InitializationInterface)) {
+            $instance = new $initialization;
+            if (!($instance instanceof InitializationInterface)) {
                 throw new \RuntimeException("{$initialization} type is not 'Mix\Core\Application\InitializationInterface'");
             }
-            $initialization->handle();
+            $instance->handle();
         }
     }
 

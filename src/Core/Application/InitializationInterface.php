@@ -4,8 +4,8 @@ namespace Mix\Core\Application;
 
 /**
  * Interface InitializationInterface
- * @author liu,jian <coder.keda@gmail.com>
  * @package Mix\Core\Application
+ * @author liu,jian <coder.keda@gmail.com>
  */
 interface InitializationInterface
 {

@@ -62,6 +62,11 @@ class Coroutine
      */
     public static function disableBuiltin()
     {
+        // 兼容非 Swoole Console
+        if (!function_exists('swoole_async_set')) {
+            return;
+        }
+        // 禁用
         static $trigger = false;
         if (!$trigger) {
             swoole_async_set([

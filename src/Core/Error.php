@@ -78,11 +78,11 @@ class Error
     }
 
     /**
-     * 返回错误类型
+     * 返回错误级别
      * @param $errno
      * @return string
      */
-    public static function getType($errno)
+    public static function getLevel($errno)
     {
         if (self::isError($errno)) {
             return 'error';

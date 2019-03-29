@@ -6,7 +6,6 @@ use Mix\Core\Component\ComponentInterface;
 use Mix\Core\Container\ContainerManager;
 use Mix\Helper\FileSystemHelper;
 use Mix\Core\Bean\AbstractObject;
-use Mix\Core\Application\InitializationInterface;
 
 /**
  * Class Application
@@ -21,12 +20,6 @@ class Application extends AbstractObject implements \ApplicationInterface
      * @var bool
      */
     public $appDebug = true;
-
-    /**
-     * 初始化
-     * @var array
-     */
-    public $initialization = [];
 
     /**
      * 基础路径
@@ -78,14 +71,6 @@ class Application extends AbstractObject implements \ApplicationInterface
         ]);
         // 错误注册
         \Mix\Core\Error::register();
-        // 执行初始化回调
-        foreach ($this->initialization as $initialization) {
-            $instance = new $initialization;
-            if (!($instance instanceof InitializationInterface)) {
-                throw new \RuntimeException("{$initialization} type is not 'Mix\Core\Application\InitializationInterface'");
-            }
-            $instance->handle();
-        }
     }
 
     /**

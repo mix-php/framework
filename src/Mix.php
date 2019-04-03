@@ -51,6 +51,7 @@ class Mix
                     if (isset($value['ref'])) {
                         $config[$key] = self::configure($value);
                     }
+                    //组件
                     if (isset($value['component'])) {
                         $name         = $value['component'];
                         $config[$key] = self::$app->$name;
@@ -96,7 +97,7 @@ class Mix
             if (substr($var, -2) === '[]') {
                 //当前的doc标注里面这是一个数组，去掉数组的尾巴
                 $var          = substr($var, 0, -2);
-                //当前的$value已经是个数组了
+                //这时候当前的$value已经是个被依赖注入自动维护的实例数组了 不需要特殊处理
             }else{
                 //不是数组，弄成临时数组 方便下面遍历检查
                 $value=[$value];

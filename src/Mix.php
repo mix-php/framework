@@ -57,7 +57,7 @@ class Mix
                     }
                 }
 
-            } elseif ($key === 'ref') {
+            } elseif ($key === 'ref') {// 实例化
                 $name       = $config['ref'];
                 $bean       = \Mix\Core\Bean::config($name);
                 $class      = $bean['class'];

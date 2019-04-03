@@ -2,6 +2,7 @@
 
 /**
  * Class Mix
+ *
  * @author liu,jian <coder.keda@gmail.com>
  */
 class Mix
@@ -9,51 +10,60 @@ class Mix
 
     /**
      * 版本号
+     *
      * @var string
      */
     public static $version = '2.0.1';
-
     /**
      * App实例
+     *
      * @var \Mix\Console\Application|\Mix\Http\Application|\Mix\WebSocket\Application|\Mix\Tcp\Application|\Mix\Udp\Application
      */
     public static $app;
-
     /**
      * 环境配置
+     *
      * @var \Mix\Core\Environment
      */
     public static $env;
 
     /**
      * 构建配置
+     *
      * @param array $config
-     * @param bool $ref
+     * @param bool  $ref
+     *
      * @return mixed
      */
-    public static function configure($config, $ref = false)
+    public static function configure(array $config)
     {
         foreach ($config as $key => $value) {
             // 子类处理
             if (is_array($value)) {
-                // 引用依赖
-                if (isset($value['ref'])) {
-                    $config[$key] = self::configure($value, true);
+                if (array_values($value) === $value) {//非关联数组
+                    foreach ($value as $subNumberKey => $subValue) {
+                        if (isset($subValue['ref'])) {
+                            $config[$key][$subNumberKey] = self::configure($subValue);
+                        }
+                    }
+                } else {
+                    // 引用依赖
+                    if (isset($value['ref'])) {
+                        $config[$key] = self::configure($value);
+                    }
+                    //组件
+                    if (isset($value['component'])) {
+                        $name         = $value['component'];
+                        $config[$key] = self::$app->$name;
+                    }
                 }
-                // 引用组件
-                if (isset($value['component'])) {
-                    $name         = $value['component'];
-                    $config[$key] = self::$app->$name;
-                }
-            }
-        }
-        if ($ref) {
-            // 实例化
-            if (isset($config['ref'])) {
+
+            } elseif ($key === 'ref') {// 实例化
                 $name       = $config['ref'];
                 $bean       = \Mix\Core\Bean::config($name);
                 $class      = $bean['class'];
                 $properties = $bean['properties'] ?? [];
+
                 return new $class($properties);
             }
         }
@@ -62,8 +72,10 @@ class Mix
 
     /**
      * 导入属性
+     *
      * @param $object
      * @param $config
+     *
      * @return mixed
      */
     public static function importProperties($object, $config)
@@ -82,19 +94,33 @@ class Mix
             if (!$var) {
                 continue;
             }
+            if (substr($var, -2) === '[]') {
+                //当前的doc标注里面这是一个数组，去掉数组的尾巴
+                $var          = substr($var, 0, -2);
+                //这时候当前的$value已经是个被依赖注入自动维护的实例数组了 不需要特殊处理
+            }else{
+                //不是数组，弄成临时数组 方便下面遍历检查
+                $value=[$value];
+            }
             if (!interface_exists($var) && !class_exists($var)) {
                 throw new \Mix\Exception\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
             }
-            if (!($value instanceof $var)) {
-                throw new \Mix\Exception\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+
+            foreach ($value as $v){
+                if (!($v instanceof $var)) {
+                    throw new \Mix\Exception\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
+                }
             }
         }
+
         return $object;
     }
 
     /**
      * 获取注释中var的值
+     *
      * @param $docComment
+     *
      * @return string
      */
     protected static function getVarFrom($docComment)
@@ -113,12 +139,15 @@ class Mix
             $var = array_shift($tmp);
             $var = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
         }
+
         return $var;
     }
 
     /**
      * 创建组件
+     *
      * @param $config
+     *
      * @return mixed
      */
     public static function createComponent($config)
@@ -127,12 +156,15 @@ class Mix
         $bean       = \Mix\Core\Bean::config($name);
         $class      = $bean['class'];
         $properties = $bean['properties'] ?? [];
+
         return new $class($properties);
     }
 
     /**
      * 从文件载入环境配置
+     *
      * @param $filename
+     *
      * @return bool
      */
     public static function loadEnvironmentFrom($filename)
@@ -140,7 +172,7 @@ class Mix
         $env = new \Mix\Core\Environment(['filename' => $filename]);
         $env->load();
         self::$env = $env;
+
         return true;
     }
-
 }

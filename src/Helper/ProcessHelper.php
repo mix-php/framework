@@ -13,9 +13,9 @@ class ProcessHelper
      * 使当前进程蜕变为一个守护进程
      * @param bool $close
      */
-    public static function daemon($close = true)
+    public static function daemon($ioclose = true)
     {
-        return \Swoole\Process::daemon(true, !$close);
+        return \Swoole\Process::daemon(true, !$ioclose);
     }
 
     /**

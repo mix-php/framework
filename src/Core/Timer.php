@@ -1,8 +1,6 @@
 <?php
 
-namespace Mix\Core\Coroutine;
-
-use Mix\Core\Coroutine;
+namespace Mix\Core;
 
 /**
  * Class Timer

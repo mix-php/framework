@@ -2,6 +2,7 @@
 
 namespace Mix\Core\Container;
 
+use Mix\Core\Bean;
 use Mix\Core\Component\ComponentInterface;
 use Mix\Core\Bean\AbstractObject;
 
@@ -42,7 +43,7 @@ class Container extends AbstractObject
             throw new \Mix\Exception\ComponentException("Did not register this component: {$name}");
         }
         // 创建组件
-        $object = \Mix::createComponent($config[$name]);
+        $object = Bean::newInstance($config[$name]['ref']);
         // 组件效验
         if (!($object instanceof ComponentInterface)) {
             throw new \Mix\Exception\ComponentException("This class is not a component: {$config[$name]['class']}");

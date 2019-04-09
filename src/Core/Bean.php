@@ -61,6 +61,19 @@ class Bean
     }
 
     /**
+     * 创建实例
+     * @param $name
+     * @return mixed
+     */
+    public static function newInstance($name)
+    {
+        $bean       = \Mix\Core\Bean::config($name);
+        $class      = $bean['class'];
+        $properties = $bean['properties'] ?? [];
+        return new $class($properties);
+    }
+
+    /**
      * 获取Bean名称
      * @param $class
      * @return string

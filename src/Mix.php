@@ -31,7 +31,6 @@ class Mix
      * 构建配置
      *
      * @param array $config
-     * @param bool  $ref
      *
      * @return mixed
      */
@@ -40,7 +39,8 @@ class Mix
         foreach ($config as $key => $value) {
             // 子类处理
             if (is_array($value)) {
-                if (array_values($value) === $value) {//非关联数组
+                if (array_values($value) === $value) {
+                    // 非关联数组
                     foreach ($value as $subNumberKey => $subValue) {
                         if (isset($subValue['ref'])) {
                             $config[$key][$subNumberKey] = self::configure($subValue);
@@ -57,14 +57,9 @@ class Mix
                         $config[$key] = self::$app->$name;
                     }
                 }
-
-            } elseif ($key === 'ref') {// 实例化
-                $name       = $config['ref'];
-                $bean       = \Mix\Core\Bean::config($name);
-                $class      = $bean['class'];
-                $properties = $bean['properties'] ?? [];
-
-                return new $class($properties);
+            } elseif ($key === 'ref') {
+                // 实例化
+                return \Mix\Core\Bean::newInstance($config['ref']);
             }
         }
         return $config;
@@ -95,24 +90,22 @@ class Mix
                 continue;
             }
             if (substr($var, -2) === '[]') {
-                //当前的doc标注里面这是一个数组，去掉数组的尾巴
-                $var          = substr($var, 0, -2);
-                //这时候当前的$value已经是个被依赖注入自动维护的实例数组了 不需要特殊处理
-            }else{
-                //不是数组，弄成临时数组 方便下面遍历检查
-                $value=[$value];
+                // 当前的doc标注里面这是一个数组，去掉数组的尾巴
+                $var = substr($var, 0, -2);
+                // 这时候当前的$value已经是个被依赖注入自动维护的实例数组了 不需要特殊处理
+            } else {
+                // 不是数组，弄成临时数组 方便下面遍历检查
+                $value = [$value];
             }
             if (!interface_exists($var) && !class_exists($var)) {
                 throw new \Mix\Exception\DependencyInjectionException("Interface or class not found, class: {$class}, property: {$name}, @var: {$var}");
             }
-
-            foreach ($value as $v){
+            foreach ($value as $v) {
                 if (!($v instanceof $var)) {
                     throw new \Mix\Exception\DependencyInjectionException("The type of the imported property does not match, class: {$class}, property: {$name}, @var: {$var}");
                 }
             }
         }
-
         return $object;
     }
 
@@ -139,25 +132,7 @@ class Mix
             $var = array_shift($tmp);
             $var = substr($var, 0, 1) === '\\' ? substr($var, 1) : '';
         }
-
         return $var;
-    }
-
-    /**
-     * 创建组件
-     *
-     * @param $config
-     *
-     * @return mixed
-     */
-    public static function createComponent($config)
-    {
-        $name       = $config['ref'];
-        $bean       = \Mix\Core\Bean::config($name);
-        $class      = $bean['class'];
-        $properties = $bean['properties'] ?? [];
-
-        return new $class($properties);
     }
 
     /**
@@ -172,7 +147,7 @@ class Mix
         $env = new \Mix\Core\Environment(['filename' => $filename]);
         $env->load();
         self::$env = $env;
-
         return true;
     }
+
 }

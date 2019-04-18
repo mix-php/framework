@@ -77,7 +77,7 @@ class Coroutine
     }
 
     /**
-     * 创建协程
+     * 创建协程 (自动)
      * @param callable $function
      * @param mixed ...$params
      */
@@ -85,6 +85,18 @@ class Coroutine
     {
         $tid = self::tid();
         $top = $tid == self::id();
+        static::go($function, $params, $tid, $top);
+    }
+
+    /**
+     * 创建协程 (手动)
+     * @param $function
+     * @param $params
+     * @param $tid
+     * @param $top
+     */
+    public static function go($function, $params, $tid, $top)
+    {
         go(function () use ($function, $params, $tid, $top) {
             // 记录协程id关系
             $id = self::id();

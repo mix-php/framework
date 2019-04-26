@@ -112,14 +112,15 @@ class Coroutine
             } catch (\Throwable $e) {
                 // 输出错误
                 \Mix::$app->error->handleException($e);
-            }
-            // 清理协程资源
-            unset(self::$idMap[$id]);
-            self::$tidCount[$tid]--;
-            // 清除协程
-            if (self::$tidCount[$tid] == 0) {
-                unset(self::$tidCount[$tid]);
-                \Mix::$app->container->delete($tid);
+            } finally {
+                // 清理协程资源
+                unset(self::$idMap[$id]);
+                self::$tidCount[$tid]--;
+                // 清除协程
+                if (self::$tidCount[$tid] == 0) {
+                    unset(self::$tidCount[$tid]);
+                    \Mix::$app->container->delete($tid);
+                }
             }
         });
     }

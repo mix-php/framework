@@ -85,7 +85,7 @@ trait ComponentInitializeTrait
     protected static function getCoroutineMode($component)
     {
         $class = get_class($component);
-        return $class::$coroutineMode ?? false;
+        return $class::COROUTINE_MODE ?? false;
     }
 
 }

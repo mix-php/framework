@@ -96,7 +96,7 @@ class ContainerManager extends AbstractObject implements ContainerInterface
         try {
             $bean  = Bean::config($this->config[$name]['ref']);
             $class = $bean['class'];
-            return $class::$coroutineMode ?? false;
+            return $class::COROUTINE_MODE ?? false;
         } catch (\Throwable $e) {
             return false;
         }

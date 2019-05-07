@@ -13,6 +13,14 @@ if (!function_exists('app')) {
     }
 }
 
+if (!function_exists('server')) {
+    // 返回当前Server实例
+    function server()
+    {
+        return \Mix::$server;
+    }
+}
+
 if (!function_exists('env')) {
     // 获取一个环境变量的值
     function env($name, $default = '')

@@ -14,12 +14,21 @@ class Mix
      * @var string
      */
     public static $version = '2.0.1';
+
     /**
      * App实例
      *
      * @var \Mix\Console\Application|\Mix\Http\Application|\Mix\WebSocket\Application|\Mix\Tcp\Application|\Mix\Udp\Application
      */
     public static $app;
+
+    /**
+     * Server实例
+     *
+     * @var \Mix\Http\Server\HttpServer|\Mix\WebSocket\Server\WebSocketServer|\Mix\Tcp\Server\TcpServer|\Mix\Udp\Server\UdpServer
+     */
+    public static $server;
+
     /**
      * 环境配置
      *

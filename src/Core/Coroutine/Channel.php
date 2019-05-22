@@ -7,6 +7,7 @@ namespace Mix\Core\Coroutine;
  * @package Mix\Core\Coroutine
  * @author liu,jian <coder.keda@gmail.com>
  *
+ * @method __construct($capacity = 0)
  * @method bool push($data)
  * @method mixed pop()
  * @method bool isEmpty()

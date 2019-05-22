@@ -7,7 +7,6 @@ namespace Mix\Core\Coroutine;
  * @package Mix\Core\Coroutine
  * @author liu,jian <coder.keda@gmail.com>
  *
- * @method __construct($capacity = 0)
  * @method bool push($data)
  * @method mixed pop()
  * @method bool isEmpty()
@@ -18,4 +17,15 @@ namespace Mix\Core\Coroutine;
  */
 class Channel extends \Swoole\Coroutine\Channel
 {
+
+    /**
+     * Channel constructor.
+     * 为了代码补全才加的，@method无法设置构造方法
+     * @param int $capacity
+     */
+    public function __construct(int $capacity = 1)
+    {
+        parent::__construct($capacity);
+    }
+
 }

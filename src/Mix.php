@@ -13,7 +13,7 @@ class Mix
      *
      * @var string
      */
-    public static $version = '2.0.4';
+    public static $version = '2.0.5';
 
     /**
      * App实例

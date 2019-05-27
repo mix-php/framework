@@ -35,17 +35,14 @@ class ProcessHelper
     }
 
     /**
-     * kill 进程
+     * kill进程
      * @param $pid
-     * @param null $signal
+     * @param int $signal
      * @return bool
      */
-    public static function kill($pid, $signal = null)
+    public static function kill($pid, $signal = SIGTERM)
     {
-        if (is_null($signal)) {
-            return \Swoole\Process::kill($pid);
-        }
-        return \Swoole\Process::kill($pid, $signal);
+        return posix_kill($pid, $signal);
     }
 
     /**

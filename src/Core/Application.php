@@ -16,6 +16,18 @@ class Application extends AbstractObject implements \ApplicationInterface
 {
 
     /**
+     * 应用名称
+     * @var string
+     */
+    public $appName = 'app-console';
+
+    /**
+     * 应用版本
+     * @var string
+     */
+    public $appVersion = '0.0.0';
+
+    /**
      * 应用调试
      * @var bool
      */

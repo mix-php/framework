@@ -27,10 +27,10 @@ class Error
             error_reporting($level);
         }
         // 多次注册处理
-        if (self::$registered) {
+        if (static::$registered) {
             return;
         }
-        self::$registered = true;
+        static::$registered = true;
         // 注册错误处理
         set_error_handler([__CLASS__, 'appError']);
         set_exception_handler([__CLASS__, 'appException']); // swoole 不支持该函数
@@ -48,8 +48,8 @@ class Error
     {
         if (error_reporting() & $errno) {
             // 委托给异常处理
-            if (self::isFatalWarning($errno, $errstr)) {
-                self::appException(new \Mix\Exception\ErrorException($errno, $errstr, $errfile, $errline));
+            if (static::isFatalWarning($errno, $errstr)) {
+                static::appException(new \Mix\Exception\ErrorException($errno, $errstr, $errfile, $errline));
                 return;
             }
             // 转换为异常抛出
@@ -62,9 +62,9 @@ class Error
      */
     public static function appShutdown()
     {
-        if (!is_null($error = error_get_last()) && self::isFatal($error['type'])) {
+        if (!is_null($error = error_get_last()) && static::isFatal($error['type'])) {
             // 委托给异常处理
-            self::appException(new \Mix\Exception\ErrorException($error['type'], $error['message'], $error['file'], $error['line']));
+            static::appException(new \Mix\Exception\ErrorException($error['type'], $error['message'], $error['file'], $error['line']));
         }
     }
 
@@ -84,13 +84,13 @@ class Error
      */
     public static function getLevel($errno)
     {
-        if (self::isError($errno)) {
+        if (static::isError($errno)) {
             return 'error';
         }
-        if (self::isWarning($errno)) {
+        if (static::isWarning($errno)) {
             return 'warning';
         }
-        if (self::isNotice($errno)) {
+        if (static::isNotice($errno)) {
             return 'notice';
         }
         return 'error';

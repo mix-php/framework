@@ -3,13 +3,18 @@
 namespace Mix\Helper;
 
 /**
- * XmlHelper类
+ * Class XmlHelper
+ * @package Mix\Helper
  * @author liu,jian <coder.keda@gmail.com>
  */
 class XmlHelper
 {
 
-    // 编码
+    /**
+     * 编码
+     * @param $data
+     * @return string
+     */
     public static function encode($data)
     {
         $xml = '<xml>';
@@ -18,13 +23,21 @@ class XmlHelper
         return $xml;
     }
 
-    // 解码
+    /**
+     * 解码
+     * @param $xml
+     * @return array|null
+     */
     public static function decode($xml)
     {
         return self::xmlToArray($xml);
     }
 
-    // array 转 xml
+    /**
+     * array转xml
+     * @param $data
+     * @return string
+     */
     protected static function arrayToXml($data)
     {
         $xml = '';
@@ -44,13 +57,21 @@ class XmlHelper
         return $xml;
     }
 
-    // 字符数据替换
+    /**
+     * 字符数据替换
+     * @param $string
+     * @return string
+     */
     protected static function characterDataReplace($string)
     {
         return sprintf('<![CDATA[%s]]>', $string);
     }
 
-    // xml 转 array
+    /**
+     * xml转array
+     * @param $xml
+     * @return array|null
+     */
     protected static function xmlToArray($xml)
     {
         $res = [];
@@ -65,7 +86,11 @@ class XmlHelper
         return $res;
     }
 
-    // 解析 SimpleXMLElement 到 array
+    /**
+     * 解析SimpleXMLElement到array
+     * @param $data
+     * @return null
+     */
     protected static function parseToArray($data)
     {
         $res = null;

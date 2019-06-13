@@ -75,4 +75,20 @@ abstract class AbstractObject implements ObjectInterface
         return new $class($properties);
     }
 
+    /**
+     * 通过对象创建实例
+     * 为了实现类型的代码补全
+     * @param $object
+     * @return $this
+     */
+    public static function make($object)
+    {
+        $currentClass = get_called_class();
+        $class        = get_class($object);
+        if ($currentClass != $class) {
+            throw new \RuntimeException("Type mismatch: Current class: {$currentClass}, Parameter class: {$class}");
+        }
+        return $object;
+    }
+
 }

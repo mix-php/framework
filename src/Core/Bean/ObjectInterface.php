@@ -44,4 +44,12 @@ interface ObjectInterface
      */
     public static function newInstance($name = null);
 
+    /**
+     * 通过对象创建实例
+     * 为了实现类型的代码补全
+     * @param $object
+     * @return $this
+     */
+    public static function make($object);
+
 }

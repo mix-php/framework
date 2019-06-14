@@ -26,7 +26,7 @@ interface ComponentInterface
      * 协程模式
      * @var int
      */
-    const COROUTINE_MODE = ComponentInterface::COROUTINE_MODE_NEW;
+    const COROUTINE_MODE = self::COROUTINE_MODE_NEW;
 
     /**
      * 获取组件状态

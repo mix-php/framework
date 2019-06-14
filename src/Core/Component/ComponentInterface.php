@@ -23,6 +23,12 @@ interface ComponentInterface
     const STATUS_RUNNING = 1;
 
     /**
+     * 协程模式
+     * @var int
+     */
+    const COROUTINE_MODE = ComponentInterface::COROUTINE_MODE_NEW;
+
+    /**
      * 获取组件状态
      * @return int
      */

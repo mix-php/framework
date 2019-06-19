@@ -3,7 +3,7 @@
 namespace Mix\Core\Container;
 
 use Mix\Core\Bean;
-use Mix\Core\Coroutine;
+use Mix\Concurrent\Coroutine;
 use Mix\Core\Bean\AbstractObject;
 use Mix\Core\Component\ComponentInterface;
 use Psr\Container\ContainerInterface;

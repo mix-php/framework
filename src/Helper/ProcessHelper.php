@@ -2,7 +2,7 @@
 
 namespace Mix\Helper;
 
-use Mix\Core\Coroutine;
+use Mix\Concurrent\Coroutine;
 
 /**
  * ProcessHelper类

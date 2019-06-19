@@ -41,7 +41,7 @@ if (!function_exists('xgo')) {
     // 创建协程
     function xgo($function, ...$params)
     {
-        \Mix\Core\Coroutine::create($function, ...$params);
+        \Mix\Concurrent\Coroutine::create($function, ...$params);
     }
 }
 

@@ -2,7 +2,7 @@
 
 namespace Mix\Core;
 
-use Mix\Core\Bean\AbstractObject;
+use Mix\Bean\Object\AbstractObject;
 
 /**
  * Class Environment

@@ -5,7 +5,7 @@ namespace Mix\Core\Container;
 use Mix\Core\Application;
 use Mix\Core\Bean;
 use Mix\Core\Component\ComponentInterface;
-use Mix\Core\Bean\AbstractObject;
+use Mix\Bean\Object\AbstractObject;
 
 /**
  * Class Container

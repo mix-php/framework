@@ -4,7 +4,7 @@ namespace Mix\Core\Container;
 
 use Mix\Core\Application;
 use Mix\Concurrent\Coroutine;
-use Mix\Core\Bean\AbstractObject;
+use Mix\Bean\Object\AbstractObject;
 use Mix\Core\Component\ComponentInterface;
 use Psr\Container\ContainerInterface;
 

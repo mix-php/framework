@@ -2,7 +2,7 @@
 
 namespace Mix\Core\Component;
 
-use Mix\Core\Bean\AbstractObject;
+use Mix\Bean\Object\AbstractObject;
 
 /**
  * Class AbstractComponent

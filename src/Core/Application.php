@@ -4,7 +4,7 @@ namespace Mix\Core;
 
 use Mix\Bean\Beans;
 use Mix\Core\Component\ComponentInterface;
-use Mix\Core\Container\ContainerManager;
+use Mix\Container\ContainerManager;
 use Mix\Helper\FileSystemHelper;
 use Mix\Bean\Object\AbstractObject;
 use Mix\Core\Application\ComponentInitializeTrait;

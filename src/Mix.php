@@ -18,16 +18,9 @@ class Mix
     /**
      * App实例
      *
-     * @var \Mix\Console\Application|\Mix\Http\Application|\Mix\WebSocket\Application|\Mix\Tcp\Application|\Mix\Udp\Application
+     * @var \Mix\Console\Application
      */
-    public static $app;
-
-    /**
-     * Server实例
-     *
-     * @var \Mix\Http\Server\HttpServer|\Mix\WebSocket\Server\WebSocketServer|\Mix\Tcp\Server\TcpServer|\Mix\Udp\Server\UdpServer
-     */
-    public static $server;
+    public static $console;
 
     /**
      * 环境配置
@@ -45,33 +38,7 @@ class Mix
      */
     public static function configure(array $config)
     {
-        foreach ($config as $key => $value) {
-            // 子类处理
-            if (is_array($value)) {
-                if (array_values($value) === $value) {
-                    // 非关联数组
-                    foreach ($value as $subNumberKey => $subValue) {
-                        if (isset($subValue['ref'])) {
-                            $config[$key][$subNumberKey] = self::configure($subValue);
-                        }
-                    }
-                } else {
-                    // 引用依赖
-                    if (isset($value['ref'])) {
-                        $config[$key] = self::configure($value);
-                    }
-                    //组件
-                    if (isset($value['component'])) {
-                        $name         = $value['component'];
-                        $config[$key] = self::$app->$name;
-                    }
-                }
-            } elseif ($key === 'ref') {
-                // 实例化
-                return \Mix\Core\Bean::newInstance($config['ref']);
-            }
-        }
-        return $config;
+
     }
 
     /**

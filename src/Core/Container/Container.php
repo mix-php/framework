@@ -2,6 +2,7 @@
 
 namespace Mix\Core\Container;
 
+use Mix\Core\Application;
 use Mix\Core\Bean;
 use Mix\Core\Component\ComponentInterface;
 use Mix\Core\Bean\AbstractObject;
@@ -13,6 +14,11 @@ use Mix\Core\Bean\AbstractObject;
  */
 class Container extends AbstractObject
 {
+
+    /**
+     * @var Application
+     */
+    public $app;
 
     /**
      * 组件配置
@@ -43,7 +49,9 @@ class Container extends AbstractObject
             throw new \Mix\Exception\ComponentException("Did not register this component: {$name}");
         }
         // 创建组件
-        $object = Bean::newInstance($config[$name]['ref']);
+        $ref    = $config[$name]['ref'];
+        $beans  = $this->app->beans;
+        $object = $beans->bean($ref)->newInstance();
         // 组件效验
         if (!($object instanceof ComponentInterface)) {
             throw new \Mix\Exception\ComponentException("This class is not a component: {$config[$name]['class']}");

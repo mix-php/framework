@@ -2,6 +2,7 @@
 
 namespace Mix\Core\Container;
 
+use Mix\Core\Application;
 use Mix\Core\Bean;
 use Mix\Concurrent\Coroutine;
 use Mix\Core\Bean\AbstractObject;
@@ -15,6 +16,11 @@ use Psr\Container\ContainerInterface;
  */
 class ContainerManager extends AbstractObject implements ContainerInterface
 {
+
+    /**
+     * @var Application
+     */
+    public $app;
 
     /**
      * 组件配置
@@ -38,6 +44,7 @@ class ContainerManager extends AbstractObject implements ContainerInterface
         $tid = $this->getTid($name);
         if (!isset($this->_containers[$tid])) {
             $this->_containers[$tid] = new Container([
+                'app'    => $this,
                 'manager' => $this,
             ]);
         }

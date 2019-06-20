@@ -41,7 +41,7 @@ class Timer
         $tid = Coroutine::tid();
         $top = $tid == Coroutine::id();
         // 设置定时器
-        $timerId = swoole_timer_after($msec, function () use ($callback, $tid, $top) {
+        $timerId = \Swoole\Timer::after($msec, function () use ($callback, $tid, $top) {
             // 创建协程
             Coroutine::go($callback, [], $tid, $top);
         });
@@ -66,7 +66,7 @@ class Timer
         $tid = Coroutine::tid();
         $top = $tid == Coroutine::id();
         // 设置定时器
-        $timerId = swoole_timer_tick($msec, function () use ($callback, $tid, $top) {
+        $timerId = \Swoole\Timer::tick($msec, function () use ($callback, $tid, $top) {
             // 创建协程
             Coroutine::go($callback, [], $tid, $top);
         });
@@ -83,7 +83,7 @@ class Timer
     public function clear()
     {
         if (isset($this->_timerId)) {
-            return swoole_timer_clear($this->_timerId);
+            return \Swoole\Timer::clear($this->_timerId);
         }
         return false;
     }

@@ -3,7 +3,6 @@
 namespace Mix\Core\Container;
 
 use Mix\Core\Application;
-use Mix\Core\Bean;
 use Mix\Concurrent\Coroutine;
 use Mix\Core\Bean\AbstractObject;
 use Mix\Core\Component\ComponentInterface;
@@ -44,7 +43,7 @@ class ContainerManager extends AbstractObject implements ContainerInterface
         $tid = $this->getTid($name);
         if (!isset($this->_containers[$tid])) {
             $this->_containers[$tid] = new Container([
-                'app'    => $this,
+                'app'     => $this,
                 'manager' => $this,
             ]);
         }
@@ -101,8 +100,9 @@ class ContainerManager extends AbstractObject implements ContainerInterface
     protected function getCoroutineMode($name)
     {
         try {
-            $bean  = Bean::config($this->config[$name]['ref']);
-            $class = $bean['class'];
+            $ref   = $this->config[$name]['ref'];
+            $beans = $this->app->beans;
+            $class = $beans->bean($ref)->getClass();
             return $class::COROUTINE_MODE ?? false;
         } catch (\Throwable $e) {
             return false;

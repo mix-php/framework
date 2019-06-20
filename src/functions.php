@@ -33,7 +33,7 @@ if (!function_exists('beanname')) {
     // 获取Bean名称
     function beanname($class)
     {
-        return \Mix\Core\Bean::name($class);
+        return \Mix\Bean\Beans::name($class);
     }
 }
 

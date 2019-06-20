@@ -18,7 +18,8 @@
   "require": {
     "php": ">=7.0.0",
     "psr/container": "~1.0",
-    "mix/bean": "v2.1.x-dev"
+    "mix/bean": "v2.1.x-dev",
+    "mix/container": "v2.1.x-dev"
   },
   "autoload": {
     "psr-4": {

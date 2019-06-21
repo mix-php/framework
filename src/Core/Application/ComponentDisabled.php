@@ -11,7 +11,7 @@ class ComponentDisabled
 {
 
     /**
-     * @var \Mix\Core\Component\ComponentInterface
+     * @var \Mix\Component\ComponentInterface
      */
     public $_component;
 

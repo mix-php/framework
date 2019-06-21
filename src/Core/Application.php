@@ -3,7 +3,8 @@
 namespace Mix\Core;
 
 use Mix\Bean\Beans;
-use Mix\Core\Application\ComponentDisabled;
+use Mix\Component\ComponentDisabled;
+use Mix\Component\ComponentEvent;
 use Mix\Component\ComponentInterface;
 use Mix\Container\ContainerManager;
 use Mix\Helper\FileSystemHelper;
@@ -95,20 +96,19 @@ class Application extends AbstractObject implements ContainerInterface
     /**
      * 获取组件
      * @param $name
-     * @return ComponentInterface
+     * @return ComponentInterface|ComponentDisabled
      */
     public function get($name)
     {
         $component = $this->container->get($name);
-        // 触发前置处理事件
-        self::triggerBeforeInitialize($component);
-        // 修改引用组件状态
-        if (self::getCoroutineMode($component) == ComponentInterface::COROUTINE_MODE_REFERENCE && $component->getStatus() == ComponentInterface::STATUS_READY) {
-            $component->setStatus(ComponentInterface::STATUS_RUNNING);
-        }
+        // 触发事件
+        ComponentEvent::trigger($component);
         // 停用未初始化的组件
         if ($component->getStatus() != ComponentInterface::STATUS_RUNNING) {
-            return new ComponentDisabled($component, $name);
+            return new ComponentDisabled([
+                'component' => $component,
+                'name'      => $name,
+            ]);
         }
         // 返回组件
         return $component;
@@ -122,45 +122,6 @@ class Application extends AbstractObject implements ContainerInterface
     public function has($name)
     {
         return $this->container->has($name);
-    }
-
-    /**
-     * 触发前置处理事件
-     * @param $component
-     */
-    protected static function triggerBeforeInitialize($component)
-    {
-        if (self::getCoroutineMode($component) == ComponentInterface::COROUTINE_MODE_REFERENCE) {
-            return;
-        }
-        if ($component->getStatus() == ComponentInterface::STATUS_READY) {
-            $component->onBeforeInitialize();
-        }
-    }
-
-    /**
-     * 触发后置处理事件
-     * @param $component
-     */
-    protected static function triggerAfterInitialize($component)
-    {
-        if (self::getCoroutineMode($component) == ComponentInterface::COROUTINE_MODE_REFERENCE) {
-            return;
-        }
-        if ($component->getStatus() == ComponentInterface::STATUS_RUNNING) {
-            $component->onAfterInitialize();
-        }
-    }
-
-    /**
-     * 获取协程模式
-     * @param $component
-     * @return bool
-     */
-    protected static function getCoroutineMode($component)
-    {
-        $class = get_class($component);
-        return $class::COROUTINE_MODE ?? false;
     }
 
     /**

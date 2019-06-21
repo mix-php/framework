@@ -4,7 +4,7 @@ namespace Mix\Core;
 
 use Mix\Bean\Beans;
 use Mix\Component\ComponentDisabled;
-use Mix\Component\ComponentEvent;
+use Mix\Component\ComponentInitialize;
 use Mix\Component\ComponentInterface;
 use Mix\Container\ContainerManager;
 use Mix\Helper\FileSystemHelper;
@@ -101,8 +101,8 @@ class Application extends AbstractObject implements ContainerInterface
     public function get($name)
     {
         $component = $this->container->get($name);
-        // 触发事件
-        ComponentEvent::trigger($component);
+        // 前置初始化
+        ComponentInitialize::before($component);
         // 停用未初始化的组件
         if ($component->getStatus() != ComponentInterface::STATUS_RUNNING) {
             return new ComponentDisabled([

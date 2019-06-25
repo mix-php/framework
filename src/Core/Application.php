@@ -72,8 +72,6 @@ class Application implements ContainerInterface
         BeanInjector::inject($this, $config);
         // 实例化ApplicationContext
         $this->context = new ApplicationContext($this->beans);
-        // 错误注册
-        \Mix\Core\Error::register();
     }
 
     /**

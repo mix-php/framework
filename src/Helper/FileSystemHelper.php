@@ -55,30 +55,4 @@ class FileSystemHelper
         return false;
     }
 
-    /**
-     * 删除指定的文件夹及其内容
-     * @param $dir
-     * @return bool
-     */
-    public static function deleteFolder($dir)
-    {
-        $dh = @opendir($dir);
-        if (!$dh) {
-            return false;
-        }
-        while (false !== ($file = readdir($dh))) {
-            if (($file != '.') && ($file != '..')) {
-                $full = $dir . '/' . $file;
-                if (is_dir($full)) {
-                    self::deleteFolder($full);
-                } else {
-                    unlink($full);
-                }
-            }
-        }
-        closedir($dh);
-        rmdir($dir);
-        return true;
-    }
-
 }

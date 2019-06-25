@@ -13,30 +13,6 @@ if (!function_exists('app')) {
     }
 }
 
-if (!function_exists('server')) {
-    // 返回当前Server实例
-    function server()
-    {
-        return \Mix::$server;
-    }
-}
-
-if (!function_exists('env')) {
-    // 获取一个环境变量的值
-    function env($name, $default = '')
-    {
-        return \Mix::$env->section($name, $default);
-    }
-}
-
-if (!function_exists('beanname')) {
-    // 获取Bean名称
-    function beanname($class)
-    {
-        return \Mix\Bean\Beans::name($class);
-    }
-}
-
 if (!function_exists('xgo')) {
     // 创建协程
     function xgo($function, ...$params)

@@ -2,7 +2,7 @@
 
 namespace Mix\Core;
 
-use Mix\Bean\BeanFactory;
+use Mix\Bean\ApplicationContext;
 use Mix\Bean\BeanInjector;
 use Mix\Helper\FileSystemHelper;
 use Psr\Container\ContainerInterface;
@@ -53,15 +53,15 @@ class Application implements ContainerInterface
 
     /**
      * 依赖配置
-     * @var Beans
+     * @var array
      */
     public $beans = [];
 
     /**
-     * BeanFactory
-     * @var BeanFactory
+     * Context
+     * @var ApplicationContext
      */
-    public $beanFactory;
+    public $context;
 
     /**
      * Application constructor.
@@ -70,10 +70,8 @@ class Application implements ContainerInterface
     {
         // 注入
         BeanInjector::inject($this, $config);
-        // 实例化BeanFactory
-        $this->beanFactory = new BeanFactory([
-            'config' => $this->beans,
-        ]);
+        // 实例化ApplicationContext
+        $this->context = new ApplicationContext($this->beans);
         // 错误注册
         \Mix\Core\Error::register();
     }
@@ -85,7 +83,7 @@ class Application implements ContainerInterface
      */
     public function get($name)
     {
-        return $this->beanFactory->getBean($name);
+        return $this->context->getBean($name);
     }
 
     /**
@@ -97,7 +95,7 @@ class Application implements ContainerInterface
     {
         $beanDefinition = null;
         try {
-            $beanDefinition = $this->beanFactory->getBeanDefinition($name);
+            $beanDefinition = $this->context->getBeanDefinition($name);
         } catch (\Throwable $e) {
         }
         return $beanDefinition ? true : false;

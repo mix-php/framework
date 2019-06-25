@@ -21,8 +21,10 @@ class Error
      */
     public static function register()
     {
+        /** @var \Mix\Console\Error $error */
+        $error = \Mix::$app->get('error');
         // 设置错误级别
-        $level = \Mix::$app->error->level;
+        $level = $error->level;
         if (error_reporting() !== $level) {
             error_reporting($level);
         }
@@ -74,7 +76,9 @@ class Error
      */
     public static function appException($e)
     {
-        \Mix::$app->error->handleException($e);
+        /** @var \Mix\Console\Error $error */
+        $error = \Mix::$app->get('error');
+        $error->handleException($e);
     }
 
     /**

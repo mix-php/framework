@@ -68,12 +68,9 @@ class ProcessHelper
                 \Swoole\Process::signal($signal, null);
                 continue;
             }
-            // 外部获取协程id
-            $tid = Coroutine::tid();
-            $top = $tid == Coroutine::id();
-            \Swoole\Process::signal($signal, function ($signal) use ($callback, $tid, $top) {
+            \Swoole\Process::signal($signal, function ($signal) use ($callback) {
                 // 创建协程
-                Coroutine::go($callback, [$signal], $tid, $top);
+                Coroutine::create($callback, [$signal]);
             });
         }
     }

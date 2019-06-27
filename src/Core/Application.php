@@ -52,6 +52,18 @@ class Application implements ContainerInterface
     public $runtimePath = 'runtime';
 
     /**
+     * 公开目录路径
+     * @var string
+     */
+    public $publicPath = 'public';
+
+    /**
+     * 视图目录路径
+     * @var string
+     */
+    public $viewPath = 'views';
+
+    /**
      * 依赖配置
      * @var array
      */
@@ -152,6 +164,36 @@ class Application implements ContainerInterface
             return $this->basePath . DIRECTORY_SEPARATOR . $this->runtimePath;
         }
         return $this->runtimePath;
+    }
+
+    /**
+     * 获取视图目录路径
+     * @return string
+     */
+    public function getViewPath()
+    {
+        if (!FileSystemHelper::isAbsolute($this->viewPath)) {
+            if ($this->viewPath == '') {
+                return $this->basePath;
+            }
+            return $this->basePath . DIRECTORY_SEPARATOR . $this->viewPath;
+        }
+        return $this->viewPath;
+    }
+
+    /**
+     * 获取公开目录路径
+     * @return string
+     */
+    public function getPublicPath()
+    {
+        if (!FileSystemHelper::isAbsolute($this->publicPath)) {
+            if ($this->publicPath == '') {
+                return $this->basePath;
+            }
+            return $this->basePath . DIRECTORY_SEPARATOR . $this->publicPath;
+        }
+        return $this->publicPath;
     }
 
 }

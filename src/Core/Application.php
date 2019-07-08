@@ -89,7 +89,7 @@ class Application implements ContainerInterface
     /**
      * 获取Bean
      * @param string $name
-     * @return mixed
+     * @return object
      */
     public function get($name)
     {

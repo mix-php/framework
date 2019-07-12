@@ -70,7 +70,7 @@ class ProcessHelper
             }
             \Swoole\Process::signal($signal, function ($signal) use ($callback) {
                 // 创建协程
-                Coroutine::create($callback, [$signal]);
+                Coroutine::create($callback, $signal);
             });
         }
     }

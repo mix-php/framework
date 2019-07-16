@@ -1,0 +1,18 @@
+{
+  "name": "mix/framework",
+  "description": "MixPHP 框架核心 http://www.mixphp.cn",
+  "type": "framework",
+  "keywords": [
+    "framework",
+    "mixphp",
+    "swoole"
+  ],
+  "homepage": "http://www.mixphp.cn/",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "liu,jian",
+      "email": "coder.keda@gmail.com"
+    }
+  ]
+}
